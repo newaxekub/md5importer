@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 
 import com.jme.image.Texture;
+import com.jme.math.Quaternion;
 import com.model.md5.JointAnimation;
 import com.model.md5.ModelNode;
 import com.model.md5.controller.JointController;
@@ -33,6 +34,8 @@ import com.model.md5.resource.mesh.primitive.Weight;
 public class MD5Importer {
 	// The logger object.
 	private static final Logger logger = Logger.getLogger(MD5Importer.class.getName());
+	// The base orientation value.
+	private static final Quaternion base = new Quaternion(-0.5f, -0.5f, -0.5f, 0.5f);
 	// The current support versions of MD5 format.
 	private static final int version = 10;
 	// The importer singleton instance.
@@ -396,7 +399,7 @@ public class MD5Importer {
 		{
 			if(this.joints[i].getParent() < 0)
 			{
-				this.joints[i].getOrientation().set(ModelNode.base.mult(this.joints[i].getOrientation()));
+				this.joints[i].getOrientation().set(MD5Importer.base.mult(this.joints[i].getOrientation()));
 			}
 		}
 		this.modelNode.setJoints(this.joints);
@@ -547,6 +550,13 @@ public class MD5Importer {
 					break;
 				default:
 					break;
+			}
+		}
+		for(int i = 0 ; i < this.parentHierarchy.length; i++)
+		{
+			if(this.baseframe.getParent(i) < 0)
+			{
+				this.baseframe.getOrientation(i).set(MD5Importer.base.mult(this.baseframe.getOrientation(i)));
 			}
 		}
 	}
