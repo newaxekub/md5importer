@@ -84,10 +84,6 @@ public class Joint implements Serializable, Savable{
 		this.orientation.set(parentOrien.inverse().multLocal(this.orientation));
 		this.translation.subtractLocal(parentTrans);
 		parentOrien.inverse().multLocal(this.translation);
-		if(this.parent < 0)
-		{
-			this.orientation.set(ModelNode.base.mult(this.orientation));
-		}
 	}
 	
 	/**

@@ -21,7 +21,7 @@ public class TestAnim extends Test{
 	@Override
 	protected ModelNode loadModel() {
 		URL bodyMesh = TestAnim.class.getClassLoader().getResource("com/model/md5/test/data/marine.md5mesh");
-		URL bodyAnim = TestAnim.class.getClassLoader().getResource("com/model/md5/test/data/marine.md5anim");
+		URL bodyAnim = TestAnim.class.getClassLoader().getResource("com/model/md5/test/data/marine_run.md5anim");
 		try {
 			MD5Importer.getInstance().load(bodyMesh, "ModelNode", bodyAnim, "BodyAnimation", Controller.RT_WRAP);
 		} catch (IOException e) {

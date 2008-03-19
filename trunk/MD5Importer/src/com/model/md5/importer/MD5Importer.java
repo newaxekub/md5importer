@@ -45,6 +45,8 @@ public class MD5Importer {
 	private int FM_Filter = Texture.FM_LINEAR;
 	// The anisotropic value.
 	private int anisotropic = 16;
+	// The flag indicates if oriented bounding should be used.
+	private boolean orientedBounding;
 	// The stream tokenizer object.
 	private StreamTokenizer reader;
 	// The joint resource library.
@@ -390,6 +392,13 @@ public class MD5Importer {
 				this.joints[i].processTransform(parent.getTranslation(), parent.getOrientation());
 			}
 		}
+		for(int i = 0; i < this.joints.length; i++)
+		{
+			if(this.joints[i].getParent() < 0)
+			{
+				this.joints[i].getOrientation().set(ModelNode.base.mult(this.joints[i].getOrientation()));
+			}
+		}
 		this.modelNode.setJoints(this.joints);
 		this.modelNode.setMeshes(this.meshes);
 		this.modelNode.initialize();
@@ -647,6 +656,14 @@ public class MD5Importer {
 		if(aniso >= 0) this.anisotropic = aniso;
 		else MD5Importer.logger.info("Invalid Anisotropic filter level");
 	}
+	
+	/**
+	 * Set if oriented bounding should be used for the model.
+	 * @param orientedBounding True if oriented bounding should be used. False otherwise.
+	 */
+	public void setOrientedBounding(boolean orientedBounding) {
+		this.orientedBounding = orientedBounding;
+	}
 
 	/**
 	 * Retrieve the image file extensions.
@@ -694,6 +711,14 @@ public class MD5Importer {
 	 */
 	public JointAnimation getAnimation() {
 		return this.animation;
+	}
+	
+	/**
+	 * Check if oriented bounding should be used.
+	 * @return True if oriented bounding should be used. False otherwise.
+	 */
+	public boolean isOrientedBounding() {
+		return this.orientedBounding;
 	}
 
 	/**
