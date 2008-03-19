@@ -43,6 +43,10 @@ public class JointController extends Controller{
 	private Vector3f translation;
 	// The temporary orientation.
 	private Quaternion orientation;
+	// The flag indicates if fading is in process.
+	private boolean fading;
+	// The fading duration.
+	private float fadingTime;
 	
 	/**
 	 * Default constructor of JointController.
@@ -72,18 +76,37 @@ public class JointController extends Controller{
 	@Override
 	public void update(float time) {
 		this.time = this.time + time * this.getSpeed();
-		if(this.activeAnimation != null)
+		if(!this.fading)
 		{
-			this.activeAnimation.update(time, this.getRepeatType(), this.getSpeed());
+			if(this.activeAnimation != null)
+			{
+				this.activeAnimation.update(time, this.getRepeatType(), this.getSpeed());
+			}
+			this.interpolation = this.getInterpolation();
+			for(int i = 0; i < this.joints.length; i++)
+			{
+				this.translation.interpolate(this.activeAnimation.getPreviousFrame().getTranslation(i),
+						this.activeAnimation.getNextFrame().getTranslation(i), this.interpolation);
+				this.orientation.slerp(this.activeAnimation.getPreviousFrame().getOrientation(i),
+						this.activeAnimation.getNextFrame().getOrientation(i), this.interpolation);
+				this.joints[i].updateTransform(this.translation, this.orientation);
+			}
 		}
-		this.interpolation = this.getInterpolation();
-		for(int i = 0; i < this.joints.length; i++)
+		else
 		{
-			this.translation.interpolate(this.activeAnimation.getPreviousFrame().getTranslation(i),
-					this.activeAnimation.getNextFrame().getTranslation(i), this.interpolation);
-			this.orientation.slerp(this.activeAnimation.getPreviousFrame().getOrientation(i),
-					this.activeAnimation.getNextFrame().getOrientation(i), this.interpolation);
-			this.joints[i].updateTransform(this.translation, this.orientation);
+			this.interpolation = this.getInterpolation();
+			for(int i = 0; i < this.joints.length; i++)
+			{
+				this.translation.interpolate(this.joints[i].getTranslation(),
+						this.activeAnimation.getPreviousFrame().getTranslation(i), this.interpolation);
+				this.orientation.slerp(this.joints[i].getOrientation(),
+						this.activeAnimation.getPreviousFrame().getOrientation(i), this.interpolation);
+				this.joints[i].updateTransform(this.translation, this.orientation);
+			}
+			if(this.interpolation >= 1)
+			{
+				this.fading = false;
+			}
 		}
 	}
 	
@@ -92,13 +115,20 @@ public class JointController extends Controller{
 	 * @return The frame interpolation value.
 	 */
 	private float getInterpolation() {
-		float prev = this.activeAnimation.getPreviousTime();
-		float next = this.activeAnimation.getNextTime();
-		if(prev == next) return 0.0f;
-		float interpolation = (this.time - prev) / (next - prev);
-		if(interpolation < 0.0f) return 0.0f;
-		else if (interpolation > 1.0f) return 1.0f;
-		else return interpolation;
+		if(!this.fading)
+		{
+			float prev = this.activeAnimation.getPreviousTime();
+			float next = this.activeAnimation.getNextTime();
+			if(prev == next) return 0.0f;
+			float interpolation = (this.time - prev) / (next - prev);
+			if(interpolation < 0.0f) return 0.0f;
+			else if (interpolation > 1.0f) return 1.0f;
+			else return interpolation;
+		}
+		else
+		{
+			return (this.time/this.fadingTime);
+		}
 	}
 	
 	/**
@@ -127,7 +157,7 @@ public class JointController extends Controller{
 		if(this.validateAnimation(animation))
 		{
 			this.animations.put(animation.getName(), animation);
-			this.activeAnimation = animation;
+			if(this.activeAnimation == null) this.activeAnimation = animation;
 		}
 		else throw new InvalidAnimationException();
 	}
@@ -148,6 +178,36 @@ public class JointController extends Controller{
 	public void setActiveAnimation(JointAnimation animation) {
 		if(this.animations.containsValue(animation)) this.activeAnimation = animation;
 		else this.addAnimation(animation);
+	}
+	
+	/**
+	 * Set the animation with given name to be the active animation.
+	 * @param name The name of the animation to be activated.
+	 * @param fadingTime The time it takes to fade into the first frame of new active animation.
+	 */
+	public void setActiveAnimation(String name, float fadingTime) {
+		this.enabledFading(fadingTime);
+		this.setActiveAnimation(name);
+	}
+	
+	/**
+	 * Set the given JointAnimation to the active animation.
+	 * @param animation The JointAnimation to be set.
+	 * @param fadingTime The time it takes to fade into the first frame of new active animation.
+	 */
+	public void setActiveAnimation(JointAnimation animation, float fadingTime) {
+		this.enabledFading(fadingTime);
+		this.setActiveAnimation(animation);
+	}
+	
+	/**
+	 * Enable fading between the current frame and the new active animation.
+	 * @param fadingTime The time it takes to fade into the first frame of new active animation.
+	 */
+	private void enabledFading(float fadingTime) {
+		this.fading = true;
+		this.fadingTime = fadingTime;
+		this.time = 0;
 	}
 	
 	@Override
