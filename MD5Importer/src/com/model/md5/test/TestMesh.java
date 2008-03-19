@@ -33,6 +33,7 @@ public class TestMesh extends Test{
 			e.printStackTrace();
 		}
 		body.attachChild(MD5Importer.getInstance().getModelNode(), "Shoulders");
+		body.flagUpdate();
 		return body;
 	}
 

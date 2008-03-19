@@ -7,6 +7,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.bounding.OrientedBoundingBox;
 import com.jme.image.Texture;
 import com.jme.scene.SceneElement;
 import com.jme.scene.batch.TriangleBatch;
@@ -193,8 +194,10 @@ public class Mesh implements Serializable, Savable{
 	 * Process and setup the bounding volume of the TriangleBatch.
 	 */
 	private void processBounding() {
-		this.triangleBatch.setModelBound(new BoundingBox());
+		if(MD5Importer.getInstance().isOrientedBounding()) this.triangleBatch.setModelBound(new OrientedBoundingBox());
+		else this.triangleBatch.setModelBound(new BoundingBox());
 		this.triangleBatch.updateModelBound();
+		this.triangleBatch.updateGeometricState(0, true);
 	}
 
 	/**

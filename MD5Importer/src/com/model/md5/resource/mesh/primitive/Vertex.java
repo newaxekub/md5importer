@@ -3,7 +3,6 @@ package com.model.md5.resource.mesh.primitive;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.util.export.InputCapsule;
@@ -38,7 +37,9 @@ public class Vertex implements Serializable, Savable{
 	/**
 	 * Default constructor of Vertex.
 	 */
-	public Vertex() {}
+	public Vertex() {
+		this.position = new Vector3f();
+	}
 	
 	/**
 	 * Constructor of Vertex.
@@ -46,13 +47,14 @@ public class Vertex implements Serializable, Savable{
 	 */
 	public Vertex(Mesh mesh) {
 		this.mesh = mesh;
+		this.position = new Vector3f();
 	}
 	
 	/**
 	 * Process the Vertex position.
 	 */
 	public void processPosition() {
-		this.position = new Vector3f();
+		this.position.zero();
 		Vector3f temp = new Vector3f();
 		for(int i = 0; i < this.weightIndices.length; i++)
 		{
@@ -67,8 +69,8 @@ public class Vertex implements Serializable, Savable{
 	 * Reset the normal and position information of this vertex.
 	 */
 	public void resetInformation() {
-		this.normal = null;
-		this.position = null;
+		this.normal.zero();
+		this.position.zero();
 	}
 
 	/**
