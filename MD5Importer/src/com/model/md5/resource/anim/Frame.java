@@ -3,7 +3,6 @@ package com.model.md5.resource.anim;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -12,7 +11,6 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
-import com.model.md5.ModelNode;
 
 /**
  * Frame maintains the information of a frame in md5anim file. This class is
@@ -77,7 +75,7 @@ public class Frame implements Serializable, Savable{
 				this.translations[jointIndex].y = value;
 				break;
 			case 2:
-				this.translations[jointIndex].z = value;
+				this.translations[jointIndex].z = -value;
 				break;
 			case 3:
 				this.orientations[jointIndex].x = value;
@@ -103,10 +101,14 @@ public class Frame implements Serializable, Savable{
 		float t = 1.0f - (raw.x * raw.x) - (raw.y * raw.y) - (raw.z * raw.z);
 		if (t < 0.0f) raw.w = 0.0f;
 		else raw.w = -(FastMath.sqrt(t));
-		if(this.baseframe && this.parents[jointIndex] < 0)
-		{
-			raw.set(ModelNode.base.mult(raw));
-		}
+	}
+	
+	/**
+	 * Retrieve the index of the parent Joint of the Joint with given index.
+	 * @return The index of the parent Joint.
+	 */
+	public int getParent(int index) {
+		return this.parents[index];
 	}
 	
 	/**

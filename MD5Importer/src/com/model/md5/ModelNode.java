@@ -21,8 +21,6 @@ import com.model.md5.resource.mesh.Mesh;
  * @author Yi Wang (Neakor)
  */
 public class ModelNode extends Node{
-	// The base orientation value.
-	public static final Quaternion base = new Quaternion(-0.5f, -0.5f, -0.5f, 0.5f);
 	// Serial version.
 	private static final long serialVersionUID = -2799207065296472869L;
 	// The flag indicates if an geometric update is needed.
