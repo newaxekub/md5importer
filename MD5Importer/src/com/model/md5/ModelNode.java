@@ -2,8 +2,6 @@ package com.model.md5;
 
 import java.io.IOException;
 
-
-import com.jme.math.Quaternion;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 import com.jme.util.export.InputCapsule;
