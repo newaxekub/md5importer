@@ -106,6 +106,7 @@ public class JointController extends Controller{
 			if(this.interpolation >= 1)
 			{
 				this.fading = false;
+				System.out.println("Fading complete");
 			}
 		}
 	}
