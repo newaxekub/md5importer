@@ -5,9 +5,6 @@ import java.net.URL;
 
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
 import com.model.md5.ModelNode;
 import com.model.md5.controller.JointController;
@@ -39,9 +36,6 @@ public class TestFading extends Test{
 			e.printStackTrace();
 		}
 		body.attachChild(MD5Importer.getInstance().getModelNode(), "Shoulders");
-		Quaternion q = new Quaternion();
-		q.fromAngleAxis(180*FastMath.DEG_TO_RAD, new Vector3f(0, 1, 0));
-		body.setLocalRotation(q);
 		MD5Importer.getInstance().cleanup();
 		return body;
 	}
@@ -59,7 +53,7 @@ public class TestFading extends Test{
 	protected void simpleUpdate() {
 		if(KeyBindingManager.getKeyBindingManager().isValidCommand("fade", false))
 		{
-			this.controller.setActiveAnimation("Stand", 15);
+			this.controller.setActiveAnimation("Stand", 2);
 		}
 	}
 	

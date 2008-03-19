@@ -75,7 +75,7 @@ public class Frame implements Serializable, Savable{
 				this.translations[jointIndex].y = value;
 				break;
 			case 2:
-				this.translations[jointIndex].z = -value;
+				this.translations[jointIndex].z = value;
 				break;
 			case 3:
 				this.orientations[jointIndex].x = value;
