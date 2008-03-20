@@ -106,7 +106,6 @@ public class JointController extends Controller{
 			if(this.interpolation >= 1)
 			{
 				this.fading = false;
-				System.out.println("Fading complete");
 			}
 		}
 	}
@@ -184,7 +183,7 @@ public class JointController extends Controller{
 	/**
 	 * Set the animation with given name to be the active animation.
 	 * @param name The name of the animation to be activated.
-	 * @param fadingTime The time it takes to fade into the first frame of new active animation.
+	 * @param fadingTime The time in seconds it takes to fade into the new active animation.
 	 */
 	public void setActiveAnimation(String name, float fadingTime) {
 		this.enabledFading(fadingTime);
@@ -194,7 +193,7 @@ public class JointController extends Controller{
 	/**
 	 * Set the given JointAnimation to the active animation.
 	 * @param animation The JointAnimation to be set.
-	 * @param fadingTime The time it takes to fade into the first frame of new active animation.
+	 * @param fadingTime The time in seconds it takes to fade into the new active animation.
 	 */
 	public void setActiveAnimation(JointAnimation animation, float fadingTime) {
 		this.enabledFading(fadingTime);
@@ -203,7 +202,7 @@ public class JointController extends Controller{
 	
 	/**
 	 * Enable fading between the current frame and the new active animation.
-	 * @param fadingTime The time it takes to fade into the first frame of new active animation.
+	 * @param fadingTime The time in seconds it takes to fade into the new active animation.
 	 */
 	private void enabledFading(float fadingTime) {
 		this.fading = true;
