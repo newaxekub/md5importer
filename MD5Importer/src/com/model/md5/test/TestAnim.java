@@ -3,9 +3,6 @@ package com.model.md5.test;
 import java.io.IOException;
 import java.net.URL;
 
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
 import com.model.md5.ModelNode;
 import com.model.md5.importer.MD5Importer;
@@ -40,9 +37,6 @@ public class TestAnim extends Test{
 			e.printStackTrace();
 		}
 		body.attachChild(MD5Importer.getInstance().getModelNode(), "Shoulders");
-		Quaternion q = new Quaternion();
-		q.fromAngleAxis(180*FastMath.DEG_TO_RAD, new Vector3f(0, 1, 0));
-		body.setLocalRotation(q);
 		return body;
 	}
 
