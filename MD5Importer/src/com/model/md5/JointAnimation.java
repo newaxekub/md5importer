@@ -16,7 +16,7 @@ import com.model.md5.resource.anim.Frame;
 /**
  * JointAnimation is the final product of MD5 animation. It is added to a
  * JointController for animating the skeletal ModelNode.
- * 
+ *
  * @author Yi Wang (Neakor)
  */
 public class JointAnimation implements Serializable, Savable{

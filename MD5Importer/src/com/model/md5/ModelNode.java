@@ -15,7 +15,7 @@ import com.model.md5.resource.mesh.Mesh;
 /**
  * ModelNode is the final product of MD5 loading process. It manages the loaded
  * Joint and Mesh. It is updated when Joint transforms are changed.
- * 
+ *
  * @author Yi Wang (Neakor)
  */
 public class ModelNode extends Node{
@@ -23,6 +23,8 @@ public class ModelNode extends Node{
 	private static final long serialVersionUID = -2799207065296472869L;
 	// The flag indicates if an geometric update is needed.
 	private boolean update;
+	// The flag indicates if model node shares skeleton with its parent.
+	private boolean dependent;
 	// The joints of this model.
 	private Joint[] joints;
 	// The meshes of this model.
@@ -51,7 +53,7 @@ public class ModelNode extends Node{
 	 * Initialize the MD5ModelNode.
 	 */
 	public void initialize() {
-		this.processJoints();
+		if(!this.dependent) this.processJoints();
 		this.skin.clearBatches();
 		for(int i = 0; i < this.meshes.length; i++)
 		{
@@ -79,7 +81,7 @@ public class ModelNode extends Node{
 	public void updateGeometricState(float time, boolean initiator) {
 		if(this.update)
 		{
-			this.processJoints();
+			if(!this.dependent) this.processJoints();
 			for(int i = 0; i < this.meshes.length; i++)
 			{
 				this.meshes[i].updateBatch();
@@ -110,6 +112,18 @@ public class ModelNode extends Node{
 	 */
 	public void attachChild(ModelNode node, int jointIndex) {
 		this.getRootJoint(node).setNodeParent(jointIndex);
+		this.attachChild(node);
+		node.initialize();
+	}
+	
+	/**
+	 * Attach the given ModelNode as a dependent child which shares the skeleton
+	 * with this ModelNode.
+	 * @param node The dependent ModelNode needs to be attached.
+	 */
+	public void attachWeakChild(ModelNode node) {
+		node.dependent = true;
+		node.setJoints(this.joints);
 		this.attachChild(node);
 		node.initialize();
 	}
@@ -185,8 +199,9 @@ public class ModelNode extends Node{
 	@Override
 	public void read(JMEImporter im) throws IOException {
 		super.read(im);
-		Savable[] temp = null;
 		InputCapsule ic = im.getCapsule(this);
+		this.dependent = ic.readBoolean("Dependent", false);
+		Savable[] temp = null;
 		temp = ic.readSavableArray("Joints", null);
 		this.joints = new Joint[temp.length];
 		for(int i = 0; i < temp.length; i++)
@@ -206,6 +221,7 @@ public class ModelNode extends Node{
 	public void write(JMEExporter ex) throws IOException {
 		super.write(ex);
 		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.dependent, "Dependent", false);
 		oc.write(this.joints, "Joints", null);
 		oc.write(this.meshes, "Meshes", null);
 		oc.write(this.skin, "Skin", null);
