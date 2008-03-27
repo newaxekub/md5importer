@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.BitSet;
 import java.util.logging.Logger;
 
-
 import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.model.md5.JointAnimation;
@@ -41,7 +40,7 @@ public class MD5Importer {
 	// The importer singleton instance.
 	private static MD5Importer instance;
 	// The image file extensions.
-	private final String[] extensions = {".jpg", ".tga", ".png", ".bmp", ".dds", ".gif", ".tif", ".tiff", ".jpeg"};
+	private final String[] extensions = {".jpg", ".tga", ".png", ".dds", ".gif", ".bmp"};
 	// The MM texture filter.
 	private int MM_Filter = Texture.MM_LINEAR_LINEAR;
 	// The FM texture filter.
