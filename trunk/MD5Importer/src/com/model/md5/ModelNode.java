@@ -121,7 +121,7 @@ public class ModelNode extends Node{
 	 * with this ModelNode.
 	 * @param node The dependent ModelNode needs to be attached.
 	 */
-	public void attachWeakChild(ModelNode node) {
+	public void attachDependent(ModelNode node) {
 		node.dependent = true;
 		node.setJoints(this.joints);
 		this.attachChild(node);
