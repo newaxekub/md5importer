@@ -139,8 +139,7 @@ public class ModelNode extends Node{
 	 * @param joints The Joint array.
 	 */
 	public void setJoints(Joint[] joints) {
-		this.joints = new Joint[joints.length];
-		System.arraycopy(joints, 0, this.joints, 0, this.joints.length);
+		this.joints = joints;
 	}
 	
 	/**
@@ -148,8 +147,7 @@ public class ModelNode extends Node{
 	 * @param meshes The Mesh array.
 	 */
 	public void setMeshes(Mesh[] meshes) {
-		this.meshes = new Mesh[meshes.length];
-		System.arraycopy(meshes, 0, this.meshes, 0, this.meshes.length);
+		this.meshes = meshes;
 	}
 	
 	/**
