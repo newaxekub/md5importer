@@ -194,7 +194,7 @@ public class Mesh implements Serializable, Savable{
 	 * Process and setup the bounding volume of the TriangleBatch.
 	 */
 	private void processBounding() {
-		if(MD5Importer.getInstance().isOrientedBounding()) this.triangleBatch.setModelBound(new OrientedBoundingBox());
+		if(MD5Importer.getInstance().isOriented()) this.triangleBatch.setModelBound(new OrientedBoundingBox());
 		else this.triangleBatch.setModelBound(new BoundingBox());
 		this.triangleBatch.updateModelBound();
 		this.triangleBatch.updateGeometricState(0, true);
