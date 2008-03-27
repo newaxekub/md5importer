@@ -37,6 +37,7 @@ public class TestAnim extends Test{
 			e.printStackTrace();
 		}
 		body.attachChild(MD5Importer.getInstance().getModelNode(), "Shoulders");
+		MD5Importer.getInstance().cleanup();
 		return body;
 	}
 
