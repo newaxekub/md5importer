@@ -1,4 +1,4 @@
-#Instruction on checking out source code.
+Instruction on checking out source code.
 
 = Introduction =
 
@@ -21,3 +21,5 @@ http://md5importer.googlecode.com/files/Checkout2.JPG
 http://md5importer.googlecode.com/files/Buildpath1.JPG
 
 http://md5importer.googlecode.com/files/Buildpath2.JPG
+
+=== Enjoy MD5Importer ===
