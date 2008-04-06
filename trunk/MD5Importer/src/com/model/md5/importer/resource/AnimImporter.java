@@ -48,9 +48,8 @@ public class AnimImporter {
 	 * @throws IOException
 	 */
 	public JointAnimation loadAnim(String name) throws IOException {
-		this.animation = new JointAnimation(name);
 		this.processAnim();
-		this.constructAnimation();
+		this.constructAnimation(name);
 		return this.animation;
 	}
 	
@@ -233,11 +232,10 @@ public class AnimImporter {
 	
 	/**
 	 * Construct JointAnimation based on information read in.
+	 * @param name The name of the loaded animation.
 	 */
-	private void constructAnimation() {
-		this.animation.setJointIDs(this.idHierarchy);
-		this.animation.setFrames(this.frames);
-		this.animation.setFrameRate(this.frameRate);
+	private void constructAnimation(String name) {
+		this.animation = new JointAnimation(name, this.idHierarchy, this.frames, this.frameRate);
 		this.idHierarchy = null;
 		this.parentHierarchy = null;
 		this.frameflags = null;

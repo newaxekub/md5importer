@@ -30,6 +30,8 @@ public class JointAnimation implements Serializable, Savable{
 	private Frame[] frames;
 	// The frame rate.
 	private float frameRate;
+	// The frame time array.
+	private float[] frameTimes;
 	// The flag indicates the direction.
 	private boolean backward;
 	// The time elapsed since last change in frame.
@@ -38,6 +40,8 @@ public class JointAnimation implements Serializable, Savable{
 	private int prevFrame;
 	// The index of the p frame.
 	private int nextFrame;
+	// The flag indicates if one cycle is complete and the new cycle has not started.
+	private boolean complete;
 	// The sub animations.
 	private ArrayList<JointAnimation> animations;
 	
@@ -50,8 +54,18 @@ public class JointAnimation implements Serializable, Savable{
 	 * Constructor of MD5Animation.
 	 * @param name The name of this MD5Animation.
 	 */
-	public JointAnimation(String name) {
+	public JointAnimation(String name, String[] IDs, Frame[] frames, float framerate) {
 		this.name = name;
+		this.setJointIDs(IDs);
+		this.setFrames(frames);
+		this.setFrameRate(framerate);
+		this.frameTimes = new float[this.frames.length];
+		for(int i = 0; i < this.frameTimes.length; i++)
+		{
+			this.frameTimes[i] = (float)i * (1.0f/this.frameRate);
+		}
+		this.prevFrame = 0;
+		this.nextFrame = 1;
 	}
 
 	/**
@@ -61,7 +75,8 @@ public class JointAnimation implements Serializable, Savable{
 	 * @param speed The speed of the Controller.
 	 */
 	public void update(float time, int repeat, float speed) {
-		this.time = this.time + time * speed;
+		this.time = this.time + (time * speed);
+		if(this.complete) this.complete = false;
 		switch(repeat)
 		{
 			case Controller.RT_CLAMP:
@@ -95,6 +110,7 @@ public class JointAnimation implements Serializable, Savable{
 			{
 				this.nextFrame = this.frames.length - 1;
 				this.prevFrame = this.nextFrame;
+				this.complete = true;
 			}
 			this.time = 0.0f;
 		}
@@ -115,6 +131,7 @@ public class JointAnimation implements Serializable, Savable{
 					this.backward = true;
 					this.prevFrame = this.frames.length - 1;
 					this.nextFrame = this.prevFrame - 1;
+					this.complete = true;
 				}
 			}
 			else
@@ -126,6 +143,7 @@ public class JointAnimation implements Serializable, Savable{
 					this.backward = false;
 					this.prevFrame = 0;
 					this.nextFrame = this.prevFrame + 1;
+					this.complete = true;
 				}
 			}
 			this.time = 0.0f;
@@ -144,6 +162,7 @@ public class JointAnimation implements Serializable, Savable{
 			{
 				this.prevFrame = 0;
 				this.nextFrame = this.prevFrame + 1;
+				this.complete = true;
 			}
 			this.time = 0.0f;
 		}
@@ -160,11 +179,10 @@ public class JointAnimation implements Serializable, Savable{
 	
 	/**
 	 * Set the IDs of Joint of this animation.
-	 * @param joints The array of IDs of Joint.
+	 * @param IDs The array of IDs of Joint.
 	 */
-	public void setJointIDs(String[] joints) {
-		this.jointIDs = new String[joints.length];
-		System.arraycopy(joints, 0, this.jointIDs, 0, this.jointIDs.length);
+	public void setJointIDs(String[] IDs) {
+		this.jointIDs = IDs;
 	}
 	
 	/**
@@ -172,8 +190,7 @@ public class JointAnimation implements Serializable, Savable{
 	 * @param frames The array of Frame.
 	 */
 	public void setFrames(Frame[] frames) {
-		this.frames = new Frame[frames.length];
-		System.arraycopy(frames, 0, this.frames, 0, this.frames.length);
+		this.frames = frames;
 	}
 	
 	/**
@@ -184,6 +201,14 @@ public class JointAnimation implements Serializable, Savable{
 		this.frameRate = frameRate;
 	}
 	
+	/**
+	 * Retrieve the total time of one cycle of the JointAnimation.
+	 * @return The total time of one cycle of the JointAnimation.
+	 */
+	public float getAnimationTime() {
+		return (1.0f/this.frameRate)*(float)this.frames.length;
+	}
+
 	/**
 	 * Retrieve the previous Frame.
 	 * @return The previous Frame.
@@ -197,6 +222,7 @@ public class JointAnimation implements Serializable, Savable{
 	 * @return The starting time of the previous Frame.
 	 */
 	public float getPreviousTime() {
+		if(this.frameTimes != null) return this.frameTimes[this.prevFrame];
 		return ((float)this.prevFrame) * (1.0f/this.frameRate);
 	}
 
@@ -213,9 +239,18 @@ public class JointAnimation implements Serializable, Savable{
 	 * @return The starting time of the next Frame.
 	 */
 	public float getNextTime() {
+		if(this.frameTimes != null) return this.frameTimes[this.nextFrame];
 		return ((float)this.nextFrame) * (1.0f/this.frameRate);
 	}
-
+	
+	/**
+	 * Retrieve the current playing direction.
+	 * @return True if the JointAnimation is playing backward. False forward.
+	 */
+	public boolean getDirection() {
+		return this.backward;
+	}
+	
 	/**
 	 * Retrieve the IDs of Joint of this animation.
 	 * @return The array of IDs of Joint.
@@ -236,6 +271,15 @@ public class JointAnimation implements Serializable, Savable{
 	@SuppressWarnings("unchecked")
 	public Class getClassTag() {
 		return JointAnimation.class;
+	}
+	
+	/**
+	 * Check if one cycle of this animation is complete, but the new one has not
+	 * yet started.
+	 * @return True if one cycle is complete. False otherwise.
+	 */
+	public boolean isCyleComplete() {
+		return this.complete;
 	}
 
 	@Override

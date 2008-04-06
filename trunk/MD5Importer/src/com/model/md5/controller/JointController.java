@@ -75,38 +75,77 @@ public class JointController extends Controller{
 	 */
 	@Override
 	public void update(float time) {
-		this.time = this.time + time * this.getSpeed();
-		if(!this.fading)
-		{
-			if(this.activeAnimation != null)
+		this.updateTime(time);
+		if(!this.fading) this.updateNormal(time);
+		else this.updateFading();
+	}
+	
+	/**
+	 * Update the total time elapsed with given value based on the repeat type. The
+	 * time is reseted after one cycle of the animation is completed.
+	 * @param time The time between the last update and the current one.
+	 */
+	private void updateTime(float time) {
+		if(this.activeAnimation != null) {
+			switch(this.getRepeatType())
 			{
-				this.activeAnimation.update(time, this.getRepeatType(), this.getSpeed());
-			}
-			this.interpolation = this.getInterpolation();
-			for(int i = 0; i < this.joints.length; i++)
-			{
-				this.translation.interpolate(this.activeAnimation.getPreviousFrame().getTranslation(i),
-						this.activeAnimation.getNextFrame().getTranslation(i), this.interpolation);
-				this.orientation.slerp(this.activeAnimation.getPreviousFrame().getOrientation(i),
-						this.activeAnimation.getNextFrame().getOrientation(i), this.interpolation);
-				this.joints[i].updateTransform(this.translation, this.orientation);
+				case Controller.RT_WRAP:
+					this.time = this.time + (time * this.getSpeed());
+					if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
+					break;
+				case Controller.RT_CLAMP:
+					this.time = this.time + (time * this.getSpeed());
+					if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
+					break;
+				case Controller.RT_CYCLE:
+					if(!this.activeAnimation.getDirection()) this.time = this.time + (time * this.getSpeed());
+					else this.time = this.time - (time * this.getSpeed());
+					if(this.activeAnimation.isCyleComplete())
+					{
+						if(!this.activeAnimation.getDirection()) this.time = 0;
+						else this.time = this.activeAnimation.getAnimationTime();
+					}
+					break;
 			}
 		}
-		else
+	}
+	
+	/**
+	 * Update normal animating process.
+	 * @param time The time between the last update and the current one.
+	 */
+	private void updateNormal(float time) {
+		if(this.activeAnimation != null)
 		{
-			this.interpolation = this.getInterpolation();
-			for(int i = 0; i < this.joints.length; i++)
-			{
-				this.translation.interpolate(this.joints[i].getTranslation(),
-						this.activeAnimation.getPreviousFrame().getTranslation(i), this.interpolation);
-				this.orientation.slerp(this.joints[i].getOrientation(),
-						this.activeAnimation.getPreviousFrame().getOrientation(i), this.interpolation);
-				this.joints[i].updateTransform(this.translation, this.orientation);
-			}
-			if(this.interpolation >= 1)
-			{
-				this.fading = false;
-			}
+			this.activeAnimation.update(time, this.getRepeatType(), this.getSpeed());
+		}
+		this.interpolation = this.getInterpolation();
+		for(int i = 0; i < this.joints.length; i++)
+		{
+			this.translation.interpolate(this.activeAnimation.getPreviousFrame().getTranslation(i),
+					this.activeAnimation.getNextFrame().getTranslation(i), this.interpolation);
+			this.orientation.slerp(this.activeAnimation.getPreviousFrame().getOrientation(i),
+					this.activeAnimation.getNextFrame().getOrientation(i), this.interpolation);
+			this.joints[i].updateTransform(this.translation, this.orientation);
+		}
+	}
+	
+	/**
+	 * Update fading process.
+	 */
+	private void updateFading() {
+		this.interpolation = this.getInterpolation();
+		for(int i = 0; i < this.joints.length; i++)
+		{
+			this.translation.interpolate(this.joints[i].getTranslation(),
+					this.activeAnimation.getPreviousFrame().getTranslation(i), this.interpolation);
+			this.orientation.slerp(this.joints[i].getOrientation(),
+					this.activeAnimation.getPreviousFrame().getOrientation(i), this.interpolation);
+			this.joints[i].updateTransform(this.translation, this.orientation);
+		}
+		if(this.interpolation >= 1)
+		{
+			this.fading = false;
 		}
 	}
 	
@@ -121,6 +160,8 @@ public class JointController extends Controller{
 			float next = this.activeAnimation.getNextTime();
 			if(prev == next) return 0.0f;
 			float interpolation = (this.time - prev) / (next - prev);
+			// Negate if repeat type is cycle and it is playing backwards.
+			if(this.getRepeatType() == Controller.RT_CYCLE && this.activeAnimation.getDirection()) interpolation = -interpolation;
 			if(interpolation < 0.0f) return 0.0f;
 			else if (interpolation > 1.0f) return 1.0f;
 			else return interpolation;
