@@ -15,7 +15,7 @@ import com.model.md5.importer.MD5Importer;
 public class TestAnim extends Test{
 
 	public static void main(String[] args) {
-		new TestAnim().start();	
+		new TestAnim().start();
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class TestAnim extends Test{
 		URL bodyMesh = TestAnim.class.getClassLoader().getResource("com/model/md5/test/data/marine.md5mesh");
 		URL bodyAnim = TestAnim.class.getClassLoader().getResource("com/model/md5/test/data/marine.md5anim");
 		try {
-			MD5Importer.getInstance().load(bodyMesh, "ModelNode", bodyAnim, "BodyAnimation", Controller.RT_WRAP);
+			MD5Importer.getInstance().load(bodyMesh, "ModelNode", bodyAnim, "BodyAnimation", Controller.RT_CYCLE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -36,7 +36,7 @@ public class TestAnim extends Test{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		body.attachChild(MD5Importer.getInstance().getModelNode(), "Shoulders");
+		//body.attachChild(MD5Importer.getInstance().getModelNode(), "Shoulders");
 		MD5Importer.getInstance().cleanup();
 		return body;
 	}
@@ -45,6 +45,6 @@ public class TestAnim extends Test{
 	protected void setupGame() {
 		ModelNode node = (ModelNode)this.rootNode.getChild("ModelNode");
 		node.setLocalScale(1);
-		node.getController(0).setSpeed(1);
+		node.getController(0).setSpeed(0.15f);
 	}
 }
