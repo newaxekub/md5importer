@@ -66,7 +66,7 @@ public class Mesh extends TriMesh{
 	 * Generate the TriangleBatch of this Mesh.
 	 */
 	public void initializeMesh() {
-		this.setNormalsMode(Spatial.NormalsMode.UseProvided);
+		this.setNormalsMode(Spatial.NormalsMode.AlwaysNormalize);
 		this.processIndex();
 		this.processVertex();
 		this.processNormal();
