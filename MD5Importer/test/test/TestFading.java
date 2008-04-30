@@ -1,4 +1,4 @@
-package com.model.md5.test;
+package test;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,8 +19,8 @@ public class TestFading extends Test{
 
 	@Override
 	protected ModelNode loadModel() {
-		URL bodyMesh = TestFading.class.getClassLoader().getResource("com/model/md5/test/data/marine.md5mesh");
-		URL bodyAnim = TestFading.class.getClassLoader().getResource("com/model/md5/test/data/marine.md5anim");
+		URL bodyMesh = TestFading.class.getClassLoader().getResource("test/data/marine.md5mesh");
+		URL bodyAnim = TestFading.class.getClassLoader().getResource("test/data/marine.md5anim");
 		try {
 			MD5Importer.getInstance().load(bodyMesh, "ModelNode", bodyAnim, "BodyAnimation", Controller.RT_WRAP);
 		} catch (IOException e) {
@@ -28,8 +28,8 @@ public class TestFading extends Test{
 		}
 		ModelNode body = MD5Importer.getInstance().getModelNode();
 		MD5Importer.getInstance().cleanup();
-		URL headMesh = TestFading.class.getClassLoader().getResource("com/model/md5/test/data/sarge.md5mesh");
-		URL headAnim = TestFading.class.getClassLoader().getResource("com/model/md5/test/data/sarge.md5anim");
+		URL headMesh = TestFading.class.getClassLoader().getResource("test/data/sarge.md5mesh");
+		URL headAnim = TestFading.class.getClassLoader().getResource("test/data/sarge.md5anim");
 		try {
 			MD5Importer.getInstance().load(headMesh, "Head", headAnim, "HeadAnimation", Controller.RT_WRAP);
 		} catch (IOException e) {
@@ -58,7 +58,7 @@ public class TestFading extends Test{
 	}
 	
 	private void addFadingAnim() {
-		URL bodyAnim = TestFading.class.getClassLoader().getResource("com/model/md5/test/data/marine_stand.md5anim");
+		URL bodyAnim = TestFading.class.getClassLoader().getResource("test/data/marine_stand.md5anim");
 		try {
 			MD5Importer.getInstance().loadAnim(bodyAnim, "Stand");
 		} catch (IOException e) {

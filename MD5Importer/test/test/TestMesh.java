@@ -1,4 +1,4 @@
-package com.model.md5.test;
+package test;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,7 +18,7 @@ public class TestMesh extends Test{
 	}
 	
 	protected ModelNode loadModel() {
-		URL md5mesh = TestMesh.class.getClassLoader().getResource("com/model/md5/test/data/marine.md5mesh");
+		URL md5mesh = TestMesh.class.getClassLoader().getResource("test/data/marine.md5mesh");
 		try {
 			MD5Importer.getInstance().loadMesh(md5mesh, "ModelNode");
 		} catch (IOException e) {
@@ -26,7 +26,7 @@ public class TestMesh extends Test{
 		}
 		ModelNode body = MD5Importer.getInstance().getModelNode();
 		MD5Importer.getInstance().cleanup();
-		URL head = TestMesh.class.getClassLoader().getResource("com/model/md5/test/data/sarge.md5mesh");
+		URL head = TestMesh.class.getClassLoader().getResource("test/data/sarge.md5mesh");
 		try {
 			MD5Importer.getInstance().loadMesh(head, "Head");
 		} catch (IOException e) {

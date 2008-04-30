@@ -1,4 +1,4 @@
-package com.model.md5.test;
+package test;
 
 import java.net.URISyntaxException;
 
@@ -22,7 +22,7 @@ public abstract class Test extends SimpleGame{
 	protected void overrideTextureKey() {
 		try {
 			ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE,
-					new SimpleResourceLocator(TestMesh.class.getClassLoader().getResource("com/model/md5/test/data/texture/")));
+					new SimpleResourceLocator(TestMesh.class.getClassLoader().getResource("test/data/texture/")));
 		} catch (URISyntaxException e) {e.printStackTrace();}
 	}
 
