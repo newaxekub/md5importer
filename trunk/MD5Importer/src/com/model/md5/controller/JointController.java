@@ -160,8 +160,8 @@ public class JointController extends Controller{
 			float next = this.activeAnimation.getNextTime();
 			if(prev == next) return 0.0f;
 			float interpolation = (this.time - prev) / (next - prev);
-			// Negate if repeat type is cycle and it is playing backwards.
-			if(this.getRepeatType() == Controller.RT_CYCLE && this.activeAnimation.getDirection()) interpolation = -interpolation;
+			// Add 1 if it is playing backwards.
+			if(this.activeAnimation.getDirection()) interpolation = 1 + interpolation;
 			if(interpolation < 0.0f) return 0.0f;
 			else if (interpolation > 1.0f) return 1.0f;
 			else return interpolation;
