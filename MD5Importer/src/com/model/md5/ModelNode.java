@@ -13,27 +13,43 @@ import com.model.md5.resource.mesh.Joint;
 import com.model.md5.resource.mesh.Mesh;
 
 /**
- * ModelNode is the final product of MD5 loading process. It manages the loaded
- * Joint and Mesh. It is updated when Joint transforms are changed.
+ * <code>ModelNode</code> is the final product of MD5 loading process.
+ * <p>
+ * <code>ModelNode</code> maintains the loaded <code>Joint</code> and <code>Mesh</code>
+ * and update them accordingly.
  *
  * @author Yi Wang (Neakor)
+ * @version Modified date: 05-01-2008 15:52 EST
+ * @version 1.0.1
  */
 public class ModelNode extends Node{
-	// Serial version.
+	/**
+	 * Serial version.
+	 */
 	private static final long serialVersionUID = -2799207065296472869L;
-	// The flag indicates if an geometric update is needed.
+	/**
+	 * The flag indicates if an geometric update is needed.
+	 */
 	private boolean update;
-	// The flag indicates if model node shares skeleton with its parent.
+	/**
+	 * The flag indicates if model node shares skeleton with its parent.
+	 */
 	private boolean dependent;
-	// The joints of this model.
+	/**
+	 * The array of <code>Joint</code> of this <code>ModelNode</code>.
+	 */
 	private Joint[] joints;
-	// The meshes of this model.
+	/**
+	 * The array of <code>Mesh</code> of this <code>ModelNode</code>.
+	 */
 	private Mesh[] meshes;
-	// The skin of this model node.
+	/**
+	 * The <code>TriMesh</code> skin of this <code>ModelNode</code>.
+	 */
 	private TriMesh skin;
 	
 	/**
-	 * Default constructor of ModelNode.
+	 * Default constructor of <code>ModelNode</code>.
 	 */
 	public ModelNode() {
 		super();
@@ -41,8 +57,8 @@ public class ModelNode extends Node{
 	}
 	
 	/**
-	 * Constructor of MD5ModelNode.
-	 * @param name The name of this MD5ModelNode.
+	 * Constructor of <code>ModelNode</code>.
+	 * @param name The name of this <code>ModelNode</code>.
 	 */
 	public ModelNode(String name) {
 		super(name);
@@ -50,13 +66,12 @@ public class ModelNode extends Node{
 	}
 	
 	/**
-	 * Initialize the MD5ModelNode.
+	 * Initialize the <code>ModelNode</code>.
 	 */
 	public void initialize() {
 		if(!this.dependent) this.processJoints();
 		this.skin.clearBatches();
-		for(int i = 0; i < this.meshes.length; i++)
-		{
+		for(int i = 0; i < this.meshes.length; i++) {
 			this.meshes[i].generateBatch();
 			this.skin.addBatch(this.meshes[i].getTriangleBatch());
 		}
@@ -64,26 +79,23 @@ public class ModelNode extends Node{
 	}
 
 	/**
-	 * Process the Joint relative transformations.
+	 * Process the <code>Joint</code> relative transformations.
 	 */
 	private void processJoints() {
-		for(int i = 0; i < this.joints.length; i++)
-		{
+		for(int i = 0; i < this.joints.length; i++) {
 			this.joints[i].processRelative();
 		}
 	}
 
 	/**
-	 * Updates all the geometry information for the node.
+	 * Updates all the geometric information for the <code>ModelNode</code>.
 	 * @param time The frame time.
-	 * @param initiator True if this node started the update process.
+	 * @param initiator True if this <code>Node</code> started the update process.
 	 */
 	public void updateGeometricState(float time, boolean initiator) {
-		if(this.update)
-		{
+		if(this.update) {
 			if(!this.dependent) this.processJoints();
-			for(int i = 0; i < this.meshes.length; i++)
-			{
+			for(int i = 0; i < this.meshes.length; i++) {
 				this.meshes[i].updateBatch();
 			}
 			this.update = false;
@@ -92,23 +104,22 @@ public class ModelNode extends Node{
 	}
 	
 	/**
-	 * Attach the given ModelNode to the Joint with given ID.
-	 * @param node The ModelNode needs to be attached.
-	 * @param jointID The ID of the Joint to attach to.
+	 * Attach the given <code>ModelNode</code> to the <code>Joint</code> with given ID.
+	 * @param node The <code>ModelNode</code> needs to be attached.
+	 * @param jointID The ID of the <code>Joint</code> to attach to.
 	 */
 	public void attachChild(ModelNode node, String jointID) {
 		int jointIndex = -1;
-		for(int i = 0; i < this.joints.length && jointIndex == -1; i++)
-		{
+		for(int i = 0; i < this.joints.length && jointIndex == -1; i++) {
 			if(this.joints[i].getName().equals(jointID)) jointIndex = i;
 		}
 		this.attachChild(node, jointIndex);
 	}
 	
 	/**
-	 * Attach the given ModelNode to the Joint with given index.
-	 * @param node The ModelNode needs to be attached.
-	 * @param jointIndex The index of the Joint to attach to.
+	 * Attach the given <code>ModelNode</code> to the <code>Joint</code> with given index.
+	 * @param node The <code>ModelNode</code> needs to be attached.
+	 * @param jointIndex The index of the <code>Joint</code> to attach to.
 	 */
 	public void attachChild(ModelNode node, int jointIndex) {
 		this.getRootJoint(node).setNodeParent(jointIndex);
@@ -117,9 +128,9 @@ public class ModelNode extends Node{
 	}
 	
 	/**
-	 * Attach the given ModelNode as a dependent child which shares the skeleton
-	 * with this ModelNode.
-	 * @param node The dependent ModelNode needs to be attached.
+	 * Attach the given <code>ModelNode</code> as a dependent child which shares the
+	 * skeleton with this <code>ModelNode</code>.
+	 * @param node The dependent <code>ModelNode</code> needs to be attached.
 	 */
 	public void attachDependent(ModelNode node) {
 		node.dependent = true;
@@ -129,9 +140,9 @@ public class ModelNode extends Node{
 	}
 	
 	/**
-	 * Get the root Joint of the given ModelNode.
-	 * @param node The ModelNode to check from.
-	 * @return The root Joint object of given ModelNode.
+	 * Get the root <code>Joint</code> of the given <code>ModelNode</code>.
+	 * @param node The <code>ModelNode</code> to check from.
+	 * @return The root <code>Joint</code> object of given <code>ModelNode</code>.
 	 */
 	private Joint getRootJoint(ModelNode node) {
 		for(int i = 0; i < node.getJoints().length; i++)
@@ -142,49 +153,49 @@ public class ModelNode extends Node{
 	}
 	
 	/**
-	 * Notify the MD5ModelNode to update geometric information.
+	 * Notify the <code>ModelNode</code> to update its geometric information.
 	 */
 	public void flagUpdate() {
 		this.update = true;
 	}
 
 	/**
-	 * Set the Joint of this model node.
-	 * @param joints The Joint array.
+	 * Set the <code>Joint</code> of this <code>ModelNode</code>.
+	 * @param joints The <code>Joint</code> array.
 	 */
 	public void setJoints(Joint[] joints) {
 		this.joints = joints;
 	}
 	
 	/**
-	 * Set the Mesh of this model node.
-	 * @param meshes The Mesh array.
+	 * Set the <code>Mesh</code> of this <code>ModelNode</code>.
+	 * @param meshes The <code>Mesh</code> array.
 	 */
 	public void setMeshes(Mesh[] meshes) {
 		this.meshes = meshes;
 	}
 	
 	/**
-	 * Retrieve the Joint array of this node.
-	 * @return The array of Joint in this model node.
+	 * Retrieve the <code>Joint</code> array of this <code>ModelNode</code>.
+	 * @return The array of <code>Joint</code> of this <code>ModelNode</code>.
 	 */
 	public Joint[] getJoints() {
 		return this.joints;
 	}
 
 	/**
-	 * Retrieve the Joint with given index.
-	 * @param index The index number of the Joint.
-	 * @return The Joint object with given index number.
+	 * Retrieve the <code>Joint</code> with given index.
+	 * @param index The index number of the <code>Joint</code>.
+	 * @return The <code>Joint</code> instance with given index number.
 	 */
 	public Joint getJoint(int index) {
 		return this.joints[index];
 	}
 	
 	/**
-	 * Retrieve the Mesh with given index.
-	 * @param index The index number of the Mesh.
-	 * @return The Mesh object with given index number.
+	 * Retrieve the <code>Mesh</code> with given index.
+	 * @param index The index number of the <code>Mesh</code>.
+	 * @return The <code>Mesh</code> instance with given index number.
 	 */
 	public Mesh getMesh(int index) {
 		return this.meshes[index];
@@ -204,14 +215,12 @@ public class ModelNode extends Node{
 		Savable[] temp = null;
 		temp = ic.readSavableArray("Joints", null);
 		this.joints = new Joint[temp.length];
-		for(int i = 0; i < temp.length; i++)
-		{
+		for(int i = 0; i < temp.length; i++) {
 			this.joints[i] = (Joint)temp[i];
 		}
 		temp = ic.readSavableArray("Meshes", null);
 		this.meshes = new Mesh[temp.length];
-		for(int i = 0; i < temp.length; i++)
-		{
+		for(int i = 0; i < temp.length; i++) {
 			this.meshes[i] = (Mesh)temp[i];
 		}
 		this.skin = (TriMesh)ic.readSavable("Skin", null);
