@@ -11,52 +11,65 @@ import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
 
 /**
- * Weight maintains the information of a weight in md5mesh file. This class is
- * used internally by MD5Importer only.
+ * <code>Weight</code> represents a weight in md5mesh file.
+ * <p>
+ * <code>Weight</code> maintains the index number of the <code>Joint</code> which it
+ * affects, a fixed weight value and a fixed position vector.
+ * <p>
+ * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
+ * @version Modified date: 05-02-2008 18:05 EST
+ * @version 1.0.1
  */
 public class Weight implements Serializable, Savable{
-	// Serial version.
+	/**
+	 * Serial version.
+	 */
 	private static final long serialVersionUID = 4719214599414606855L;
-	// The index of the joint this weight applies to.
+	/**
+	 * The index of the <code>Joint</code> this <code>Weight</code> affects.
+	 */
 	private int jointIndex;
-	// The value of this weight.
+	/**
+	 * The fixed weight value of this <code>Weight</code>.
+	 */
 	private float value;
-	// The position of this weight.
+	/**
+	 * The position vector of this <code>Weight</code>.
+	 */
 	private Vector3f position;
 	
 	/**
-	 * Default constructor of Weight.
+	 * Default constructor of <code>Weight</code>.
 	 */
 	public Weight() {
 		this.position = new Vector3f();
 	}
 	
 	/**
-	 * Set the index of the joint this weight applies to.
-	 * @param index The index of the joint this weight applies to.
+	 * Set the index of the <code>Joint</code> which this <code>Weight</code> affects.
+	 * @param index The index of the <code>Joint</code>.
 	 */
 	public void setJointIndex(int index) {
 		this.jointIndex = index;
 	}
 	
 	/**
-	 * Set the value of this Weight.
-	 * @param value The value of this Weight.
+	 * Set the weight value of this <code>Weight</code>.
+	 * @param value The weight value of this <code>Weight</code>.
 	 */
 	public void setWeightValue(float value) {
 		this.value = value;
 	}
 	
 	/**
-	 * Set the position of this Weight.
+	 * Set the fixedposition of this <code>Weight</code>.
 	 * @param index The index of position value to set.
 	 * @param value The float value to be set.
 	 */
 	public void setPosition(int index, float value) {
-		switch(index)
-		{
+		switch(index) {
 			case 0:	this.position.setX(value); break;
 			case 1: this.position.setY(value); break;
 			case 2: this.position.setZ(value); break;
@@ -65,15 +78,15 @@ public class Weight implements Serializable, Savable{
 	}
 	
 	/**
-	 * Retrieve the index of the Joint this Weight affects.
-	 * @return The index number of the Joint.
+	 * Retrieve the index of the <code>Joint</code> this <code>Weight</code> affects.
+	 * @return The index number of the <code>Joint</code>.
 	 */
 	public int getJointIndex() {
 		return this.jointIndex;
 	}
 	
 	/**
-	 * Retrieve the weight value of this Weight.
+	 * Retrieve the fixed weight value of this <code>Weight</code>.
 	 * @return The float weight value.
 	 */
 	public float getWeightValue() {
@@ -81,8 +94,8 @@ public class Weight implements Serializable, Savable{
 	}
 	
 	/**
-	 * Retrieve the position of this Weight.
-	 * @return The Vector3f position fo this Weight.
+	 * Retrieve the fixed position of this <code>Weight</code>.
+	 * @return The <code>Vector3f</code> position of this <code>Weight</code>.
 	 */
 	public Vector3f getPosition() {
 		return this.position;

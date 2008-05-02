@@ -16,37 +16,59 @@ import com.jme.util.export.Savable;
 import com.model.md5.ModelNode;
 
 /**
- * Joint maintains the information of a joint in md5mesh file. This class is
- * used internally by MD5Importer only.
+ * <code>Joint</code> represents a joint in md5mesh file.
+ * <p>
+ * <code>Joint</code> maintains its own transform information and the index number of
+ * its parent <code>Joint</code>.
+ * <p>
+ * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
+ * @version Modified date: 05-02-2008 16:20 EST
+ * @version 1.0.1
  */
 public class Joint implements Serializable, Savable{
-	// Serial version.
+	/**
+	 * Serial version.
+	 */
 	private static final long serialVersionUID = -926371530130383637L;
-	// The model node this joint belongs.
+	/**
+	 * The <code>ModelNode</code> this <code>Joint</code> belongs.
+	 */
 	private ModelNode modelNode;
-	// The name of the joint.
+	/**
+	 * The name ID of the <code>Joint</code>.
+	 */
 	private String name;
-	// The parent joint index.
+	/**
+	 * The parent index of this <code>Joint</code> in the local <code>ModelNode</code>.
+	 */
 	private int parent;
-	// The parent joint index of this joint in the parent ModelNode.
+	/**
+	 * The parent index of this <code>Joint</code> in the parent <code>ModelNode</code>.
+	 */
 	private int nodeParent;
-	// The translation transform.
+	/**
+	 * The translation value.
+	 */
 	private Vector3f translation;
-	// The orientation transform.
+	/**
+	 * The orientation value.
+	 */
 	private Quaternion orientation;
-	// The relative transform matrix of this joint.
+	/**
+	 * The relative <code>TransformMatrix</code> of this <code>Joint</code> to its parent.
+	 */
 	private TransformMatrix transform;
 
 	/**
-	 * Default constructor of Joint.
+	 * Default constructor of <code>Joint</code>.
 	 */
 	public Joint() {}
 	
 	/**
-	 * Constructor of Joint.
-	 * @param name
+	 * Constructor of <code>Joint</code>.
+	 * @param name The name ID of the <code>Joint</code>.
 	 */
 	public Joint(String name, ModelNode modelNode) {
 		this.name = name;
@@ -59,9 +81,9 @@ public class Joint implements Serializable, Savable{
 	}
 	
 	/**
-	 * Update the translation and orientation of this Joint.
-	 * @param translation The new Vector3f translation of this Joint.
-	 * @param orientation The new Quaternion orientation of this Joint.
+	 * Update the translation and orientation of this <code>Joint</code>.
+	 * @param translation The new <code>Vector3f</code> translation value.
+	 * @param orientation The new </code>Quaternion</code> orientation value.
 	 */
 	public void updateTransform(Vector3f translation, Quaternion orientation) {
 		this.translation.set(translation);
@@ -70,14 +92,13 @@ public class Joint implements Serializable, Savable{
 	}
 	
 	/**
-	 * Process the translation and orientation of this Joint This process has to
-	 * be started from the bottom of Joint tree up to the root Joint.
-	 * @param parentTrans The parent Joint Vector3f translation.
-	 * @param parentOrien The parent Joint Quaternion orientation.
+	 * Process the translation and orientation of this <code>Joint</code> This process
+	 * has to be started from the bottom of skeleton tree up to the root <code>Joint</code>.
+	 * @param parentTrans The parent <code>Vector3f</code> translation value.
+	 * @param parentOrien The parent <code>Quaternion</code> orientation value.
 	 */
 	public void processTransform(Vector3f parentTrans, Quaternion parentOrien) {
-		if(parentTrans == null || parentOrien == null)
-		{
+		if(parentTrans == null || parentOrien == null) {
 			parentOrien = new Quaternion();
 			parentTrans = new Vector3f();
 		}
@@ -87,7 +108,7 @@ public class Joint implements Serializable, Savable{
 	}
 	
 	/**
-	 * Process the relative transforms of this Joint.
+	 * Process the relative transforms of this <code>Joint</code>.
 	 */
 	public void processRelative() {
 		this.transform.loadIdentity();
@@ -97,13 +118,13 @@ public class Joint implements Serializable, Savable{
 	}
 	
 	/**
-	 * Get the base transform based on parent Joint of this Joint in the parent ModelNode.
-	 * @return The base TransformMatrix.
+	 * Get the base transform of the parent <code>Joint</code> in either the parent
+	 * <code>ModelNode</code> or the local <code>ModelNode</code>.
+	 * @return The base <code>TransformMatrix</code>.
 	 */
 	private TransformMatrix getBaseTransform() {
 		if(this.nodeParent < 0) return new TransformMatrix();
-		else
-		{
+		else {
 			TransformMatrix matrix = new TransformMatrix();
 			matrix.combineWithParent(((ModelNode)this.modelNode.getParent()).getJoint(this.nodeParent).getTransform());
 			return matrix;
@@ -111,16 +132,16 @@ public class Joint implements Serializable, Savable{
 	}
 	
 	/**
-	 * Set the parent Joint index of this Joint.
-	 * @param parent The index of the parent Joint.
+	 * Set the parent index of this <code>Joint</code>.
+	 * @param parent The index of the parent <code>Joint</code>.
 	 */
 	public void setParent(int parent) {
 		this.parent = parent;
 	}
 	
 	/**
-	 * Set the parent Joint index of this Joint in the parent ModelNode.
-	 * @param outerParent The index of the parent Joint.
+	 * Set the parent index of this <code>Joint</code> in the parent <code>ModelNode</code>.
+	 * @param outerParent The index of the parent <code>Joint</code>.
 	 */
 	public void setNodeParent(int outerParent) {
 		this.nodeParent = outerParent;
@@ -132,8 +153,7 @@ public class Joint implements Serializable, Savable{
 	 * @param value The actual value to be set.
 	 */
 	public void setTransform(int index, float value) {
-		switch(index)
-		{
+		switch(index) {
 			case 0: this.translation.setX(value); break;
 			case 1: this.translation.setY(value); break;
 			case 2: this.translation.setZ(value); break;
@@ -157,40 +177,40 @@ public class Joint implements Serializable, Savable{
 	}
 	
 	/**
-	 * Retrieve the translation of this Joint read from MD5 file.
-	 * @return The Vector3f translation read directly from MD5 file.
+	 * Retrieve the translation of this <code>Joint</code> read from MD5 file.
+	 * @return The <code>Vector3f</code> translation read directly from MD5 file.
 	 */
 	public Vector3f getTranslation() {
 		return this.translation;
 	}
 	
 	/**
-	 * Retrieve the orientation of this Joint read from MD5 file.
-	 * @return The Quaternion orientation read directly from MD5 file.
+	 * Retrieve the orientation of this <code>Joint</code> read from MD5 file.
+	 * @return The <code>Quaternion</code> orientation read directly from MD5 file.
 	 */
 	public Quaternion getOrientation() {
 		return this.orientation;
 	}
 
 	/**
-	 * Retrieve the relative TransformMatrix of this Joint.
-	 * @return The relative TransformMatrix of this Joint.
+	 * Retrieve the relative <code>TransformMatrix</code> of this <code>Joint</code>.
+	 * @return The relative <code>TransformMatrix</code> of this <code>Joint</code>.
 	 */
 	public TransformMatrix getTransform() {
 		return this.transform;
 	}
 	
 	/**
-	 * Retrieve the index of the parent Joint.
-	 * @return The index of the parent Joint.
+	 * Retrieve the index number of the parent <code>Joint</code>.
+	 * @return The index number of the parent <code>Joint</code>.
 	 */
 	public int getParent() {
 		return this.parent;
 	}
 	
 	/**
-	 * Retrieve the name of this Joint.
-	 * @return The name of this Joint.
+	 * Retrieve the name ID of this <code>Joint</code>.
+	 * @return The name ID of this <code>Joint</code>.
 	 */
 	public String getName() {
 		return this.name;
