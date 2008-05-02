@@ -54,11 +54,11 @@ public class MD5Importer {
 	 */
 	private final String[] extensions = {".jpg", ".tga", ".png", ".dds", ".gif", ".bmp"};
 	/**
-	 * The magnification (MipMap) <code>Texture</code> filter.
+	 * The minification (MM) <code>Texture</code> filter.
 	 */
 	private int MM_Filter = Texture.MM_LINEAR_LINEAR;
 	/**
-	 * The minification (FM) <code>Texture</code> filter.
+	 * The magnification (FM) <code>Texture</code> filter.
 	 */
 	private int FM_Filter = Texture.FM_LINEAR;
 	/**
@@ -166,8 +166,8 @@ public class MD5Importer {
 	}
 	
 	/**
-	 * Set the magnification (MipMap) <code>Texture</code> filter.
-	 * @param filter The magnification (MipMap <code>Texture</code> filter.
+	 * Set the minification (MM) <code>Texture</code> filter.
+	 * @param filter The minification (MM) <code>Texture</code> filter.
 	 */
 	public void setMMFilter(int filter) {
 		if(filter == Texture.MM_LINEAR || filter == Texture.MM_LINEAR_LINEAR || filter == Texture.MM_LINEAR_NEAREST ||
@@ -177,10 +177,10 @@ public class MD5Importer {
 		}
 		else MD5Importer.logger.info("Invalid MM_Texture filter. Default bi-linear filter used.");
 	}
-
+	
 	/**
-	 * Set the minification (FM) <code>Texture</code> filter.
-	 * @param filter The FM <code>Texture</code> filter.
+	 * Set the magnification (FM) <code>Texture</code> filter.
+	 * @param filter The magnification (FM) <code>Texture</code> filter.
 	 */
 	public void setFMFilter(int filter) {
 		if(filter == Texture.FM_LINEAR || filter == Texture.FM_NEAREST)	this.FM_Filter = filter;
@@ -213,16 +213,16 @@ public class MD5Importer {
 	}
 
 	/**
-	 * Retrieve the magnification (MipMap) <code>Texture</code> filter.
-	 * @return The magnification (MipMap) <code>Texture</code> filter.
+	 * Retrieve the minification (MM) <code>Texture</code> filter.
+	 * @return The minification (MM) <code>Texture</code> filter.
 	 */
 	public int getMMFilter() {
 		return this.MM_Filter;
 	}
-
+	
 	/**
-	 * Retrieve the minification (FM) <code>Texture</code> filter.
-	 * @return The minification (FM) <code>Texture</code> filter.
+	 * Retrieve the magnification (FM) <code>Texture</code> filter.
+	 * @return The magnification (FM) <code>Texture</code> filter.
 	 */
 	public int getFMFilter() {
 		return this.FM_Filter;
