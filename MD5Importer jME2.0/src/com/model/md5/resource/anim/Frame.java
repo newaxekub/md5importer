@@ -13,61 +13,75 @@ import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
 
 /**
- * Frame maintains the information of a frame in md5anim file. This class is
- * used internally by MD5Importer only.
+ * <code>Frame</code> represents a frame in the md5anim file.
+ * <p>
+ * <code>Frame</code> maintains translation and orientation information of each
+ * <code>Joint</code> in the animation of the current frame.
+ * <p>
+ * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
+ * @version Modified date: 05-02-2008 19:17 EST
+ * @version 1.0.0
  */
 public class Frame implements Serializable, Savable{
-	// Serial version.
+	/**
+	 * Serial version.
+	 */
 	private static final long serialVersionUID = 8891271219195292580L;
-	// The flag indicates if this frame is a baseframe.
+	/**
+	 * The flag indicates if this <code>Frame</code> is a baseframe.
+	 */
 	private boolean baseframe;
-	// The animation bone parent hierarchy.
+	/**
+	 * The array of parent indices for each <code>Joint</code>.
+	 */
 	private int[] parents;
-	// The translations of joints in this frame.
+	/**
+	 * The translations of <code>Joint</code> of this <code>Frame</code>.
+	 */
 	private Vector3f[] translations;
-	// The orientations of joints in this frame.
+	/**
+	 * The orientations of <code>Joint</code> of this <code>Frame</code>.
+	 */
 	private Quaternion[] orientations;
 	
 	/**
-	 * Default constructor of Frame.
+	 * Default constructor of <code>Frame</code>.
 	 */
 	public Frame() {}
 	
 	/**
-	 * Constructor of Frame.
-	 * @param baseframe True if this frame is a baseframe. False otherwise.
-	 * @param numJoints The total number of Joints in the animation.
+	 * Constructor of <code>Frame</code>.
+	 * @param baseframe True if this <code>Frame</code> is a baseframe. False otherwise.
+	 * @param numJoints The total number of <code>Joint</code> in the animation.
 	 */
 	public Frame(boolean baseframe, int numJoints) {
 		this.baseframe = baseframe;
 		this.translations = new Vector3f[numJoints];
 		this.orientations = new Quaternion[numJoints];
-		for(int i = 0; i < this.translations.length && i < this.orientations.length; i++)
-		{
+		for(int i = 0; i < this.translations.length && i < this.orientations.length; i++) {
 			this.translations[i] = new Vector3f();
 			this.orientations[i] = new Quaternion();
 		}
 	}
 	
 	/**
-	 * Set the bone hierarchy of the Frame.
-	 * @param parents The integer array of bone hierarchy.
+	 * Set the <code>Frame</code> hierarchy of the <code>Frame</code>.
+	 * @param parents The integer array of <code>Joint</code> hierarchy.
 	 */
 	public void setParents(int[] parents) {
 		this.parents = parents;
 	}
 	
 	/**
-	 * Set the transform of this frame.
-	 * @param jointIndex The index of the joint.
+	 * Set the transform of this <code>Frame</code>.
+	 * @param jointIndex The index of the <code>Joint</code>.
 	 * @param index The transform index number.
 	 * @param value The transform value to be set.
 	 */
 	public void setTransform(int jointIndex, int index, float value) {
-		switch(index)
-		{
+		switch(index) {
 			case 0:
 				this.translations[jointIndex].x = value;
 				break;
@@ -93,8 +107,8 @@ public class Frame implements Serializable, Savable{
 	}
 	
 	/**
-	 * Process the Quaternion orientation to finalize it.
-	 * @param jointIndex The index of the joint.
+	 * Process the <code>Quaternion</code> orientation to finalize it.
+	 * @param jointIndex The index of the <code>Joint</code>.
 	 * @param raw The raw orientation value.
 	 */
 	private void processOrientation(int jointIndex, Quaternion raw) {
@@ -104,8 +118,8 @@ public class Frame implements Serializable, Savable{
 	}
 	
 	/**
-	 * Retrieve the index of the parent Joint of the Joint with given index.
-	 * @return The index of the parent Joint.
+	 * Retrieve the parent index of the <code>Joint</code> with given index.
+	 * @return The index of the parent <code>Joint</code>.
 	 */
 	public int getParent(int index) {
 		return this.parents[index];
@@ -113,13 +127,12 @@ public class Frame implements Serializable, Savable{
 	
 	/**
 	 * Retrieve the transform value with given indices.
-	 * @param jointIndex The joint index.
+	 * @param jointIndex The <code>Joint</code> index.
 	 * @param transIndex The transform index.
 	 * @return The transform value.
 	 */
 	public float getTransformValue(int jointIndex, int transIndex) {
-		switch(transIndex)
-		{
+		switch(transIndex) {
 			case 0:
 				return this.translations[jointIndex].x;
 			case 1:
@@ -138,18 +151,18 @@ public class Frame implements Serializable, Savable{
 	}
 	
 	/**
-	 * Retrieve the Vector3f translation value with given joint index.
-	 * @param jointIndex The joint number.
-	 * @return The Vector3f translation value.
+	 * Retrieve the translation of the <code>Joint</code> with given index.
+	 * @param jointIndex The <code>Joint</code> index number.
+	 * @return The <code>Vector3f</code> translation value.
 	 */
 	public Vector3f getTranslation(int jointIndex) {
 		return this.translations[jointIndex];
 	}
 	
 	/**
-	 * Retrieve the Quaternion orientation value with given joint index.
-	 * @param jointIndex The joint number.
-	 * @return The Quaternion orientation value.
+	 * Retrieve the orientation of the <code>Joint</code> with given index.
+	 * @param jointIndex The <code>Joint</code> number.
+	 * @return The <code>Quaternion</code> orientation value.
 	 */
 	public Quaternion getOrientation(int jointIndex) {
 		return this.orientations[jointIndex];
@@ -169,14 +182,12 @@ public class Frame implements Serializable, Savable{
 		this.parents = ic.readIntArray("Parents", null);
 		temp = ic.readSavableArray("Translations", null);
 		this.translations = new Vector3f[temp.length];
-		for(int i = 0; i < temp.length; i++)
-		{
+		for(int i = 0; i < temp.length; i++) {
 			this.translations[i] = (Vector3f)temp[i];
 		}
 		temp = ic.readSavableArray("Orientations", null);
 		this.orientations = new Quaternion[temp.length];
-		for(int i = 0; i < temp.length; i++)
-		{
+		for(int i = 0; i < temp.length; i++) {
 			this.orientations[i] = (Quaternion)temp[i];
 		}
 	}
