@@ -24,8 +24,8 @@ import com.model.md5.resource.mesh.Mesh;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 17:52 EST
- * @version 1.0.1
+ * @version Modified date: 05-02-2008 19:34 EST
+ * @version 1.0.0
  */
 public class Triangle implements Serializable, Savable{
 	/**
