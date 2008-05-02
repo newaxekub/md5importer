@@ -209,7 +209,7 @@ public class Mesh implements Serializable, Savable{
 	}
 
 	/**
-	 * Set the texture file name of this mesh.
+	 * Set the texture file name of this <code>Mesh</code>.
 	 * @param texture The texture file name without extension.
 	 */
 	public void setTexture(String texture) {
