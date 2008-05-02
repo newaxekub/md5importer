@@ -13,27 +13,42 @@ import com.jme.util.export.Savable;
 import com.model.md5.resource.mesh.Mesh;
 
 /**
- * Triangle maintains the information of a tri in md5mesh file. This class is
- * used internally by MD5Importer only.
+ * <code>Triangle</code> represents a tri in md5mesh file.
+ * <p>
+ * <code>Triangle</code> maintains three indices of <code>Vertex</code> that define
+ * this <code>Triangle</code>.
+ * <p>
+ * <code>Triangle</code> is responsible for calculating the normal vector for each
+ * <code>Vertex</code>.
+ * <p>
+ * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
+ * @version Modified date: 05-02-2008 17:52 EST
+ * @version 1.0.1
  */
 public class Triangle implements Serializable, Savable{
-	// Serial version.
+	/**
+	 * Serial version.
+	 */
 	private static final long serialVersionUID = -6234457193386375719L;
-	// The mesh this triangle belongs to.
+	/**
+	 * The <code>Mesh</code> this <code>Triangle</code> belongs to.
+	 */
 	private Mesh mesh;
-	// The vertex indices array.
+	/**
+	 * The array of <code>Vertex</code> index.
+	 */
 	private int[] vertexIndices;
 	
 	/**
-	 * Default constructor of Triangle.
+	 * Default constructor of <code>Triangle</code>.
 	 */
 	public Triangle() {}
 	
 	/**
-	 * Constructor of Triangle.
-	 * @param mesh The Mesh this Vertex belongs to.
+	 * Constructor of <code>Triangle</code>.
+	 * @param mesh The <code>Mesh</code> this <code>Triangle</code> belongs to.
 	 */
 	public Triangle(Mesh mesh) {
 		this.mesh = mesh;
@@ -41,7 +56,8 @@ public class Triangle implements Serializable, Savable{
 	}
 	
 	/**
-	 * Process the normal of vertices and store the normal values in Vertex.
+	 * Process the normal of vertices and store the normal values in the
+	 * <code>Vertex</code> instances.
 	 */
 	public void processNormal() {
 		Vector3f temp1 = new Vector3f();
@@ -59,18 +75,18 @@ public class Triangle implements Serializable, Savable{
 	}
 	
 	/**
-	 * Set the index of vertex of this Triangle.
-	 * @param index The index of the vertex indices array.
-	 * @param vertex The index of the vertex to be set.
+	 * Set the index of one <code>Vertex</code> in this <code>Triangle</code>.
+	 * @param index The index of the <code>Vertex</code> in the indices array.
+	 * @param vertex The index of the <code>Vertex</code> to be set.
 	 */
 	public void setVertexIndex(int index, int vertex) {
 		this.vertexIndices[index] = vertex;
 	}
 	
 	/**
-	 * Retrieve the index of the Vertex in this Triangle with given index.
-	 * @param index The index number of the Vertex.
-	 * @return The index of the Vertex in this Triangle with given index.
+	 * Retrieve the <code>Vertex</code> index with given array index.
+	 * @param index The array index number in the <code>Triangle</code>.
+	 * @return The index number of the <code>Vertex</code> with given array index.
 	 */
 	public int getVertexIndex(int index) {
 		return this.vertexIndices[index];
