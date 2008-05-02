@@ -1,19 +1,26 @@
 package com.model.md5.exception;
 
 /**
- * InvalidAnimationException is thrown when an invalid animation is being
- * loaded into the previously loaded skeletal system.
+ * <code>InvalidAnimationException</code> is thrown when an invalid
+ * <code>JointAnimation</code> is being set to a previously loaded skeletal
+ * system.
  * 
  * @author Yi Wang (Neakor)
+ * @version Modified date: 05-01-2008 17:36 EST
+ * @version 1.0.1
  */
 public class InvalidAnimationException extends RuntimeException{
-	// Serial version.
+	/**
+	 * Serial version.
+	 */
 	private static final long serialVersionUID = -7115839715066462208L;
-	// Message.
+	/**
+	 * Text message.
+	 */
 	private static final String message = "Animation does not match skeleton system.";
 
 	/**
-	 * Constructor of InvalidAnimationException.
+	 * Constructor of <code>InvalidAnimationException</code>.
 	 */
 	public InvalidAnimationException() {
 		super(InvalidAnimationException.message);
