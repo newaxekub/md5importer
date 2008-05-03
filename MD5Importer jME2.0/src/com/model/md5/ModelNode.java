@@ -19,7 +19,7 @@ import com.model.md5.resource.mesh.Mesh;
  *
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-02-2008 19:21 EST
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class ModelNode extends Node{
 	/**

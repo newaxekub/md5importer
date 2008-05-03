@@ -24,8 +24,8 @@ import com.model.md5.resource.mesh.Mesh;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 19:34 EST
- * @version 1.0.0
+ * @version Modified date: 05-03-2008 18:56 EST
+ * @version 1.0.1
  */
 public class Vertex implements Serializable, Savable{
 	/**
@@ -56,12 +56,17 @@ public class Vertex implements Serializable, Savable{
 	 * The position of this <code>Vertex</code>.
 	 */
 	private Vector3f position;
+	/**
+	 * The temporary <code>Vector3f</code> for position calculation.
+	 */
+	private final Vector3f temp;
 	
 	/**
 	 * Default constructor of <code>Vertex</code>.
 	 */
 	public Vertex() {
 		this.position = new Vector3f();
+		this.temp = new Vector3f();
 	}
 	
 	/**
@@ -71,6 +76,7 @@ public class Vertex implements Serializable, Savable{
 	public Vertex(Mesh mesh) {
 		this.mesh = mesh;
 		this.position = new Vector3f();
+		this.temp = new Vector3f();
 	}
 	
 	/**
@@ -78,12 +84,11 @@ public class Vertex implements Serializable, Savable{
 	 */
 	public void processPosition() {
 		this.position.zero();
-		Vector3f temp = new Vector3f();
 		for(int i = 0; i < this.weightIndices.length; i++) {
-			temp.set(this.mesh.getWeight(this.weightIndices[i]).getPosition());
-			this.mesh.getModelNode().getJoint(this.mesh.getWeight(this.weightIndices[i]).getJointIndex()).getTransform().multPoint(temp);
-			temp.multLocal(this.mesh.getWeight(this.weightIndices[i]).getWeightValue());
-			this.position.addLocal(temp);
+			this.temp.set(this.mesh.getWeight(this.weightIndices[i]).getPosition());
+			this.mesh.getModelNode().getJoint(this.mesh.getWeight(this.weightIndices[i]).getJointIndex()).getTransform().multPoint(this.temp);
+			this.temp.multLocal(this.mesh.getWeight(this.weightIndices[i]).getWeightValue());
+			this.position.addLocal(this.temp);
 		}
 	}
 	

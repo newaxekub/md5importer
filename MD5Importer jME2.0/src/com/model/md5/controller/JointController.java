@@ -1,6 +1,8 @@
 package com.model.md5.controller;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -24,8 +26,8 @@ import com.model.md5.resource.mesh.Joint;
  * then updates the skeleton with interpolated translation and orientation values.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 18:49 EST
- * @version 1.0.0
+ * @version Modified date: 05-03-2008 18:57 EST
+ * @version 1.0.1
  */
 public class JointController extends Controller{
 	/**
@@ -264,6 +266,22 @@ public class JointController extends Controller{
 		this.fading = true;
 		this.fadingTime = fadingTime;
 		this.time = 0;
+	}
+	
+	/**
+	 * Retrieve the current active <code>JointAnimation</code>.
+	 * @return The current active <code>JointAnimation</code>.
+	 */
+	public JointAnimation getActiveAnimation() {
+		return this.activeAnimation;
+	}
+
+	/**
+	 * Retrieve all the <code>JointAnimation</code> assigned to this <code>JointController</code>.
+	 * @return Unmodifiable <code>Collection</code> of <code>JointAnimation</code>.
+	 */
+	public Collection<JointAnimation> getAnimations() {
+		return Collections.unmodifiableCollection(this.animations.values());
 	}
 	
 	@Override
