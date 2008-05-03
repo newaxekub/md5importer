@@ -21,7 +21,7 @@ import com.model.md5.resource.anim.Frame;
  *
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-02-2008 18:47 EST
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class JointAnimation implements Serializable, Savable{
 	/**
