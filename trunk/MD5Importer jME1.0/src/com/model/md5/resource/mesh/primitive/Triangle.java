@@ -24,8 +24,8 @@ import com.model.md5.resource.mesh.Mesh;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 17:52 EST
- * @version 1.0.1
+ * @version Modified date: 05-03-2008 18:45 EST
+ * @version 1.0.2
  */
 public class Triangle implements Serializable, Savable{
 	/**
@@ -40,11 +40,22 @@ public class Triangle implements Serializable, Savable{
 	 * The array of <code>Vertex</code> index.
 	 */
 	private int[] vertexIndices;
+	/**
+	 * The first temporary <code>Vector3f</code> for normal calculation.
+	 */
+	private final Vector3f temp1;
+	/**
+	 * The second temporary <code>Vector3f</code> for normal calculation.
+	 */
+	private final Vector3f temp2;
 	
 	/**
 	 * Default constructor of <code>Triangle</code>.
 	 */
-	public Triangle() {}
+	public Triangle() {
+		this.temp1 = new Vector3f();
+		this.temp2 = new Vector3f();
+	}
 	
 	/**
 	 * Constructor of <code>Triangle</code>.
@@ -53,6 +64,8 @@ public class Triangle implements Serializable, Savable{
 	public Triangle(Mesh mesh) {
 		this.mesh = mesh;
 		this.vertexIndices = new int[3];
+		this.temp1 = new Vector3f();
+		this.temp2 = new Vector3f();
 	}
 	
 	/**
@@ -60,18 +73,16 @@ public class Triangle implements Serializable, Savable{
 	 * <code>Vertex</code> instances.
 	 */
 	public void processNormal() {
-		Vector3f temp1 = new Vector3f();
-		Vector3f temp2 = new Vector3f();
 		Vertex vert1 = this.mesh.getVertex(this.vertexIndices[0]);
 		Vertex vert2 = this.mesh.getVertex(this.vertexIndices[1]);
 		Vertex vert3 = this.mesh.getVertex(this.vertexIndices[2]);
-		temp1.set(vert2.getPosition()).subtractLocal(vert1.getPosition());
-		temp2.set(vert3.getPosition()).subtractLocal(vert2.getPosition());
-		temp1.crossLocal(temp2);
-		temp1.normalizeLocal();
-		vert1.setNormal(temp2.set(temp1).multLocal(1.0f/(float)vert1.getUsedTimes()));
-		vert2.setNormal(temp2.set(temp1).multLocal(1.0f/(float)vert2.getUsedTimes()));
-		vert3.setNormal(temp1.multLocal(1.0f/(float)vert3.getUsedTimes()));
+		this.temp1.set(vert2.getPosition()).subtractLocal(vert1.getPosition());
+		this.temp2.set(vert3.getPosition()).subtractLocal(vert2.getPosition());
+		this.temp1.crossLocal(this.temp2);
+		this.temp1.normalizeLocal();
+		vert1.setNormal(this.temp2.set(this.temp1).multLocal(1.0f/(float)vert1.getUsedTimes()));
+		vert2.setNormal(this.temp2.set(this.temp1).multLocal(1.0f/(float)vert2.getUsedTimes()));
+		vert3.setNormal(this.temp1.multLocal(1.0f/(float)vert3.getUsedTimes()));
 	}
 	
 	/**
