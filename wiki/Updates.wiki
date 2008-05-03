@@ -1,7 +1,9 @@
 == 05/02/2008 ==
 
-  * MD5Importer jME1.0 v1.0.1 released with fixed cycle wrap mode implementation.
-  * MD5Importer jME2.0 v1.0.0 released with support for jME2.0 version.
+MD5Importer jME1.0 v1.0.1 released
+  * Fixed cycle wrap mode implementation.
+MD5Importer jME2.0 v1.0.0 released
+  * Support for jME2.0 version.
 
 == 05/03/2008 ==
 
