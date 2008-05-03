@@ -1,0 +1,6 @@
+= Updates =
+
+== 05/03/2008 ==
+
+Performance boost thanks to Momoko_Fan.
+  * Created temporary variables in Vertex and Triangle classes to reduce garbage creation.
