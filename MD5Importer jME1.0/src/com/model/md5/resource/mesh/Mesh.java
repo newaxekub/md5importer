@@ -40,7 +40,7 @@ import com.model.md5.resource.mesh.primitive.Weight;
  * 
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-02-2008 16:28 EST
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class Mesh implements Serializable, Savable{
 	/**

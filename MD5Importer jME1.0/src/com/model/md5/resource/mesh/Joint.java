@@ -25,7 +25,7 @@ import com.model.md5.ModelNode;
  * 
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-02-2008 16:20 EST
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class Joint implements Serializable, Savable{
 	/**

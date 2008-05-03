@@ -17,7 +17,7 @@ import com.model.md5.resource.anim.Frame;
  *
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-01-2008 18:09 EST
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class AnimImporter {
 	/**
