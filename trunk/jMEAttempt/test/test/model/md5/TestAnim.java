@@ -1,4 +1,4 @@
-package jme.model.md5.test;
+package test.model.md5;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,8 +22,8 @@ public class TestAnim extends SimpleGame{
 	@Override
 	protected void simpleInitGame() {
 		this.overrideTextureKey();
-		URL mesh = TestAnim.class.getClassLoader().getResource("jme/model/md5/test/data/fish.md5mesh");
-		URL anim = TestAnim.class.getClassLoader().getResource("jme/model/md5/test/data/fish.md5anim");
+		URL mesh = TestAnim.class.getClassLoader().getResource("test/model/md5/data/fish.md5mesh");
+		URL anim = TestAnim.class.getClassLoader().getResource("test/model/md5/data/fish.md5anim");
 		try {
 			MD5Importer.getInstance().load(mesh, "Fish", anim, "Swim", Controller.RT_WRAP);
 		} catch (IOException e) {
@@ -38,7 +38,7 @@ public class TestAnim extends SimpleGame{
 	private void overrideTextureKey() {
 		try {
 			ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE,
-					new SimpleResourceLocator(TestMesh.class.getClassLoader().getResource("jme/model/md5/test/data/texture/")));
+					new SimpleResourceLocator(TestMesh.class.getClassLoader().getResource("test/model/md5/data/texture/")));
 		} catch (URISyntaxException e) {e.printStackTrace();}
 	}
 }
