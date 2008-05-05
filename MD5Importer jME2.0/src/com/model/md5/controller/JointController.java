@@ -61,11 +61,11 @@ public class JointController extends Controller{
 	/**
 	 * The temporary translation.
 	 */
-	private Vector3f translation;
+	private final Vector3f translation;
 	/**
 	 * The temporary orientation.
 	 */
-	private Quaternion orientation;
+	private final Quaternion orientation;
 	/**
 	 * The flag indicates if fading is in process.
 	 */
