@@ -13,6 +13,8 @@ import javax.swing.JFileChooser;
 import md5viewer.enumn.FileType;
 
 import com.jme.app.SimpleGame;
+import com.jme.input.KeyBindingManager;
+import com.jme.input.KeyInput;
 import com.jme.scene.Controller;
 import com.jme.util.resource.ResourceLocatorTool;
 import com.jme.util.resource.SimpleResourceLocator;
@@ -44,6 +46,14 @@ public class MD5Viewer extends SimpleGame{
 	 * The MD5Anim file <code>URL</code> to load.
 	 */
 	private URL anim;
+	/**
+	 * The current action speed.
+	 */
+	private float speed;
+	/**
+	 * The current scale.
+	 */
+	private float scale;
 
 	/**
 	 * Main application.
@@ -61,6 +71,8 @@ public class MD5Viewer extends SimpleGame{
 	public MD5Viewer() {
 		this.logger = Logger.getLogger(MD5Viewer.class.toString());
 		this.chooser = new JFileChooser();
+		this.speed = 1;
+		this.scale = 1;
 	}
 	
 	/**
@@ -126,6 +138,7 @@ public class MD5Viewer extends SimpleGame{
 
 	@Override
 	protected void simpleInitGame() {
+		this.setupKeyBindings();
 		this.overrideTextureKey();
 		// Load only mesh.
 		if(this.mesh != null && this.anim == null) {
@@ -148,11 +161,37 @@ public class MD5Viewer extends SimpleGame{
 	}
 	
 	/**
+	 * Setup the additional key bindings.
+	 */
+	private void setupKeyBindings() {
+		KeyBindingManager.getKeyBindingManager().set("speedup", KeyInput.KEY_1);
+		KeyBindingManager.getKeyBindingManager().set("slowdown", KeyInput.KEY_2);
+		KeyBindingManager.getKeyBindingManager().set("scaleup", KeyInput.KEY_3);
+		KeyBindingManager.getKeyBindingManager().set("scaledown", KeyInput.KEY_4);
+	}
+	
+	/**
 	 * Override the <code>Texture</code> key location.
 	 */
 	private void overrideTextureKey() {
 		try {
 			ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, new SimpleResourceLocator(this.mesh));
 		} catch (URISyntaxException e) {e.printStackTrace();}
+	}
+	
+	protected void simpleUpdate() {
+		if(KeyBindingManager.getKeyBindingManager().isValidCommand("speedup", false)) {
+			this.speed += 1f;
+			this.input.setActionSpeed(this.speed);
+		} else if(KeyBindingManager.getKeyBindingManager().isValidCommand("slowdown", false)) {
+			this.speed -= 1f;
+			this.input.setActionSpeed(this.speed);
+		} else if(KeyBindingManager.getKeyBindingManager().isValidCommand("scaleup", false)) {
+			this.scale += 0.2f;
+			this.rootNode.setLocalScale(this.scale);
+		} else if(KeyBindingManager.getKeyBindingManager().isValidCommand("scaledown", false)) {
+			this.scale -= 0.2f;
+			this.rootNode.setLocalScale(this.scale);
+		} 
 	}
 }
