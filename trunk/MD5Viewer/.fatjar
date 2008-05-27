@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Mon May 26 23:28:01 EDT 2008
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=MD5Viewer.jar
+manifest.mergeall=true
+manifest.mainclass=md5viewer.MD5Viewer
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|jME1.0>~jmetest/;<po|MD5Importer jME1.0>~test/;<po|jME1.0>~jmetest/
+includes=
