@@ -208,9 +208,9 @@ public class JointController extends Controller{
 	}
 	
 	/**
-	 * Add a new <code>JointAnimation</code> to this <code>JointController</code> and
-	 * set it to be the active <code>JointAnimation</code> if there is no current active
-	 * <code>JointAnimation</code>.
+	 * Add a new <code>JointAnimation</code> to this <code>JointController</code>.
+	 * The new animation set it to be the active animation if currently there is no
+	 * active animation.
 	 * @param animation The <code>JointAnimation</code> to be added.
 	 */
 	public void addAnimation(JointAnimation animation) {
