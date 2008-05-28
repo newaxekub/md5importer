@@ -1,4 +1,4 @@
-package md5viewer;
+package com.md5viewer;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,6 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 
-import md5viewer.enumn.FileType;
 
 import com.jme.app.SimpleGame;
 import com.jme.input.KeyBindingManager;
@@ -18,6 +17,7 @@ import com.jme.input.KeyInput;
 import com.jme.scene.Controller;
 import com.jme.util.resource.ResourceLocatorTool;
 import com.jme.util.resource.SimpleResourceLocator;
+import com.md5viewer.enumn.FileType;
 import com.model.md5.ModelNode;
 import com.model.md5.importer.MD5Importer;
 
