@@ -73,6 +73,7 @@ public class MD5Viewer extends SimpleGame{
 		this.chooser = new JFileChooser();
 		this.speed = 1;
 		this.scale = 1;
+		this.setDialogBehaviour(MD5Viewer.ALWAYS_SHOW_PROPS_DIALOG);
 	}
 	
 	/**
