@@ -59,6 +59,7 @@ public class MD5Viewer extends SimpleGame{
 	public static void main(String[] args) {
 		MD5Viewer app = new MD5Viewer();
 		app.mesh = app.selectFile(FileType.Mesh);
+		if(app.mesh == null) System.exit(-1);
 		app.anim = app.selectFile(FileType.Animation);
 		app.start();
 	}

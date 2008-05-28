@@ -1,14 +1,14 @@
 #Fat Jar Configuration File
-#Wed May 28 14:45:02 EDT 2008
+#Wed May 28 14:46:39 EDT 2008
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
 jarname=MD5Viewer_v1.1.1.jar
 manifest.mergeall=true
-manifest.mainclass=md5viewer.MD5Viewer
+manifest.mainclass=com.md5viewer.MD5Viewer
 manifest.file=<createnew>
 jarname.isextern=false
 onejar.expand=
-excludes=<po|jME1.0>~jmetest/;<po|MD5Importer jME1.0>~test/;<po|jME1.0>~jmetest/
+excludes=<po|jME1.0>~jmetest/;<po|MD5Importer jME1.0>~test/
 includes=
