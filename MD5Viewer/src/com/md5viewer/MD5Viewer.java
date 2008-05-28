@@ -6,10 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
-
 
 import com.jme.app.SimpleGame;
 import com.jme.input.KeyBindingManager;
@@ -26,8 +24,8 @@ import com.model.md5.importer.MD5Importer;
  * the selected MD5 files for viewing easily.
  * 
  * @author Yi Wang (Neakor)
- * @version Creation date: 05-21-2008 11:30
- * @version Modified date: 05-21-2008 12:11
+ * @version Creation date: 05-21-08 11:30
+ * @version Modified date: 05-28-08 12:11
  */
 public class MD5Viewer extends SimpleGame{
 	/**
@@ -60,8 +58,8 @@ public class MD5Viewer extends SimpleGame{
 	 */
 	public static void main(String[] args) {
 		MD5Viewer app = new MD5Viewer();
-		app.selectMeshFile();
-		app.selectAnimFile();
+		app.mesh = app.selectFile(FileType.Mesh);
+		app.anim = app.selectFile(FileType.Animation);
 		app.start();
 	}
 	
@@ -73,52 +71,42 @@ public class MD5Viewer extends SimpleGame{
 		this.chooser = new JFileChooser();
 		this.speed = 1;
 		this.scale = 1;
-		this.setDialogBehaviour(MD5Viewer.ALWAYS_SHOW_PROPS_DIALOG);
+		this.setDialogBehaviour(MD5Viewer.ALWAYS_SHOW_PROPS_DIALOG, (URL)null);
 	}
 	
 	/**
-	 * Select the MD5Mesh file with file chooser.
+	 * Select a <code>File</code> and return its <code>URL</code>.
+	 * @param type The intended <code>FileType</code> of the <code>File</code>.
+	 * @return The <code>URL</code> of the selected <code>File</code>.
 	 */
-	private void selectMeshFile() {
-		this.chooser.setDialogTitle("Select MD5Mesh file");
-		Preferences preferences = Preferences.userNodeForPackage(MD5Viewer.class);
-		File meshDir = new File(preferences.get("StartDirectory", "."));
-		this.chooser.setCurrentDirectory(meshDir);
+	private URL selectFile(FileType type) {
+		String promt = "";
+		String error = "";
+		switch(type) {
+		case Mesh:
+			promt = "Select MD5Mesh file";
+			error = "Invalid MD5Mesh file.";
+			break;
+		case Animation:
+			promt = "Select MD5Anim file";
+			error = "Invalid MD5Anim file.";
+			break;
+		}
+		this.chooser.setDialogTitle(promt);
 		if (this.chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			File file = this.chooser.getSelectedFile();
-			if(this.validateFile(FileType.Mesh, file.getName())) {
+			if(this.validateFile(type, file.getName())) {
 				try {
-					this.mesh = file.toURI().toURL();
+					return file.toURI().toURL();
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
 			} else {
-				this.logger.info("Invalid MD5Mesh file.");
-				System.exit(-1);
+				this.logger.info(error);
+				if(type.equals(FileType.Mesh)) System.exit(-1);
 			}
 		}
-	}
-	
-	/**
-	 * Select the MD5Anim file with file chooser.
-	 */
-	private void selectAnimFile() {
-		this.chooser.setDialogTitle("Select MD5Anim file");
-		Preferences preferences = Preferences.userNodeForPackage(MD5Viewer.class);
-		File animDir = new File(preferences.get("StartDirectory", "."));
-		this.chooser.setCurrentDirectory(animDir);
-		if (this.chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			File file = this.chooser.getSelectedFile();
-			if(this.validateFile(FileType.Animation, file.getName())) {
-				try {
-					this.anim = file.toURI().toURL();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-			} else {
-				this.logger.info("Invalid MD5Anim file.");
-			}
-		}
+		return null;
 	}
 	
 	/**
