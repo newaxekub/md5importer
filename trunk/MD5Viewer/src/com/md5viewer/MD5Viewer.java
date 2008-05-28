@@ -129,10 +129,10 @@ public class MD5Viewer extends SimpleGame{
 	 */
 	private boolean validateFile(FileType type, String filename) {
 		switch(type) {
-			case Mesh:
-				return (filename.substring(filename.lastIndexOf(".")+1, filename.length()).equalsIgnoreCase("md5mesh"));
-			case Animation:
-				return (filename.substring(filename.lastIndexOf(".")+1, filename.length()).equalsIgnoreCase("md5anim"));
+		case Mesh:
+			return (filename.substring(filename.lastIndexOf(".")+1, filename.length()).equalsIgnoreCase("md5mesh"));
+		case Animation:
+			return (filename.substring(filename.lastIndexOf(".")+1, filename.length()).equalsIgnoreCase("md5anim"));
 		}
 		return false;
 	}
