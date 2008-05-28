@@ -1,4 +1,4 @@
-package md5viewer.enumn;
+package com.md5viewer.enumn;
 
 public enum FileType {
 	Mesh,
