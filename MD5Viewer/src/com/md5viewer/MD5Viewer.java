@@ -15,7 +15,7 @@ import com.jme.input.KeyInput;
 import com.jme.scene.Controller;
 import com.jme.util.resource.ResourceLocatorTool;
 import com.jme.util.resource.SimpleResourceLocator;
-import com.md5viewer.enumn.FileType;
+import com.md5viewer.enumn.EFileType;
 import com.model.md5.ModelNode;
 import com.model.md5.importer.MD5Importer;
 
@@ -58,9 +58,9 @@ public class MD5Viewer extends SimpleGame{
 	 */
 	public static void main(String[] args) {
 		MD5Viewer app = new MD5Viewer();
-		app.mesh = app.selectFile(FileType.Mesh);
+		app.mesh = app.selectFile(EFileType.Mesh);
 		if(app.mesh == null) System.exit(-1);
-		app.anim = app.selectFile(FileType.Animation);
+		app.anim = app.selectFile(EFileType.Animation);
 		app.start();
 	}
 	
@@ -80,7 +80,7 @@ public class MD5Viewer extends SimpleGame{
 	 * @param type The intended <code>FileType</code> of the <code>File</code>.
 	 * @return The <code>URL</code> of the selected <code>File</code>.
 	 */
-	private URL selectFile(FileType type) {
+	private URL selectFile(EFileType type) {
 		String promt = "";
 		String error = "";
 		switch(type) {
@@ -104,7 +104,7 @@ public class MD5Viewer extends SimpleGame{
 				}
 			} else {
 				this.logger.info(error);
-				if(type.equals(FileType.Mesh)) System.exit(-1);
+				if(type.equals(EFileType.Mesh)) System.exit(-1);
 			}
 		}
 		return null;
@@ -116,7 +116,7 @@ public class MD5Viewer extends SimpleGame{
 	 * @param filename The file name to be validated.
 	 * @return True if the given file name is valid. False otherwise.
 	 */
-	private boolean validateFile(FileType type, String filename) {
+	private boolean validateFile(EFileType type, String filename) {
 		switch(type) {
 		case Mesh:
 			return (filename.substring(filename.lastIndexOf(".")+1, filename.length()).equalsIgnoreCase("md5mesh"));
