@@ -8,7 +8,7 @@ package com.md5viewer.enumn;
  * @version Creation date: 05-21-08 11:40
  * @version Modified date: 05-21-08 11:41
  */
-public enum FileType {
+public enum EFileType {
 	Mesh,
 	Animation
 }
