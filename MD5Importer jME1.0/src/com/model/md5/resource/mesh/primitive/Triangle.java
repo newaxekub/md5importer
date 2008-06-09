@@ -3,7 +3,6 @@ package com.model.md5.resource.mesh.primitive;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 import com.jme.math.Vector3f;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;

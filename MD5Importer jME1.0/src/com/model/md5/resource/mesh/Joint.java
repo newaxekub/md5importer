@@ -3,7 +3,6 @@ package com.model.md5.resource.mesh;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.TransformMatrix;

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
 import com.jme.scene.Controller;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
