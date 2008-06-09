@@ -45,6 +45,6 @@ public class TestAnim extends Test{
 	protected void setupGame() {
 		ModelNode node = (ModelNode)this.rootNode.getChild("ModelNode");
 		node.setLocalScale(1);
-		node.getController(0).setSpeed(0.3f);
+		node.getController(0).setSpeed(0.15f);
 	}
 }

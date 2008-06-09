@@ -25,9 +25,8 @@ import com.model.md5.resource.mesh.Mesh;
  * 
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-03-2008 18:45 EST
- * @version 1.0.2
  */
-public class Triangle implements Serializable, Savable{
+public class Triangle implements Serializable, Savable {
 	/**
 	 * Serial version.
 	 */

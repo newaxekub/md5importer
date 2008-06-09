@@ -30,7 +30,6 @@ import com.model.md5.importer.resource.MeshImporter;
  *
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-01-2008 17:55 EST
- * @version 1.0.2
  */
 public class MD5Importer {
 	/**

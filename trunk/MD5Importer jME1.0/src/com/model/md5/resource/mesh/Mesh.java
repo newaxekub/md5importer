@@ -39,10 +39,9 @@ import com.model.md5.resource.mesh.primitive.Weight;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 16:28 EST
- * @version 1.0.2
+ * @version Modified date: 06-09-2008 16:16 EST
  */
-public class Mesh implements Serializable, Savable{
+public class Mesh implements Serializable, Savable {
 	/**
 	 * Serial version.
 	 */
@@ -144,7 +143,6 @@ public class Mesh implements Serializable, Savable{
 	 * Process and setup the normal position buffer.
 	 */
 	private void processNormal() {
-		// Triangles have to process thr normal first incase the vertices are not in order.
 		for(int i = 0; i < this.triangles.length; i++) {
 			this.triangles[i].processNormal();
 		}
@@ -312,6 +310,7 @@ public class Mesh implements Serializable, Savable{
 		Savable[] temp = null;
 		InputCapsule ic = im.getCapsule(this);
 		this.modelNode = (ModelNode)ic.readSavable("ModelNode", null);
+		this.texture = ic.readString("Texture", null);
 		temp = ic.readSavableArray("Vertices", null);
 		this.vertices = new Vertex[temp.length];
 		for(int i = 0; i < temp.length; i++) {
@@ -327,16 +326,15 @@ public class Mesh implements Serializable, Savable{
 		for(int i = 0; i < temp.length; i++) {
 			this.weights[i] = (Weight)temp[i];
 		}
-		this.triangleBatch = (TriangleBatch)ic.readSavable("Batch", null);
 	}
 
 	@Override
 	public void write(JMEExporter ex) throws IOException {
 		OutputCapsule oc = ex.getCapsule(this);
 		oc.write(this.modelNode, "ModelNode", null);
+		oc.write(this.texture, "Texture", null);
 		oc.write(this.vertices, "Vertices", null);
 		oc.write(this.triangles, "Triangles", null);
 		oc.write(this.weights, "Weights", null);
-		oc.write(this.triangleBatch, "Batch", null);
 	}
 }
