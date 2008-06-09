@@ -25,7 +25,6 @@ import com.model.md5.resource.mesh.Mesh;
  * 
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-03-2008 18:56 EST
- * @version 1.0.1
  */
 public class Vertex implements Serializable, Savable{
 	/**
@@ -65,7 +64,6 @@ public class Vertex implements Serializable, Savable{
 	 * Default constructor of <code>Vertex</code>.
 	 */
 	public Vertex() {
-		this.position = new Vector3f();
 		this.temp = new Vector3f();
 	}
 	

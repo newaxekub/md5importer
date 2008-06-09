@@ -15,11 +15,10 @@ import com.model.md5.resource.mesh.Mesh;
  * <code>ModelNode</code> is the final product of MD5 loading process.
  * <p>
  * <code>ModelNode</code> maintains the loaded <code>Joint</code> and <code>Mesh</code>
- * and update them accordingly.
+ * objects and update them accordingly.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 19:21 EST
- * @version 1.0.1
+ * @version Modified date: 06-09-2008 17:52 EST
  */
 public class ModelNode extends Node{
 	/**
@@ -62,6 +61,11 @@ public class ModelNode extends Node{
 	 * Initialize the <code>ModelNode</code>.
 	 */
 	public void initialize() {
+		if(this.meshes == null) {
+			for(int i = 0; i < this.meshes.length; i++) {
+				this.detachChild(this.meshes[i]);
+			}
+		}
 		if(!this.dependent) this.processJoints();
 		for(int i = 0; i < this.meshes.length; i++) {
 			this.meshes[i].initializeMesh();
@@ -213,14 +217,21 @@ public class ModelNode extends Node{
 		for(int i = 0; i < temp.length; i++) {
 			this.meshes[i] = (Mesh)temp[i];
 		}
+		this.initialize();
 	}
 
 	@Override
 	public void write(JMEExporter ex) throws IOException {
+		for(int i = 0; i < this.meshes.length; i++) {
+			this.detachChild(this.meshes[i]);
+		}
 		super.write(ex);
 		OutputCapsule oc = ex.getCapsule(this);
 		oc.write(this.dependent, "Dependent", false);
 		oc.write(this.joints, "Joints", null);
 		oc.write(this.meshes, "Meshes", null);
+		for(int i = 0; i < this.meshes.length; i++) {
+			this.attachChild(this.meshes[i]);
+		}
 	}
 }

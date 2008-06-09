@@ -40,10 +40,9 @@ import com.model.md5.resource.mesh.primitive.Weight;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 19:28 EST
- * @version 1.0.1
+ * @version Modified date: 06-09-2008 17:49 EST
  */
-public class Mesh extends TriMesh{
+public class Mesh extends TriMesh {
 	/**
 	 * Serial version.
 	 */
@@ -292,6 +291,7 @@ public class Mesh extends TriMesh{
 		Savable[] temp = null;
 		InputCapsule ic = im.getCapsule(this);
 		this.modelNode = (ModelNode)ic.readSavable("ModelNode", null);
+		this.texture = ic.readString("Texture", null);
 		temp = ic.readSavableArray("Vertices", null);
 		this.vertices = new Vertex[temp.length];
 		for(int i = 0; i < temp.length; i++) {
@@ -314,6 +314,7 @@ public class Mesh extends TriMesh{
 		super.write(ex);
 		OutputCapsule oc = ex.getCapsule(this);
 		oc.write(this.modelNode, "ModelNode", null);
+		oc.write(this.texture, "Texture", null);
 		oc.write(this.vertices, "Vertices", null);
 		oc.write(this.triangles, "Triangles", null);
 		oc.write(this.weights, "Weights", null);
