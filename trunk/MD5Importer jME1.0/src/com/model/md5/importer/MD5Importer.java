@@ -29,7 +29,7 @@ import com.model.md5.importer.resource.MeshImporter;
  * {@link}http://www.modwiki.net/wiki/MD5_(file_format).
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-01-2008 17:55 EST
+ * @version Modified date: 06-09-2008 19:53 EST
  */
 public class MD5Importer {
 	/**
@@ -48,10 +48,6 @@ public class MD5Importer {
 	 * The singleton <code>MD5Importer</code> instance.
 	 */
 	private static MD5Importer instance;
-	/**
-	 * The supported <code>Image</code> file extensions.
-	 */
-	private final String[] extensions = {".jpg", ".tga", ".png", ".dds", ".gif", ".bmp"};
 	/**
 	 * The minification (MM) <code>Texture</code> filter.
 	 */
@@ -201,14 +197,6 @@ public class MD5Importer {
 	 */
 	public void setOrientedBounding(boolean orientedBounding) {
 		this.orientedBounding = orientedBounding;
-	}
-
-	/**
-	 * Retrieve the <code>Image</code> file extensions.
-	 * @return The <code>String</code> array of extensions.
-	 */
-	public String[] getExtensions() {
-		return this.extensions;
 	}
 
 	/**
