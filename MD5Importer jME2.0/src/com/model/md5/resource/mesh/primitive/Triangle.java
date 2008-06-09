@@ -3,7 +3,6 @@ package com.model.md5.resource.mesh.primitive;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 import com.jme.math.Vector3f;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
@@ -25,7 +24,6 @@ import com.model.md5.resource.mesh.Mesh;
  * 
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-03-2008 18:54 EST
- * @version 1.0.1
  */
 public class Triangle implements Serializable, Savable{
 	/**

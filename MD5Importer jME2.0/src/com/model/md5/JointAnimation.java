@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
 import com.jme.scene.Controller;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
@@ -20,10 +19,9 @@ import com.model.md5.resource.anim.Frame;
  * the skeletal <code>ModelNode</code>.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 18:47 EST
- * @version 1.0.1
+ * @version Modified date: 06-09-2008 17:44 EST
  */
-public class JointAnimation implements Serializable, Savable{
+public class JointAnimation implements Serializable, Savable {
 	/**
 	 * Serial version.
 	 */
@@ -49,8 +47,7 @@ public class JointAnimation implements Serializable, Savable{
 	 */
 	private float[] frameTimes;
 	/**
-	 * The flag indicates if this <code>JointAnimation</code> is being
-	 * played backwards.
+	 * The flag indicates if this <code>JointAnimation</code> is being played backwards.
 	 */
 	private boolean backward;
 	/**
@@ -66,8 +63,7 @@ public class JointAnimation implements Serializable, Savable{
 	 */
 	private int nextFrame;
 	/**
-	 * The flag indicates if this cycle is completed but the new cycle has not
-	 * yet started.
+	 * The flag indicates if this cycle is completed but the new cycle has not yet started.
 	 */
 	private boolean complete;
 	/**
@@ -78,14 +74,17 @@ public class JointAnimation implements Serializable, Savable{
 	/**
 	 * Default constructor of <code>JointAnimation</code>.
 	 */
-	public JointAnimation() {}
+	public JointAnimation() {
+		this.prevFrame = 0;
+		this.nextFrame = 1;
+	}
 	
 	/**
 	 * Constructor of <code>JointAnimation</code>.
 	 * @param name The name of this <code>JointAnimation</code>.
 	 * @param IDs The joint IDs of this <code>JointAnimation</code>.
 	 * @param frames The array of <code>Frame</code>.
-	 * @param framerate The framerate of this <code>JointAnimation</code>.
+	 * @param framerate The frame rate of this <code>JointAnimation</code>.
 	 */
 	public JointAnimation(String name, String[] IDs, Frame[] frames, float framerate) {
 		this.name = name;
@@ -285,7 +284,7 @@ public class JointAnimation implements Serializable, Savable{
 	}
 	
 	/**
-	 * Check if this <code>JointAnimation</code> is beling played backward.
+	 * Check if this <code>JointAnimation</code> is being played backward.
 	 * @return True if the <code>JointAnimation</code> is being played backward. False forward.
 	 */
 	public boolean isBackward() {
@@ -313,6 +312,7 @@ public class JointAnimation implements Serializable, Savable{
 			this.frames[i] = (Frame)temp[i];
 		}
 		this.frameRate = ic.readFloat("FrameRate", 0);
+		this.frameTimes = ic.readFloatArray("FrameTimes", null);
 		this.animations = (ArrayList<JointAnimation>)ic.readSavableArrayList("Animations", null);
 	}
 
@@ -323,6 +323,7 @@ public class JointAnimation implements Serializable, Savable{
 		oc.write(this.jointIDs, "JointIDs", null);
 		oc.write(this.frames, "Frames", null);
 		oc.write(this.frameRate, "FrameRate", 0);
+		oc.write(this.frameTimes, "FrameTimes", null);
 		oc.writeSavableArrayList(this.animations, "Animations", null);
 	}
 }

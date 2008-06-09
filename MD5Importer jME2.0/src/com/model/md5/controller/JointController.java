@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
@@ -26,10 +25,9 @@ import com.model.md5.resource.mesh.Joint;
  * then updates the skeleton with interpolated translation and orientation values.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-03-2008 18:57 EST
- * @version 1.0.1
+ * @version Modified date: 05-03-2008 18:51 EST
  */
-public class JointController extends Controller{
+public class JointController extends Controller {
 	/**
 	 * Serial version.
 	 */
