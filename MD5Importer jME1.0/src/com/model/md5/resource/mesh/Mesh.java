@@ -39,7 +39,7 @@ import com.model.md5.resource.mesh.primitive.Weight;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-09-2008 16:16 EST
+ * @version Modified date: 06-09-2008 19:55 EST
  */
 public class Mesh implements Serializable, Savable {
 	/**
@@ -170,10 +170,7 @@ public class Mesh implements Serializable, Savable {
 			else if(this.vertices[i].getTextureCoords().y < minV) minV = this.vertices[i].getTextureCoords().y;
 		}
 		this.triangleBatch.setTextureBuffer(textureBuffer, 0);
-		URL url = null;
-		for(int i = 0; i < instance.getExtensions().length && url == null; i++) {
-			url = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, this.texture+instance.getExtensions()[i]);
-		}
+		URL url = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, this.texture);
 		Texture color = TextureManager.loadTexture(url,instance.getMMFilter(),instance.getFMFilter(),instance.getAnisotropic(),true);
 		if(color != null) {
 			if(maxU > 1 || minU < 0) {

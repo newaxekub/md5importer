@@ -109,8 +109,11 @@ public class ModelNode extends Node {
 	 */
 	public void attachChild(ModelNode node, String jointID) {
 		int jointIndex = -1;
-		for(int i = 0; i < this.joints.length && jointIndex == -1; i++) {
-			if(this.joints[i].getName().equals(jointID)) jointIndex = i;
+		for(int i = 0; i < this.joints.length; i++) {
+			if(this.joints[i].getName().equals(jointID)) {
+				jointIndex = i;
+				break;
+			}
 		}
 		this.attachChild(node, jointIndex);
 	}
