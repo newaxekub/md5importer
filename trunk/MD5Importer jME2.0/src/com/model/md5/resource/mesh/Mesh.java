@@ -40,7 +40,7 @@ import com.model.md5.resource.mesh.primitive.Weight;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-09-2008 17:49 EST
+ * @version Modified date: 06-09-2008 19:53 EST
  */
 public class Mesh extends TriMesh {
 	/**
@@ -168,10 +168,7 @@ public class Mesh extends TriMesh {
 			else if(this.vertices[i].getTextureCoords().y < minV) minV = this.vertices[i].getTextureCoords().y;
 		}
 		this.setTextureCoords(new TexCoords(textureBuffer));
-		URL url = null;
-		for(int i = 0; i < instance.getExtensions().length && url == null; i++) {
-			url = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, this.texture+instance.getExtensions()[i]);
-		}
+		URL url = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, this.texture);
 		Texture color = TextureManager.loadTexture(url,instance.getMiniFilter(),instance.getMagFilter(),instance.getAnisotropic(),true);
 		if(color != null) {
 			if(maxU > 1) color.setWrap(Texture.WrapAxis.S, Texture.WrapMode.Repeat);
