@@ -16,13 +16,12 @@ import com.model.md5.resource.mesh.Mesh;
  * <code>ModelNode</code> is the final product of MD5 loading process.
  * <p>
  * <code>ModelNode</code> maintains the loaded <code>Joint</code> and <code>Mesh</code>
- * and update them accordingly.
+ * objects and updates them accordingly.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-01-2008 15:52 EST
- * @version 1.0.2
+ * @version Modified date: 06-09-2008 17:05 EST
  */
-public class ModelNode extends Node{
+public class ModelNode extends Node {
 	/**
 	 * Serial version.
 	 */
@@ -53,7 +52,6 @@ public class ModelNode extends Node{
 	 */
 	public ModelNode() {
 		super();
-		this.skin = new TriMesh(name + "Skin");
 	}
 	
 	/**
@@ -62,13 +60,14 @@ public class ModelNode extends Node{
 	 */
 	public ModelNode(String name) {
 		super(name);
-		this.skin = new TriMesh(name + "Skin");
 	}
 	
 	/**
 	 * Initialize the <code>ModelNode</code>.
 	 */
 	public void initialize() {
+		this.detachChild(this.skin);
+		this.skin = new TriMesh(this.name + "Skin");
 		if(!this.dependent) this.processJoints();
 		this.skin.clearBatches();
 		for(int i = 0; i < this.meshes.length; i++) {
@@ -145,8 +144,7 @@ public class ModelNode extends Node{
 	 * @return The root <code>Joint</code> object of given <code>ModelNode</code>.
 	 */
 	private Joint getRootJoint(ModelNode node) {
-		for(int i = 0; i < node.getJoints().length; i++)
-		{
+		for(int i = 0; i < node.getJoints().length; i++) {
 			if(node.getJoint(i).getParent() < 0) return node.getJoint(i);
 		}
 		return null;
@@ -223,16 +221,17 @@ public class ModelNode extends Node{
 		for(int i = 0; i < temp.length; i++) {
 			this.meshes[i] = (Mesh)temp[i];
 		}
-		this.skin = (TriMesh)ic.readSavable("Skin", null);
+		this.initialize();
 	}
 
 	@Override
 	public void write(JMEExporter ex) throws IOException {
+		this.detachChild(this.skin);
 		super.write(ex);
 		OutputCapsule oc = ex.getCapsule(this);
 		oc.write(this.dependent, "Dependent", false);
 		oc.write(this.joints, "Joints", null);
 		oc.write(this.meshes, "Meshes", null);
-		oc.write(this.skin, "Skin", null);
+		this.attachChild(this.skin);
 	}
 }

@@ -27,9 +27,8 @@ import com.model.md5.resource.mesh.Joint;
  * 
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-03-2008 18:51 EST
- * @version 1.0.2
  */
-public class JointController extends Controller{
+public class JointController extends Controller {
 	/**
 	 * Serial version.
 	 */

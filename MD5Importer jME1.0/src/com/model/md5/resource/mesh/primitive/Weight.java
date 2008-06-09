@@ -20,9 +20,8 @@ import com.jme.util.export.Savable;
  * 
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-02-2008 18:05 EST
- * @version 1.0.2
  */
-public class Weight implements Serializable, Savable{
+public class Weight implements Serializable, Savable {
 	/**
 	 * Serial version.
 	 */
