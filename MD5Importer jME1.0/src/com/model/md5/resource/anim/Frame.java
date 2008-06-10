@@ -18,12 +18,16 @@ import com.jme.util.export.Savable;
  * <code>Frame</code> maintains translation and orientation information of each
  * <code>Joint</code> in the animation of the current frame.
  * <p>
+ * <code>Frame</code> should not be cloned directly. The cloning process of a
+ * <code>Frame</code> should be initiated by the cloning process of the parent
+ * <code>JointAnimation</code>.
+ * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 16:11 EST
+ * @version Modified date: 06-10-2008 15:14 EST
  */
-public class Frame implements Serializable, Savable {
+public class Frame implements Serializable, Savable, Cloneable {
 	/**
 	 * Serial version.
 	 */
@@ -198,5 +202,22 @@ public class Frame implements Serializable, Savable {
 		oc.write(this.parents, "Parents", null);
 		oc.write(this.translations, "Translations", null);
 		oc.write(this.orientations, "Orientations", null);
+	}
+	
+	@Override
+	public Frame clone() {
+		Frame clone = new Frame();
+		clone.baseframe = this.baseframe;
+		clone.parents = new int[this.parents.length];
+		System.arraycopy(this.parents, 0, clone.parents, 0, this.parents.length);
+		clone.translations = new Vector3f[this.translations.length];
+		for(int i = 0; i < clone.translations.length; i++) {
+			clone.translations[i] = this.translations[i].clone();
+		}
+		clone.orientations = new Quaternion[this.orientations.length];
+		for(int i = 0; i < clone.orientations.length; i++) {
+			clone.orientations[i] = new Quaternion(this.orientations[i].x, this.orientations[i].y, this.orientations[i].z, this.orientations[i].w);
+		}
+		return clone;
 	}
 }
