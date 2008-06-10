@@ -8,7 +8,7 @@ package com.model.md5.exception;
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-02-2008 18:50 EST
  */
-public class InvalidAnimationException extends RuntimeException{
+public class InvalidAnimationException extends RuntimeException {
 	/**
 	 * Serial version.
 	 */
