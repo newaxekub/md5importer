@@ -21,12 +21,15 @@ import com.model.md5.resource.mesh.Mesh;
  * <code>Vertex</code> stores an array of <code>Weight</code> indices which are used
  * to calculate the position vector.
  * <p>
+ * <code>Vertex</code> cannot be cloned directly. The cloning process of <code>Vertex</code>
+ * can only be initiated by the cloning process of the parent <code>Mesh</code>.
+ * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-03-2008 18:56 EST
+ * @version Modified date: 06-10-2008 13:08 EST
  */
-public class Vertex implements Serializable, Savable{
+public class Vertex implements Serializable, Savable {
 	/**
 	 * Serial version.
 	 */
@@ -197,5 +200,22 @@ public class Vertex implements Serializable, Savable{
 		oc.write(this.usedTimes, "UsedTimes", 0);
 		oc.write(this.normal, "Normal", null);
 		oc.write(this.position, "Position", null);
+	}
+	
+	/**
+	 * Clone this vertex with given newly cloned mesh parent.
+	 * @param mesh The cloned <code>Mesh</code> parent.
+	 * @return The cloned copy of this <code>Vertex</code>
+	 */
+	public Vertex clone(Mesh mesh) {
+		Vertex clone = new Vertex();
+		clone.mesh = mesh;
+		clone.textureCoords = this.textureCoords.clone();
+		clone.weightIndices = new int[this.weightIndices.length];
+		System.arraycopy(this.weightIndices, 0, clone.weightIndices, 0, this.weightIndices.length);
+		clone.usedTimes = this.usedTimes;
+		clone.normal = this.normal.clone();
+		clone.position = this.position.clone();
+		return clone;
 	}
 }

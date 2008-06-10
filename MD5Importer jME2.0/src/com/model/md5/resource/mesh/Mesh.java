@@ -37,10 +37,13 @@ import com.model.md5.resource.mesh.primitive.Weight;
  * <code>Mesh</code> does not directly process any geometric information but delegates
  * the process down to the primitive elements it maintains.
  * <p>
+ * <code>Mesh</code> cannot be cloned directly. The cloning process of a <code>Mesh</code>
+ * can only be initiated by the cloning process of the parent <code>ModelNode</code>.
+ * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-09-2008 19:53 EST
+ * @version Modified date: 06-10-2008 14:23 EST
  */
 public class Mesh extends TriMesh {
 	/**
@@ -80,13 +83,15 @@ public class Mesh extends TriMesh {
 	 * @param modelNode The <code>ModelNode</code> this <code>Mesh</code> belongs to.
 	 */
 	public Mesh(ModelNode modelNode) {
+		super();
 		this.modelNode = modelNode;
 	}
 	
 	/**
 	 * Initialize this <code>Mesh</code> and its geometric data.
 	 */
-	public void initializeMesh() {
+	public void initialize() {
+		this.setName(this.modelNode.getName()+"Mesh");
 		this.setNormalsMode(Spatial.NormalsMode.AlwaysNormalize);
 		this.processIndex();
 		this.processVertex();
@@ -315,5 +320,29 @@ public class Mesh extends TriMesh {
 		oc.write(this.vertices, "Vertices", null);
 		oc.write(this.triangles, "Triangles", null);
 		oc.write(this.weights, "Weights", null);
+	}
+	
+	/**
+	 * Clone this mesh with given newly cloned <code>ModelNode</code> parent.
+	 * @param mesh The cloned <code>ModelNode</code> parent.
+	 * @return The cloned copy of this <code>Mesh</code>
+	 */
+	public Mesh clone(ModelNode modelNode) {
+		Mesh clone = new Mesh();
+		clone.modelNode = modelNode;
+		clone.texture = new String(this.texture.toCharArray());
+		clone.vertices = new Vertex[this.vertices.length];
+		for(int i = 0; i < clone.vertices.length; i++) {
+			clone.vertices[i] = this.vertices[i].clone(clone);
+		}
+		clone.triangles = new Triangle[this.triangles.length];
+		for(int i = 0; i < clone.triangles.length; i++) {
+			clone.triangles[i] = this.triangles[i].clone(clone);
+		}
+		clone.weights = new Weight[this.weights.length];
+		for(int i = 0; i < clone.weights.length; i++) {
+			clone.weights[i] = this.weights[i].clone();
+		}
+		return clone;
 	}
 }

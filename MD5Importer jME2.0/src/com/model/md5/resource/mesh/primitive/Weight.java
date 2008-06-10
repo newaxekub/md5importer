@@ -16,12 +16,16 @@ import com.jme.util.export.Savable;
  * <code>Weight</code> maintains the index number of the <code>Joint</code> which it
  * affects, a fixed weight value and a fixed position vector.
  * <p>
+ * <code>Weight</code> should not be cloned directly. The cloning process of a
+ * <code>Weight</code> should be initiated by the cloning process of the parent
+ * <code>Mesh</code>.
+ * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 19:35 EST
+ * @version Modified date: 06-10-2008 12:44 EST
  */
-public class Weight implements Serializable, Savable{
+public class Weight implements Serializable, Savable, Cloneable {
 	/**
 	 * Serial version.
 	 */
@@ -120,5 +124,14 @@ public class Weight implements Serializable, Savable{
 		oc.write(this.jointIndex, "JointIndex", -1);
 		oc.write(this.value, "Value", 0);
 		oc.write(this.position, "Position", null);
+	}
+	
+	@Override
+	public Weight clone() {
+		Weight clone = new Weight();
+		clone.jointIndex = this.jointIndex;
+		clone.value = this.value;
+		clone.position = this.position.clone();
+		return clone;
 	}
 }
