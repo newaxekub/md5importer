@@ -7,7 +7,7 @@ package com.model.md5.exception;
  * @author Yi Wang (Neakor)
  * @version Modified date: 05-02-2008 18:51 EST
  */
-public class InvalidVersionException extends RuntimeException{
+public class InvalidVersionException extends RuntimeException {
 	/**
 	 * Serial version.
 	 */
