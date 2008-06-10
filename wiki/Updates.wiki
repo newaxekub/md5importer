@@ -1,6 +1,7 @@
 == 06/09/08 ==
 
 *MD5Importer jME1.0 and MDImporter jME2.0 quick fix.*
+
 Hard-coded problem in version 1.1.0. The new texture loading process does not allow users to specify texture formats. Now the v1.1.1 version makes use of MultiFormatResourceLocator to allow user specify their own image formats. MD5Importer no longer provides any hard-coded image format extensions anymore.
 
 *MD5Importer jME1.0 v1.1.0 and MD5Importer jME2.0 v1.1.0 released.*
