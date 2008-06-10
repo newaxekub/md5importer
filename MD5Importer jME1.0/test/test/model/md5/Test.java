@@ -2,10 +2,9 @@ package test.model.md5;
 
 import java.net.URISyntaxException;
 
-
 import com.jme.app.SimpleGame;
+import com.jme.util.resource.MultiFormatResourceLocator;
 import com.jme.util.resource.ResourceLocatorTool;
-import com.jme.util.resource.SimpleResourceLocator;
 import com.model.md5.ModelNode;
 import com.model.md5.importer.MD5Importer;
 
@@ -21,9 +20,12 @@ public abstract class Test extends SimpleGame{
 	
 	protected void overrideTextureKey() {
 		try {
-			ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE,
-					new SimpleResourceLocator(TestMesh.class.getClassLoader().getResource("test/model/md5/data/texture/")));
-		} catch (URISyntaxException e) {e.printStackTrace();}
+			MultiFormatResourceLocator locator = new MultiFormatResourceLocator(this.getClass().getClassLoader().getResource("test/model/md5/data/texture/"), 
+					new String[]{".tga", ".bmp", ".png", ".jpg", ".texture", ".jme"});
+			ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, locator);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	abstract protected ModelNode loadModel();
