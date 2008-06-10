@@ -246,7 +246,7 @@ public class ModelNode extends Node implements Cloneable {
 	@Override
 	public ModelNode clone() {
 		ModelNode clone = new ModelNode();
-		clone.name = this.name;
+		clone.name = new String(this.name.toCharArray());
 		clone.dependent = this.dependent;
 		clone.joints = new Joint[this.joints.length];
 		for(int i = 0; i < clone.joints.length; i++) {
