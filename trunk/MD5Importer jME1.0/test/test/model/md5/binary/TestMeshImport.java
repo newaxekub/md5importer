@@ -43,7 +43,7 @@ public class TestMeshImport extends SimpleGame{
 	private void overrideTextureKey() {
 		try {
 			MultiFormatResourceLocator locator = new MultiFormatResourceLocator(this.getClass().getClassLoader().getResource("test/model/md5/data/texture/"), 
-					new String[]{".tga", ".bmp", ".png", ".jpg", ".texture", ".jme"});
+					new String[]{".tga"});
 			ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, locator);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
