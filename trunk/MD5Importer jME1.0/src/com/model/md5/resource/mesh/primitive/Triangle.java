@@ -20,10 +20,13 @@ import com.model.md5.resource.mesh.Mesh;
  * <code>Triangle</code> is responsible for calculating the normal vector for each
  * <code>Vertex</code>.
  * <p>
+ * <code>Triangle</code> cannot be cloned directly. The cloning process of a <code>Triangle</code>
+ * can only be initiated by the cloning process of the parent <code>Mesh</code>.
+ * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-03-2008 18:45 EST
+ * @version Modified date: 06-10-2008 15:15 EST
  */
 public class Triangle implements Serializable, Savable {
 	/**
@@ -119,5 +122,18 @@ public class Triangle implements Serializable, Savable {
 		OutputCapsule oc = ex.getCapsule(this);
 		oc.write(this.mesh, "Mesh", null);
 		oc.write(this.vertexIndices, "VertexIndices", null);
+	}
+	
+	/**
+	 * Clone this triangle with given newly cloned mesh parent.
+	 * @param mesh The cloned <code>Mesh</code> parent.
+	 * @return The cloned copy of this <code>Triangle</code>
+	 */
+	public Triangle clone(Mesh mesh) {
+		Triangle clone = new Triangle();
+		clone.mesh = mesh;
+		clone.vertexIndices = new int[this.vertexIndices.length];
+		System.arraycopy(this.vertexIndices, 0, clone.vertexIndices, 0, this.vertexIndices.length);
+		return clone;
 	}
 }

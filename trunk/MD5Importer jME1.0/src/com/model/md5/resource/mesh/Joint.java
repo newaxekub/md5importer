@@ -20,10 +20,13 @@ import com.model.md5.ModelNode;
  * <code>Joint</code> maintains its own transform information and the index number of
  * its parent <code>Joint</code>.
  * <p>
+ * <code>Joint</code> cannot be cloned directly. The cloning process of a <code>Joint</code>
+ * can only be initiated by the cloning process of the parent <code>ModelNode</code>.
+ * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 16:20 EST
+ * @version Modified date: 06-10-2008 15:16 EST
  */
 public class Joint implements Serializable, Savable {
 	/**
@@ -62,7 +65,9 @@ public class Joint implements Serializable, Savable {
 	/**
 	 * Default constructor of <code>Joint</code>.
 	 */
-	public Joint() {}
+	public Joint() {
+		this.nodeParent = -1;
+	}
 	
 	/**
 	 * Constructor of <code>Joint</code>.
@@ -226,7 +231,6 @@ public class Joint implements Serializable, Savable {
 		this.modelNode = (ModelNode)ic.readSavable("ModelNode", null);
 		this.name = ic.readString("Name", null);
 		this.parent = ic.readInt("Parent", -1);
-		this.nodeParent = ic.readInt("NodeParent", -1);
 		this.translation = (Vector3f)ic.readSavable("Translation", null);
 		this.orientation = (Quaternion)ic.readSavable("Orientation", null);
 		this.transform = (TransformMatrix)ic.readSavable("Transform", null);
@@ -238,9 +242,25 @@ public class Joint implements Serializable, Savable {
 		oc.write(this.modelNode, "ModelNode", null);
 		oc.write(this.name, "Name", null);
 		oc.write(this.parent, "Parent", -1);
-		oc.write(this.nodeParent, "NodeParent", -1);
 		oc.write(this.translation, "Translation", null);
 		oc.write(this.orientation, "Orientation", null);
 		oc.write(this.transform, "Transform", null);
+	}
+	
+	/**
+	 * Clone this join with given newly cloned <code>ModelNode</code> parent.
+	 * @param mesh The cloned <code>ModelNode</code> parent.
+	 * @return The cloned copy of this <code>Joint</code>
+	 */
+	public Joint clone(ModelNode modelNode) {
+		Joint clone = new Joint();
+		clone.modelNode = modelNode;
+		clone.name = new String(this.name.toCharArray());
+		clone.parent = this.parent;
+		clone.translation = this.translation.clone();
+		clone.orientation = new Quaternion(this.orientation.x, this.orientation.y, this.orientation.z, this.orientation.w);
+		clone.transform = new TransformMatrix();
+		clone.transform.set(this.transform);
+		return clone;
 	}
 }

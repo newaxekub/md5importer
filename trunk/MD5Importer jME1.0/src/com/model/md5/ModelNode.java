@@ -17,11 +17,16 @@ import com.model.md5.resource.mesh.Mesh;
  * <p>
  * <code>ModelNode</code> maintains the loaded <code>Joint</code> and <code>Mesh</code>
  * objects and updates them accordingly.
+ * <p>
+ * <code>ModelNode</code> implements <code>Cloneable</code> interface to provide the
+ * cloning functionality so that users can fast clone model nodes that may be used by
+ * multiple entities. The newly cloned <code>ModelNode</code> is already initialized
+ * and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-09-2008 17:05 EST
+ * @version Modified date: 06-10-2008 15:22 EST
  */
-public class ModelNode extends Node {
+public class ModelNode extends Node implements Cloneable {
 	/**
 	 * Serial version.
 	 */
@@ -236,5 +241,22 @@ public class ModelNode extends Node {
 		oc.write(this.joints, "Joints", null);
 		oc.write(this.meshes, "Meshes", null);
 		this.attachChild(this.skin);
+	}
+	
+	@Override
+	public ModelNode clone() {
+		ModelNode clone = new ModelNode();
+		clone.name = new String(this.name.toCharArray());
+		clone.dependent = this.dependent;
+		clone.joints = new Joint[this.joints.length];
+		for(int i = 0; i < clone.joints.length; i++) {
+			clone.joints[i] = this.joints[i].clone(clone);
+		}
+		clone.meshes = new Mesh[this.meshes.length];
+		for(int i = 0; i < clone.meshes.length; i++) {
+			clone.meshes[i] = this.meshes[i].clone(clone);
+		}
+		clone.initialize();
+		return clone;
 	}
 }
