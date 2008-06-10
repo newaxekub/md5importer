@@ -2,7 +2,7 @@
 
 *MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.0 release.*
 
-Version 1.2.0 added new functionality of fast cloning ModelNode and JointAnimation which allows users to quickly clone models and animations for multiple entities to use a game scene. This is extremely useful for typical MMO genre games.
+Version 1.2.0 added new functionality of fast cloning ModelNode and JointAnimation which allows users to quickly clone models and animations for multiple entities to use a game scene. This is extremely useful for typical MMO genre games. See tests under test.model.md5.clone package for detailed speed comparison.
 
 == 06/09/08 ==
 
