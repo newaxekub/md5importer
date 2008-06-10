@@ -5,10 +5,7 @@
   * Updated tests to demonstrate binary export without saving texture image data.
 
 *MD5Importer jME1.0 and MDImporter jME2.0 quick bug fix.*
-  * There was a bug in the new texture loading process that does allow users to specify 
-    texture formats. Now the v1.1.1 version makes use of MultiFormatResourceLocator to 
-    allow user specify their own format. MD5Importer no longer provides any image format 
-    extensions anymore.
+  * There was a bug in the new texture loading process that does allow users to specify texture formats. Now the v1.1.1 version makes use of MultiFormatResourceLocator to allow user specify their own format. MD5Importer no longer provides any image format extensions anymore.
 
 == 05/28/08 ==
 
