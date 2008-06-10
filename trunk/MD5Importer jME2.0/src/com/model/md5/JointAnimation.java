@@ -17,11 +17,16 @@ import com.model.md5.resource.anim.Frame;
  * <p>
  * <code>JointAnimation</code> is added to a <code>JointControlle</code> for animating
  * the skeletal <code>ModelNode</code>.
+ * <p>
+ * <code>JointAnimation</code> implements <code>Cloneable</code> interface to provide
+ * the cloning functionality so that users can fast clone animations that may be used
+ * by multiple <code>ModelNode</code>. The newly cloned <code>JointAnimation</code> is
+ * initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-09-2008 17:44 EST
+ * @version Modified date: 06-10-2008 12:41 EST
  */
-public class JointAnimation implements Serializable, Savable {
+public class JointAnimation implements Serializable, Savable, Cloneable {
 	/**
 	 * Serial version.
 	 */
@@ -325,5 +330,27 @@ public class JointAnimation implements Serializable, Savable {
 		oc.write(this.frameRate, "FrameRate", 0);
 		oc.write(this.frameTimes, "FrameTimes", null);
 		oc.writeSavableArrayList(this.animations, "Animations", null);
+	}
+	
+	@Override
+	public JointAnimation clone() {
+		JointAnimation clone = new JointAnimation();
+		clone.name = new String(this.name.toCharArray());
+		clone.jointIDs = new String[this.jointIDs.length];
+		System.arraycopy(this.jointIDs, 0, clone.jointIDs, 0, this.jointIDs.length);
+		clone.frames = new Frame[this.frames.length];
+		for(int i = 0; i < clone.frames.length; i++) {
+			clone.frames[i] = this.frames[i].clone();
+		}
+		clone.frameRate = this.frameRate;
+		clone.frameTimes = new float[this.frameTimes.length];
+		System.arraycopy(this.frameTimes, 0, clone.frameTimes, 0, this.frameTimes.length);
+		if(this.animations != null) {
+			clone.animations = new ArrayList<JointAnimation>();
+			for(JointAnimation anim : this.animations) {
+				clone.animations.add(anim.clone());
+			}
+		}
+		return clone;
 	}
 }

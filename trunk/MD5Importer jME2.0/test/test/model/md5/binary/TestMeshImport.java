@@ -20,6 +20,8 @@ public class TestMeshImport extends SimpleGame{
 	private final String head = "headmesh.jme";
 	protected ModelNode bodyNode;
 	protected ModelNode headNode;
+	protected double bodytime;
+	protected double headtime;
 	
 	public static void main(String[] args) {
 		new TestMeshImport().start();
@@ -31,8 +33,14 @@ public class TestMeshImport extends SimpleGame{
 		URL bodyURL = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/" + this.body);
 		URL headURL = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/" + this.head);
 		try {
+			long start = System.nanoTime();
 			this.bodyNode = (ModelNode)BinaryImporter.getInstance().load(bodyURL);
+			long end = System.nanoTime();
+			this.bodytime = (end - start)/1000000.0;
+			start = System.nanoTime();
 			this.headNode = (ModelNode)BinaryImporter.getInstance().load(headURL);
+			end = System.nanoTime();
+			this.headtime = (end - start)/1000000.0;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
