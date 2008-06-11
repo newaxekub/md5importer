@@ -74,6 +74,7 @@ public class TestAnimClone extends TestMeshClone {
 		bodycontroller.addAnimation(bodyclone);
 		bodycontroller.setRepeatType(1);
 		bodycontroller.setActive(true);
+		bodycontroller.setSpeed(0.2f);
 		this.bodyclone.addController(bodycontroller);
 		JointController headcontroller = new JointController(this.headclone.getJoints());
 		headcontroller.addAnimation(headclone);
