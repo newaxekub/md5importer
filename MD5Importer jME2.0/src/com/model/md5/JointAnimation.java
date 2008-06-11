@@ -24,7 +24,7 @@ import com.model.md5.resource.anim.Frame;
  * initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-10-2008 12:41 EST
+ * @version Modified date: 06-11-2008 11:52 EST
  */
 public class JointAnimation implements Serializable, Savable, Cloneable {
 	/**
@@ -96,9 +96,10 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 		this.setJointIDs(IDs);
 		this.setFrames(frames);
 		this.setFrameRate(framerate);
+		final float timeperframe = 1.0f/this.frameRate;
 		this.frameTimes = new float[this.frames.length];
 		for(int i = 0; i < this.frameTimes.length; i++) {
-			this.frameTimes[i] = (float)i * (1.0f/this.frameRate);
+			this.frameTimes[i] = (float)i * timeperframe;
 		}
 		this.prevFrame = 0;
 		this.nextFrame = 1;
@@ -111,17 +112,16 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	 * @param speed The speed of the <code>Controller</code>.
 	 */
 	public void update(float time, int repeat, float speed) {
-		this.time = this.time + (time * speed);
-		if(this.complete) this.complete = false;
+		if(this.complete && repeat != Controller.RT_CLAMP) this.complete = false;
 		switch(repeat) {
 			case Controller.RT_CLAMP:
-				this.updateClamp();
+				this.updateClamp(time, speed);
 				break;
 			case Controller.RT_CYCLE:
-				this.updateCycle();
+				this.updateCycle(time, speed);
 				break;
 			case Controller.RT_WRAP:
-				this.updateWrap();
+				this.updateWrap(time, speed);
 				break;
 		}
 		if(this.animations != null) {
@@ -133,26 +133,33 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	
 	/**
 	 * Update <code>Frame</code> index when the wrap mode is set to clamp.
+	 * @param time The time between last update and the current one.
+	 * @param speed The speed of the <code>Controller</code>.
 	 */
-	private void updateClamp() {
-		if(this.time >= 1.0f/this.frameRate) {
+	private void updateClamp(float time, float speed) {
+		if(this.complete) return;
+		this.time = this.time + (time * speed);
+		if(this.time >= this.frameTimes[this.nextFrame]) {
 			this.nextFrame++;
 			this.prevFrame = this.nextFrame - 1;
 			if(this.nextFrame > this.frames.length - 1) {
-				this.nextFrame = this.frames.length - 1;
-				this.prevFrame = this.nextFrame;
+				this.nextFrame = 1;
+				this.prevFrame = 0;
 				this.complete = true;
+				this.time = 0.0f;
 			}
-			this.time = 0.0f;
 		}
 	}
 	
 	/**
 	 * Update <code>Frame</code> index when the wrap mode is set to cycle.
+	 * @param time The time between last update and the current one.
+	 * @param speed The speed of the <code>Controller</code>.
 	 */
-	private void updateCycle() {
-		if(this.time >= 1.0f/this.frameRate) {
-			if(!this.backward) {
+	private void updateCycle(float time, float speed) {
+		if(!this.backward) {
+			this.time = this.time + (time * speed);
+			if(this.time >= this.frameTimes[this.nextFrame]) {
 				this.nextFrame++;
 				this.prevFrame = this.nextFrame - 1;
 				if(this.nextFrame > this.frames.length - 1) {
@@ -160,8 +167,12 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 					this.prevFrame = this.frames.length - 1;
 					this.nextFrame = this.prevFrame - 1;
 					this.complete = true;
+					this.time = this.frameTimes[this.prevFrame];
 				}
-			} else {
+			}
+		} else {
+			this.time = this.time - (time * speed);
+			if(this.time <= this.frameTimes[this.nextFrame]) {
 				this.nextFrame--;
 				this.prevFrame = this.nextFrame + 1;
 				if(this.nextFrame < 0) {
@@ -169,25 +180,28 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 					this.prevFrame = 0;
 					this.nextFrame = this.prevFrame + 1;
 					this.complete = true;
+					this.time = 0.0f;
 				}
 			}
-			this.time = 0.0f;
 		}
 	}
 	
 	/**
 	 * Update <code>Frame</code> index when the wrap mode is set to wrap.
+	 * @param time The time between last update and the current one.
+	 * @param speed The speed of the <code>Controller</code>.
 	 */
-	private void updateWrap() {
-		if(this.time >= 1.0f/this.frameRate) {
+	private void updateWrap(float time, float speed) {
+		this.time = this.time + (time * speed);
+		if(this.time >= this.frameTimes[this.nextFrame]) {
 			this.nextFrame++;
 			this.prevFrame = this.nextFrame - 1;
 			if(this.nextFrame > this.frames.length - 1) {
 				this.prevFrame = 0;
 				this.nextFrame = this.prevFrame + 1;
 				this.complete = true;
+				this.time = 0.0f;
 			}
-			this.time = 0.0f;
 		}
 	}
 	
