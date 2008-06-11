@@ -25,7 +25,7 @@ import com.model.md5.resource.mesh.Joint;
  * then updates the skeleton with interpolated translation and orientation values.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-03-2008 18:51 EST
+ * @version Modified date: 06-11-2008 11:51 EST
  */
 public class JointController extends Controller {
 	/**
@@ -101,8 +101,10 @@ public class JointController extends Controller {
 	 */
 	@Override
 	public void update(float time) {
+		if(this.activeAnimation == null) return;
 		this.updateTime(time);
-		if(!this.fading) this.updateJoints(time);
+		this.activeAnimation.update(time, this.getRepeatType(), this.getSpeed());
+		if(!this.fading) this.updateJoints();
 		else this.updateFading();
 	}
 	
@@ -136,12 +138,8 @@ public class JointController extends Controller {
 	
 	/**
 	 * Update the skeleton during normal animating process.
-	 * @param time The time between the last update and the current one.
 	 */
-	private void updateJoints(float time) {
-		if(this.activeAnimation != null) {
-			this.activeAnimation.update(time, this.getRepeatType(), this.getSpeed());
-		}
+	private void updateJoints() {
 		this.interpolation = this.getInterpolation();
 		for(int i = 0; i < this.joints.length; i++) {
 			this.translation.interpolate(this.activeAnimation.getPreviousFrame().getTranslation(i),
