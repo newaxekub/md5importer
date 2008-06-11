@@ -1,3 +1,9 @@
+== 06/11/08==
+
+*MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.1 release.*
+
+Fixed an animation jittering bug caused by the false calculations returned by JointAnimation.
+
 == 06/10/08 ==
 
 *MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.0 release.*
