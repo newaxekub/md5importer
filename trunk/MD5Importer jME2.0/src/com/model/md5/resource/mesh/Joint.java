@@ -226,6 +226,17 @@ public class Joint implements Serializable, Savable {
 	}
 
 	@Override
+	public void write(JMEExporter ex) throws IOException {
+		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.modelNode, "ModelNode", null);
+		oc.write(this.name, "Name", null);
+		oc.write(this.parent, "Parent", -1);
+		oc.write(this.translation, "Translation", null);
+		oc.write(this.orientation, "Orientation", null);
+		oc.write(this.transform, "Transform", null);
+	}
+
+	@Override
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule ic = im.getCapsule(this);
 		this.modelNode = (ModelNode)ic.readSavable("ModelNode", null);
@@ -236,17 +247,6 @@ public class Joint implements Serializable, Savable {
 		this.transform = (TransformMatrix)ic.readSavable("Transform", null);
 	}
 
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.modelNode, "ModelNode", null);
-		oc.write(this.name, "Name", null);
-		oc.write(this.parent, "Parent", -1);
-		oc.write(this.translation, "Translation", null);
-		oc.write(this.orientation, "Orientation", null);
-		oc.write(this.transform, "Transform", null);
-	}
-	
 	/**
 	 * Clone this join with given newly cloned <code>ModelNode</code> parent.
 	 * @param mesh The cloned <code>ModelNode</code> parent.
