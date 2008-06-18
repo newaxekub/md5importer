@@ -111,6 +111,14 @@ public class Weight implements Serializable, Savable, Cloneable {
 	}
 
 	@Override
+	public void write(JMEExporter ex) throws IOException {
+		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.jointIndex, "JointIndex", -1);
+		oc.write(this.value, "Value", 0);
+		oc.write(this.position, "Position", null);
+	}
+
+	@Override
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule ic = im.getCapsule(this);
 		this.jointIndex = ic.readInt("JointIndex", -1);
@@ -118,14 +126,6 @@ public class Weight implements Serializable, Savable, Cloneable {
 		this.position = (Vector3f)ic.readSavable("Position", null);
 	}
 
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.jointIndex, "JointIndex", -1);
-		oc.write(this.value, "Value", 0);
-		oc.write(this.position, "Position", null);
-	}
-	
 	@Override
 	public Weight clone() {
 		Weight clone = new Weight();
