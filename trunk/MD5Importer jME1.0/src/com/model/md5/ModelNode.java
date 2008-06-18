@@ -214,6 +214,17 @@ public class ModelNode extends Node implements Cloneable {
 	}
 	
 	@Override
+	public void write(JMEExporter ex) throws IOException {
+		this.detachChild(this.skin);
+		super.write(ex);
+		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.dependent, "Dependent", false);
+		oc.write(this.joints, "Joints", null);
+		oc.write(this.meshes, "Meshes", null);
+		this.attachChild(this.skin);
+	}
+
+	@Override
 	public void read(JMEImporter im) throws IOException {
 		super.read(im);
 		InputCapsule ic = im.getCapsule(this);
@@ -232,17 +243,6 @@ public class ModelNode extends Node implements Cloneable {
 		this.initialize();
 	}
 
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		this.detachChild(this.skin);
-		super.write(ex);
-		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.dependent, "Dependent", false);
-		oc.write(this.joints, "Joints", null);
-		oc.write(this.meshes, "Meshes", null);
-		this.attachChild(this.skin);
-	}
-	
 	@Override
 	public ModelNode clone() {
 		ModelNode clone = new ModelNode();
