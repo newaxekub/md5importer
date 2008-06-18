@@ -320,6 +320,17 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	}
 
 	@Override
+	public void write(JMEExporter ex) throws IOException {
+		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.name, "Name", null);
+		oc.write(this.jointIDs, "JointIDs", null);
+		oc.write(this.frames, "Frames", null);
+		oc.write(this.frameRate, "FrameRate", 0);
+		oc.write(this.frameTimes, "FrameTimes", null);
+		oc.writeSavableArrayList(this.animations, "Animations", null);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule ic = im.getCapsule(this);
@@ -335,17 +346,6 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 		this.animations = (ArrayList<JointAnimation>)ic.readSavableArrayList("Animations", null);
 	}
 
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.name, "Name", null);
-		oc.write(this.jointIDs, "JointIDs", null);
-		oc.write(this.frames, "Frames", null);
-		oc.write(this.frameRate, "FrameRate", 0);
-		oc.write(this.frameTimes, "FrameTimes", null);
-		oc.writeSavableArrayList(this.animations, "Animations", null);
-	}
-	
 	@Override
 	public JointAnimation clone() {
 		JointAnimation clone = new JointAnimation();

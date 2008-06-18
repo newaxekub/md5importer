@@ -288,6 +288,15 @@ public class JointController extends Controller {
 	}
 	
 	@Override
+	public void write(JMEExporter e) throws IOException {
+		super.write(e);
+		OutputCapsule oc = e.getCapsule(this);
+		oc.write(this.joints, "Joints", null);
+		oc.write(this.activeAnimation, "ActiveAnimation", null);
+		oc.writeStringSavableMap(this.animations, "Animations", null);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public void read(JMEImporter e) throws IOException {
 		super.read(e);
@@ -299,14 +308,5 @@ public class JointController extends Controller {
 		}
 		this.activeAnimation = (JointAnimation)ic.readSavable("ActiveAnimation", null);
 		this.animations = (HashMap<String, JointAnimation>)ic.readStringSavableMap("Animations", null);
-	}
-
-	@Override
-	public void write(JMEExporter e) throws IOException {
-		super.write(e);
-		OutputCapsule oc = e.getCapsule(this);
-		oc.write(this.joints, "Joints", null);
-		oc.write(this.activeAnimation, "ActiveAnimation", null);
-		oc.writeStringSavableMap(this.animations, "Animations", null);
 	}
 }

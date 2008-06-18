@@ -178,6 +178,15 @@ public class Frame implements Serializable, Savable, Cloneable {
 	}
 
 	@Override
+	public void write(JMEExporter ex) throws IOException {
+		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.baseframe, "Baseframe", false);
+		oc.write(this.parents, "Parents", null);
+		oc.write(this.translations, "Translations", null);
+		oc.write(this.orientations, "Orientations", null);
+	}
+
+	@Override
 	public void read(JMEImporter im) throws IOException {
 		Savable[] temp = null;
 		InputCapsule ic = im.getCapsule(this);
@@ -195,15 +204,6 @@ public class Frame implements Serializable, Savable, Cloneable {
 		}
 	}
 
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.baseframe, "Baseframe", false);
-		oc.write(this.parents, "Parents", null);
-		oc.write(this.translations, "Translations", null);
-		oc.write(this.orientations, "Orientations", null);
-	}
-	
 	@Override
 	public Frame clone() {
 		Frame clone = new Frame();

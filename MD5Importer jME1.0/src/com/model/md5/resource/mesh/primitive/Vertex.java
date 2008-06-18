@@ -181,6 +181,17 @@ public class Vertex implements Serializable, Savable {
 	}
 
 	@Override
+	public void write(JMEExporter ex) throws IOException {
+		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.mesh, "Mesh", null);
+		oc.write(this.textureCoords, "TextureCoords", null);
+		oc.write(this.weightIndices, "WeightIndices", null);
+		oc.write(this.usedTimes, "UsedTimes", 0);
+		oc.write(this.normal, "Normal", null);
+		oc.write(this.position, "Position", null);
+	}
+
+	@Override
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule ic = im.getCapsule(this);
 		this.mesh = (Mesh)ic.readSavable("Mesh", null);
@@ -191,17 +202,6 @@ public class Vertex implements Serializable, Savable {
 		this.position = (Vector3f)ic.readSavable("Position", null);
 	}
 
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.mesh, "Mesh", null);
-		oc.write(this.textureCoords, "TextureCoords", null);
-		oc.write(this.weightIndices, "WeightIndices", null);
-		oc.write(this.usedTimes, "UsedTimes", 0);
-		oc.write(this.normal, "Normal", null);
-		oc.write(this.position, "Position", null);
-	}
-	
 	/**
 	 * Clone this vertex with given newly cloned mesh parent.
 	 * @param mesh The cloned <code>Mesh</code> parent.

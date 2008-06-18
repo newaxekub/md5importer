@@ -306,6 +306,16 @@ public class Mesh implements Serializable, Savable {
 	}
 
 	@Override
+	public void write(JMEExporter ex) throws IOException {
+		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.modelNode, "ModelNode", null);
+		oc.write(this.texture, "Texture", null);
+		oc.write(this.vertices, "Vertices", null);
+		oc.write(this.triangles, "Triangles", null);
+		oc.write(this.weights, "Weights", null);
+	}
+
+	@Override
 	public void read(JMEImporter im) throws IOException {
 		Savable[] temp = null;
 		InputCapsule ic = im.getCapsule(this);
@@ -328,16 +338,6 @@ public class Mesh implements Serializable, Savable {
 		}
 	}
 
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.modelNode, "ModelNode", null);
-		oc.write(this.texture, "Texture", null);
-		oc.write(this.vertices, "Vertices", null);
-		oc.write(this.triangles, "Triangles", null);
-		oc.write(this.weights, "Weights", null);
-	}
-	
 	/**
 	 * Clone this mesh with given newly cloned <code>ModelNode</code> parent.
 	 * @param mesh The cloned <code>ModelNode</code> parent.

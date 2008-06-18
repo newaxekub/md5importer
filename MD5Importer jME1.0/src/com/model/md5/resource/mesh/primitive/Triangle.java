@@ -111,19 +111,19 @@ public class Triangle implements Serializable, Savable {
 	}
 
 	@Override
+	public void write(JMEExporter ex) throws IOException {
+		OutputCapsule oc = ex.getCapsule(this);
+		oc.write(this.mesh, "Mesh", null);
+		oc.write(this.vertexIndices, "VertexIndices", null);
+	}
+
+	@Override
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule ic = im.getCapsule(this);
 		this.mesh = (Mesh)ic.readSavable("Mesh", null);
 		this.vertexIndices = ic.readIntArray("VertexIndices", null);
 	}
 
-	@Override
-	public void write(JMEExporter ex) throws IOException {
-		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.mesh, "Mesh", null);
-		oc.write(this.vertexIndices, "VertexIndices", null);
-	}
-	
 	/**
 	 * Clone this triangle with given newly cloned mesh parent.
 	 * @param mesh The cloned <code>Mesh</code> parent.
