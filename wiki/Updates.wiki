@@ -1,3 +1,9 @@
+== 06/19/08 ==
+
+*MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.1 Java5 release.*
+
+As requested by a number of users. I compiled Java5 version for both jME1.0 and jME2.0 releases.
+
 == 06/11/08==
 
 *MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.1 release.*
