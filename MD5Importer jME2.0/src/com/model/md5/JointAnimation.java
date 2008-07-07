@@ -139,7 +139,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	private void updateClamp(float time, float speed) {
 		if(this.complete) return;
 		this.time = this.time + (time * speed);
-		if(this.time >= this.frameTimes[this.nextFrame]) {
+		while(this.time >= this.frameTimes[this.nextFrame]) {
 			this.nextFrame++;
 			this.prevFrame = this.nextFrame - 1;
 			if(this.nextFrame > this.frames.length - 1) {
@@ -147,6 +147,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 				this.prevFrame = 0;
 				this.complete = true;
 				this.time = 0.0f;
+				break;
 			}
 		}
 	}
@@ -159,7 +160,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	private void updateCycle(float time, float speed) {
 		if(!this.backward) {
 			this.time = this.time + (time * speed);
-			if(this.time >= this.frameTimes[this.nextFrame]) {
+			while(this.time >= this.frameTimes[this.nextFrame]) {
 				this.nextFrame++;
 				this.prevFrame = this.nextFrame - 1;
 				if(this.nextFrame > this.frames.length - 1) {
@@ -168,11 +169,12 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 					this.nextFrame = this.prevFrame - 1;
 					this.complete = true;
 					this.time = this.frameTimes[this.prevFrame];
+					break;
 				}
 			}
 		} else {
 			this.time = this.time - (time * speed);
-			if(this.time <= this.frameTimes[this.nextFrame]) {
+			while(this.time <= this.frameTimes[this.nextFrame]) {
 				this.nextFrame--;
 				this.prevFrame = this.nextFrame + 1;
 				if(this.nextFrame < 0) {
@@ -181,6 +183,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 					this.nextFrame = this.prevFrame + 1;
 					this.complete = true;
 					this.time = 0.0f;
+					break;
 				}
 			}
 		}
@@ -196,11 +199,12 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 		if(this.time >= this.frameTimes[this.nextFrame]) {
 			this.nextFrame++;
 			this.prevFrame = this.nextFrame - 1;
-			if(this.nextFrame > this.frames.length - 1) {
+			while(this.nextFrame > this.frames.length - 1) {
 				this.prevFrame = 0;
 				this.nextFrame = this.prevFrame + 1;
 				this.complete = true;
 				this.time = 0.0f;
+				break;
 			}
 		}
 	}
