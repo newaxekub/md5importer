@@ -44,7 +44,6 @@ public class TestAnim extends Test{
 	@Override
 	protected void setupGame() {
 		ModelNode node = (ModelNode)this.rootNode.getChild("ModelNode");
-		node.setLocalTranslation(0, -40, -300);
 		node.setLocalScale(1);
 		node.getController(0).setSpeed(2f);
 	}
