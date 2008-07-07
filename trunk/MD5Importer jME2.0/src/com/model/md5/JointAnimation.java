@@ -24,7 +24,7 @@ import com.model.md5.resource.anim.Frame;
  * initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-11-2008 11:52 EST
+ * @version Modified date: 07-07-2008 11:14 EST
  */
 public class JointAnimation implements Serializable, Savable, Cloneable {
 	/**
