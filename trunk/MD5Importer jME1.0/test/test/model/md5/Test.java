@@ -3,6 +3,7 @@ package test.model.md5;
 import java.net.URISyntaxException;
 
 import com.jme.app.SimpleGame;
+import com.jme.scene.Node;
 import com.jme.util.resource.MultiFormatResourceLocator;
 import com.jme.util.resource.ResourceLocatorTool;
 import com.model.md5.ModelNode;
@@ -13,7 +14,9 @@ public abstract class Test extends SimpleGame{
 	@Override
 	protected void simpleInitGame() {
 		this.overrideTextureKey();
-		this.rootNode.attachChild(this.loadModel());
+		Node node = this.loadModel();
+		node.setLocalTranslation(0, -40, -300);
+		this.rootNode.attachChild(node);
 		this.setupGame();
 		MD5Importer.getInstance().cleanup();
 	}
