@@ -24,7 +24,7 @@ import com.model.md5.resource.anim.Frame;
  * initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-11-2008 11:52 EST
+ * @version Modified date: 07-07-2008 11:16 EST
  */
 public class JointAnimation implements Serializable, Savable, Cloneable {
 	/**
@@ -139,7 +139,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	private void updateClamp(float time, float speed) {
 		if(this.complete) return;
 		this.time = this.time + (time * speed);
-		if(this.time >= this.frameTimes[this.nextFrame]) {
+		while(this.time >= this.frameTimes[this.nextFrame]) {
 			this.nextFrame++;
 			this.prevFrame = this.nextFrame - 1;
 			if(this.nextFrame > this.frames.length - 1) {
@@ -147,6 +147,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 				this.prevFrame = 0;
 				this.complete = true;
 				this.time = 0.0f;
+				break;
 			}
 		}
 	}
@@ -159,7 +160,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	private void updateCycle(float time, float speed) {
 		if(!this.backward) {
 			this.time = this.time + (time * speed);
-			if(this.time >= this.frameTimes[this.nextFrame]) {
+			while(this.time >= this.frameTimes[this.nextFrame]) {
 				this.nextFrame++;
 				this.prevFrame = this.nextFrame - 1;
 				if(this.nextFrame > this.frames.length - 1) {
@@ -168,11 +169,12 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 					this.nextFrame = this.prevFrame - 1;
 					this.complete = true;
 					this.time = this.frameTimes[this.prevFrame];
+					break;
 				}
 			}
 		} else {
 			this.time = this.time - (time * speed);
-			if(this.time <= this.frameTimes[this.nextFrame]) {
+			while(this.time <= this.frameTimes[this.nextFrame]) {
 				this.nextFrame--;
 				this.prevFrame = this.nextFrame + 1;
 				if(this.nextFrame < 0) {
@@ -181,6 +183,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 					this.nextFrame = this.prevFrame + 1;
 					this.complete = true;
 					this.time = 0.0f;
+					break;
 				}
 			}
 		}
@@ -193,7 +196,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	 */
 	private void updateWrap(float time, float speed) {
 		this.time = this.time + (time * speed);
-		if(this.time >= this.frameTimes[this.nextFrame]) {
+		while(this.time >= this.frameTimes[this.nextFrame]) {
 			this.nextFrame++;
 			this.prevFrame = this.nextFrame - 1;
 			if(this.nextFrame > this.frames.length - 1) {
@@ -201,6 +204,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 				this.nextFrame = this.prevFrame + 1;
 				this.complete = true;
 				this.time = 0.0f;
+				break;
 			}
 		}
 	}

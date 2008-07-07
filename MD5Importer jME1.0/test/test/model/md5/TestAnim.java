@@ -32,7 +32,7 @@ public class TestAnim extends Test{
 		URL headMesh = TestAnim.class.getClassLoader().getResource("test/model/md5/data/sarge.md5mesh");
 		URL headAnim = TestAnim.class.getClassLoader().getResource("test/model/md5/data/sarge.md5anim");
 		try {
-			MD5Importer.getInstance().load(headMesh, "Head", headAnim, "HeadAnimation", Controller.RT_WRAP);
+			MD5Importer.getInstance().load(headMesh, "Head", headAnim, "HeadAnimation", Controller.RT_CYCLE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -45,6 +45,6 @@ public class TestAnim extends Test{
 	protected void setupGame() {
 		ModelNode node = (ModelNode)this.rootNode.getChild("ModelNode");
 		node.setLocalScale(1);
-		node.getController(0).setSpeed(0.2f);
+		node.getController(0).setSpeed(2f);
 	}
 }
