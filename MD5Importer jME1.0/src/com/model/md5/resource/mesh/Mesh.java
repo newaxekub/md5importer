@@ -30,14 +30,16 @@ import com.model.md5.resource.mesh.primitive.Weight;
 /**
  * <code>Mesh</code> represents a mesh in md5mesh file.
  * <p>
- * <code>Mesh</code> maintains a number of <code>Vertex</code>, <code>Weight</code>
- * and <code>Triangle</code> to represent the basic geometry of a <code>ModelNode</code>.
+ * <code>Mesh</code> maintains a number of <code>Vertex</code>,
+ * <code>Weight</code> and <code>Triangle</code> to represent the basic
+ * geometry of a <code>ModelNode</code>.
  * <p>
- * <code>Mesh</code> does not directly process any geometric information but delegates
- * the process down to the primitive elements it maintains.
+ * <code>Mesh</code> does not directly process any geometric information
+ * but delegates the process down to the primitive elements it maintains.
  * <p>
- * <code>Mesh</code> cannot be cloned directly. The cloning process of a <code>Mesh</code>
- * can only be initiated by the cloning process of the parent <code>ModelNode</code>.
+ * <code>Mesh</code> cannot be cloned directly. The cloning process of a
+ * <code>Mesh</code> can only be initiated by the cloning process of the
+ * parent <code>ModelNode</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
@@ -73,12 +75,12 @@ public class Mesh implements Serializable, Savable {
 	 * The generated <code>TriangleBatch</code> of this <code>Mesh</code>.
 	 */
 	private TriangleBatch triangleBatch;
-	
+
 	/**
 	 * Default constructor of <code>Mesh</code>.
 	 */
 	public Mesh() {}
-	
+
 	/**
 	 * Constructor of <code>Mesh</code>.
 	 * @param modelNode The <code>ModelNode</code> this <code>Mesh</code> belongs to.
@@ -86,7 +88,7 @@ public class Mesh implements Serializable, Savable {
 	public Mesh(ModelNode modelNode) {
 		this.modelNode = modelNode;
 	}
-	
+
 	/**
 	 * Generate the <code>TriangleBatch</code> of this <code>Mesh</code>.
 	 */
@@ -99,7 +101,7 @@ public class Mesh implements Serializable, Savable {
 		this.processTexture();
 		this.processBounding();
 	}
-	
+
 	/**
 	 * Update the <code>TriangleBatch</code> vertex and normal buffer.
 	 */
@@ -111,7 +113,7 @@ public class Mesh implements Serializable, Savable {
 		this.processNormal();
 		this.triangleBatch.updateModelBound();
 	}
-	
+
 	/**
 	 * Process and setup the index buffer.
 	 */
@@ -119,15 +121,14 @@ public class Mesh implements Serializable, Savable {
 		IntBuffer indexBuffer = BufferUtils.createIntBuffer(this.triangles.length*3);
 		indexBuffer.clear();
 		for(int i = 0; i < this.triangles.length; i++) {
-			for(int j = 0; j < 3; j++)
-			{
+			for(int j = 0; j < 3; j++) {
 				indexBuffer.put(this.triangles[i].getVertexIndex(j));
 			}
 		}
 		indexBuffer.flip();
 		this.triangleBatch.setIndexBuffer(indexBuffer);
 	}
-	
+
 	/**
 	 * Process and setup the vertex position buffer.
 	 */
@@ -141,7 +142,7 @@ public class Mesh implements Serializable, Savable {
 		}
 		this.triangleBatch.setVertexBuffer(vertexBuffer);
 	}
-	
+
 	/**
 	 * Process and setup the normal position buffer.
 	 */
@@ -157,7 +158,7 @@ public class Mesh implements Serializable, Savable {
 		}
 		this.triangleBatch.setNormalBuffer(normalBuffer);
 	}
-	
+
 	/**
 	 * Process and setup the <code>TextureState</code> and texture UV buffer.
 	 */
@@ -177,10 +178,10 @@ public class Mesh implements Serializable, Savable {
 		Texture color = TextureManager.loadTexture(url,instance.getMMFilter(),instance.getFMFilter(),instance.getAnisotropic(),true);
 		if(color != null) {
 			if(maxU > 1 || minU < 0) {
-				if (maxV > 1 || minV < 0) color.setWrap(Texture.WM_WRAP_S_WRAP_T);
+				if(maxV > 1 || minV < 0) color.setWrap(Texture.WM_WRAP_S_WRAP_T);
 				else {
 					if(color.getWrap() != Texture.WM_WRAP_S_WRAP_T) {
-						if (color.getWrap() == Texture.WM_CLAMP_S_WRAP_T) color.setWrap(Texture.WM_WRAP_S_WRAP_T);
+						if(color.getWrap() == Texture.WM_CLAMP_S_WRAP_T) color.setWrap(Texture.WM_WRAP_S_WRAP_T);
 						else color.setWrap(Texture.WM_WRAP_S_CLAMP_T);
 					}
 				}
@@ -195,7 +196,7 @@ public class Mesh implements Serializable, Savable {
 		state.setTexture(color);
 		this.triangleBatch.setRenderState(state);
 	}
-	
+
 	/**
 	 * Process and setup the bounding volume of the <code>Mesh</code>.
 	 */
@@ -213,7 +214,7 @@ public class Mesh implements Serializable, Savable {
 	public void setTexture(String texture) {
 		this.texture = texture;
 	}
-	
+
 	/**
 	 * Setup the vertices array based on the given count.
 	 * @param count The number of vertices in this <code>Mesh</code>.
@@ -221,7 +222,7 @@ public class Mesh implements Serializable, Savable {
 	public void setVrticesCount(int count) {
 		this.vertices = new Vertex[count];
 	}
-	
+
 	/**
 	 * Set the <code>Vertex</code> with given index number.
 	 * @param index The index of the <code>Vertex</code>.
@@ -230,7 +231,7 @@ public class Mesh implements Serializable, Savable {
 	public void setVertex(int index, Vertex vertex) {
 		this.vertices[index] = vertex;
 	}
-	
+
 	/**
 	 * Setup the triangles array based on the given count.
 	 * @param count The number of triangles in this <code>Mesh</code>.
@@ -238,7 +239,7 @@ public class Mesh implements Serializable, Savable {
 	public void setTrianglesCount(int count) {
 		this.triangles = new Triangle[count];
 	}
-	
+
 	/**
 	 * Set the <code>Triangle</code> with given index number.
 	 * @param index The index of the <code>Triangle</code>.
@@ -247,7 +248,7 @@ public class Mesh implements Serializable, Savable {
 	public void setTriangle(int index, Triangle triangle) {
 		this.triangles[index] = triangle;
 	}
-	
+
 	/**
 	 * Setup the weights array based on the given count.
 	 * @param count The number of weights in this <code>Mesh</code>.
@@ -255,7 +256,7 @@ public class Mesh implements Serializable, Savable {
 	public void setWeightCount(int count) {
 		this.weights = new Weight[count];
 	}
-	
+
 	/**
 	 * Set the <code>Weight</code> with given index number.
 	 * @param index The index of the <code>Weight</code>.
@@ -264,7 +265,7 @@ public class Mesh implements Serializable, Savable {
 	public void setWeight(int index, Weight weight) {
 		this.weights[index] = weight;
 	}
-	
+
 	/**
 	 * Retrieve the <code>ModelNode</code> this <code>Mesh</code> belongs to.
 	 * @return The <code>ModelNode</code> this <code>Mesh</code> belongs to.
@@ -272,7 +273,7 @@ public class Mesh implements Serializable, Savable {
 	public ModelNode getModelNode() {
 		return this.modelNode;
 	}
-	
+
 	/**
 	 * Retrieve the <code>Vertex</code> with given index number.
 	 * @param index The index number of the <code>Vertex</code>.
@@ -281,7 +282,7 @@ public class Mesh implements Serializable, Savable {
 	public Vertex getVertex(int index) {
 		return this.vertices[index];
 	}
-	
+
 	/**
 	 * Retrieve the <code>Weight</code> with given index number.
 	 * @param index The index number of the <code>Weight</code>.
@@ -290,7 +291,7 @@ public class Mesh implements Serializable, Savable {
 	public Weight getWeight(int index) {
 		return this.weights[index];
 	}
-	
+
 	/**
 	 * Retrieve the <code>TriangleBatch</code> generated by this <code>Mesh</code>.
 	 * @return The generated <code>TriangleBatch</code> instance.

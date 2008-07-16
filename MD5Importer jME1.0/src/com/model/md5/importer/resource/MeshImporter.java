@@ -38,7 +38,7 @@ public class MeshImporter {
 	 * The final <code>ModelNode</code> instance.
 	 */
 	private ModelNode modelNode;
-	
+
 	/**
 	 * Constructor of <code>MeshImporter</code>.
 	 * @param reader The <code>StreamTokenizer</code> instance setup for reading file.
@@ -46,12 +46,12 @@ public class MeshImporter {
 	public MeshImporter(StreamTokenizer reader) {
 		this.reader = reader;
 	}
-	
+
 	/**
 	 * Load the md5mesh file and construct the final <code>ModelNode</code>.
 	 * @param name The name of the loaded <code>ModelNode</code>.
 	 * @return The loaded <code>ModelNode</code> instance.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	public ModelNode loadMesh(String name) throws IOException {
 		this.modelNode = new ModelNode(name);
@@ -59,10 +59,10 @@ public class MeshImporter {
 		this.constructSkinMesh();
 		return this.modelNode;
 	}
-	
+
 	/**
 	 * Process the information in md5mesh file.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processSkin() throws IOException {
 		String sval = null;
@@ -88,10 +88,10 @@ public class MeshImporter {
 			}
 		}
 	}
-	
+
 	/**
 	 * Process the information to construct all <code>Joint</code>.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processJoints() throws IOException {
 		int jointIndex = 0;
@@ -101,32 +101,31 @@ public class MeshImporter {
 		while(this.reader.nextToken() != '}' && jointIndex < this.joints.length) {
 			type = this.reader.ttype;
 			switch(type) {
-				case '"':
-					this.joints[jointIndex] = new Joint(this.reader.sval, this.modelNode);
-					break;
-				case StreamTokenizer.TT_NUMBER:
-					this.joints[jointIndex].setParent((int)this.reader.nval);
-					break;
-				case '(':
-					while(this.reader.nextToken() != ')') {
-						this.joints[jointIndex].setTransform(transIndex, (float)this.reader.nval);
-						transIndex++;
-					}
-					break;
-				case StreamTokenizer.TT_EOL:
-					if(transIndex > 5) {
-						transIndex = 0;
-						jointIndex++;
-					}
-					break;
-				default: break;
+			case '"':
+				this.joints[jointIndex] = new Joint(this.reader.sval, this.modelNode);
+				break;
+			case StreamTokenizer.TT_NUMBER:
+				this.joints[jointIndex].setParent((int)this.reader.nval);
+				break;
+			case '(':
+				while(this.reader.nextToken() != ')') {
+					this.joints[jointIndex].setTransform(transIndex, (float)this.reader.nval);
+					transIndex++;
+				}
+				break;
+			case StreamTokenizer.TT_EOL:
+				if(transIndex > 5) {
+					transIndex = 0;
+					jointIndex++;
+				}
+				break;
 			}
 		}
 	}
-	
+
 	/**
 	 * Process the information to construct a single <code>Mesh</code>.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processMesh() throws IOException {
 		int meshIndex = -1;
@@ -160,11 +159,11 @@ public class MeshImporter {
 			}
 		}
 	}
-	
+
 	/**
 	 * Process the information to construct a single <code>Vertex</code>.
 	 * @param mesh The <code>Mesh</code> that is being processed.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processVertex(Mesh mesh) throws IOException {
 		int pointer = 0;
@@ -172,37 +171,35 @@ public class MeshImporter {
 		while(this.reader.nextToken() != StreamTokenizer.TT_EOL) {
 			if(this.reader.ttype == StreamTokenizer.TT_NUMBER) {
 				switch(pointer) {
-					case 0:
-						mesh.setVertex((int)this.reader.nval, vertex);
-						pointer++;
-						break;
-					case 1:
-						float u = (float)this.reader.nval;
-						pointer++;
-						this.reader.nextToken();
-						float v = (float)this.reader.nval;				
-						vertex.setTextureCoords(u, v);
-						pointer++;
-						break;
-					case 3:
-						int start = (int)this.reader.nval;
-						pointer++;
-						this.reader.nextToken();
-						int length = (int)this.reader.nval;
-						vertex.setWeightIndices(start, length);
-						pointer++;
-						break;
-					default:
-						break;
+				case 0:
+					mesh.setVertex((int)this.reader.nval, vertex);
+					pointer++;
+					break;
+				case 1:
+					float u = (float)this.reader.nval;
+					pointer++;
+					this.reader.nextToken();
+					float v = (float)this.reader.nval;				
+					vertex.setTextureCoords(u, v);
+					pointer++;
+					break;
+				case 3:
+					int start = (int)this.reader.nval;
+					pointer++;
+					this.reader.nextToken();
+					int length = (int)this.reader.nval;
+					vertex.setWeightIndices(start, length);
+					pointer++;
+					break;
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Process the information to construct in a single <code>Triangle</code>.
 	 * @param mesh The <code>Mesh</code> that is being processed.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processTriangle(Mesh mesh) throws IOException {
 		int pointer = 0;
@@ -215,9 +212,9 @@ public class MeshImporter {
 					pointer++;
 				} else if(pointer >= 1 && pointer <= 3) {
 					switch(pointer) {
-						case 1:	index = 0; break;
-						case 2: index = 2; break;
-						case 3: index = 1; break;
+					case 1:	index = 0; break;
+					case 2: index = 2; break;
+					case 3: index = 1; break;
 					}
 					triangle.setVertexIndex(index, (int)this.reader.nval);
 					mesh.getVertex((int)this.reader.nval).incrementUsedTimes();
@@ -226,11 +223,11 @@ public class MeshImporter {
 			}
 		}
 	}
-	
+
 	/**
 	 * Process the information to construct in a single <code>Weight</code>.
 	 * @param mesh The <code>Mesh</code> that is being processed.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processWeight(Mesh mesh) throws IOException {
 		int pointer = 0;

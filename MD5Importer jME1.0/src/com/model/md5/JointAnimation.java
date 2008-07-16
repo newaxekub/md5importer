@@ -15,13 +15,13 @@ import com.model.md5.resource.anim.Frame;
 /**
  * <code>JointAnimation</code> is the final product of MD5 animation.
  * <p>
- * <code>JointAnimation</code> is added to a <code>JointControlle</code> for animating
- * the skeletal <code>ModelNode</code>.
+ * <code>JointAnimation</code> is added to a <code>JointControlle</code> for
+ * animating the skeletal <code>ModelNode</code>.
  * <p>
- * <code>JointAnimation</code> implements <code>Cloneable</code> interface to provide
- * the cloning functionality so that users can fast clone animations that may be used
- * by multiple <code>ModelNode</code>. The newly cloned <code>JointAnimation</code> is
- * initialized and ready to be used.
+ * <code>JointAnimation</code> implements <code>Cloneable</code> interface to
+ * provide the cloning functionality so that users can fast clone animations
+ * that may be used by multiple <code>ModelNode</code>. The newly cloned
+ * <code>JointAnimation</code> is initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
  * @version Modified date: 07-07-2008 11:16 EST
@@ -75,7 +75,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	 * The children <code>JointAnimation</code>.
 	 */
 	private ArrayList<JointAnimation> animations;
-	
+
 	/**
 	 * Default constructor of <code>JointAnimation</code>.
 	 */
@@ -83,7 +83,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 		this.prevFrame = 0;
 		this.nextFrame = 1;
 	}
-	
+
 	/**
 	 * Constructor of <code>JointAnimation</code>.
 	 * @param name The name of this <code>JointAnimation</code>.
@@ -114,15 +114,15 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	public void update(float time, int repeat, float speed) {
 		if(this.complete && repeat != Controller.RT_CLAMP) this.complete = false;
 		switch(repeat) {
-			case Controller.RT_CLAMP:
-				this.updateClamp(time, speed);
-				break;
-			case Controller.RT_CYCLE:
-				this.updateCycle(time, speed);
-				break;
-			case Controller.RT_WRAP:
-				this.updateWrap(time, speed);
-				break;
+		case Controller.RT_CLAMP:
+			this.updateClamp(time, speed);
+			break;
+		case Controller.RT_CYCLE:
+			this.updateCycle(time, speed);
+			break;
+		case Controller.RT_WRAP:
+			this.updateWrap(time, speed);
+			break;
 		}
 		if(this.animations != null) {
 			for(JointAnimation anim : this.animations) {
@@ -130,7 +130,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Update <code>Frame</code> index when the wrap mode is set to clamp.
 	 * @param time The time between last update and the current one.
@@ -151,7 +151,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Update <code>Frame</code> index when the wrap mode is set to cycle.
 	 * @param time The time between last update and the current one.
@@ -188,7 +188,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Update <code>Frame</code> index when the wrap mode is set to wrap.
 	 * @param time The time between last update and the current one.
@@ -208,7 +208,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Add a child <code>JointAnimation</code>.
 	 * @param animation The child <code>JointAnimation</code> to be added.
@@ -217,7 +217,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 		if(this.animations == null) this.animations = new ArrayList<JointAnimation>();
 		this.animations.add(animation);
 	}
-	
+
 	/**
 	 * Set the IDs of <code>Joint</code> of this <code>JointAnimation</code>.
 	 * @param IDs The array of IDs of <code>Joint</code>.
@@ -225,7 +225,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	public void setJointIDs(String[] IDs) {
 		this.jointIDs = IDs;
 	}
-	
+
 	/**
 	 * Set the <code>Frame</code> of this <code>JointAnimation</code>.
 	 * @param frames The array of <code>Frame</code>.
@@ -233,15 +233,15 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	public void setFrames(Frame[] frames) {
 		this.frames = frames;
 	}
-	
+
 	/**
-	 * Set the framerate of this <code>JointAnimation</code>.
-	 * @param frameRate The float framerate.
+	 * Set the frame rate of this <code>JointAnimation</code>.
+	 * @param frameRate The float frame rate.
 	 */
 	public void setFrameRate(float frameRate) {
 		this.frameRate = frameRate;
 	}
-	
+
 	/**
 	 * Retrieve the total time of one cycle of this <code>JointAnimation</code>.
 	 * @return The total time of one cycle of this <code>JointAnimation</code>.
@@ -257,7 +257,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	public Frame getPreviousFrame() {
 		return this.frames[this.prevFrame];
 	}
-	
+
 	/**
 	 * Retrieve the starting time of the previous <code>Frame</code>.
 	 * @return The starting time of the previous <code>Frame</code>.
@@ -274,7 +274,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	public Frame getNextFrame() {
 		return this.frames[this.nextFrame];
 	}
-	
+
 	/**
 	 * Retrieve the starting time of the next <code>Frame</code>.
 	 * @return The starting time of the next <code>Frame</code>.
@@ -283,7 +283,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 		if(this.frameTimes != null) return this.frameTimes[this.nextFrame];
 		return ((float)this.nextFrame) * (1.0f/this.frameRate);
 	}
-	
+
 	/**
 	 * Retrieve the IDs of <code>Joint</code> of this <code>JointAnimation</code>.
 	 * @return The array of IDs of <code>Joint</code>.
@@ -299,13 +299,13 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Class getClassTag() {
 		return JointAnimation.class;
 	}
-	
+
 	/**
 	 * Check if this <code>JointAnimation</code> is being played backward.
 	 * @return True if the <code>JointAnimation</code> is being played backward. False forward.

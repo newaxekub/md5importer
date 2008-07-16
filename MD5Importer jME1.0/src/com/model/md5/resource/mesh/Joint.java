@@ -17,11 +17,12 @@ import com.model.md5.ModelNode;
 /**
  * <code>Joint</code> represents a joint in md5mesh file.
  * <p>
- * <code>Joint</code> maintains its own transform information and the index number of
- * its parent <code>Joint</code>.
+ * <code>Joint</code> maintains its own transform information and the index
+ * number of its parent <code>Joint</code>.
  * <p>
- * <code>Joint</code> cannot be cloned directly. The cloning process of a <code>Joint</code>
- * can only be initiated by the cloning process of the parent <code>ModelNode</code>.
+ * <code>Joint</code> cannot be cloned directly. The cloning process of a
+ * <code>Joint</code> can only be initiated by the cloning process of the
+ * parent <code>ModelNode</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
@@ -68,7 +69,7 @@ public class Joint implements Serializable, Savable {
 	public Joint() {
 		this.nodeParent = -1;
 	}
-	
+
 	/**
 	 * Constructor of <code>Joint</code>.
 	 * @param name The name ID of the <code>Joint</code>.
@@ -82,7 +83,7 @@ public class Joint implements Serializable, Savable {
 		this.orientation = new Quaternion();
 		this.transform = new TransformMatrix();
 	}
-	
+
 	/**
 	 * Update the translation and orientation of this <code>Joint</code>.
 	 * @param translation The new <code>Vector3f</code> translation value.
@@ -93,7 +94,7 @@ public class Joint implements Serializable, Savable {
 		this.orientation.set(orientation);
 		this.modelNode.flagUpdate();
 	}
-	
+
 	/**
 	 * Process the translation and orientation of this <code>Joint</code> This process
 	 * has to be started from the bottom of skeleton tree up to the root <code>Joint</code>.
@@ -109,7 +110,7 @@ public class Joint implements Serializable, Savable {
 		this.translation.subtractLocal(parentTrans);
 		parentOrien.inverse().multLocal(this.translation);
 	}
-	
+
 	/**
 	 * Process the relative transforms of this <code>Joint</code>.
 	 */
@@ -119,7 +120,7 @@ public class Joint implements Serializable, Savable {
 		else this.transform.set(this.getBaseTransform());
 		this.transform.multLocal(new TransformMatrix(this.orientation, this.translation), new Vector3f());
 	}
-	
+
 	/**
 	 * Get the base transform of the parent <code>Joint</code> in either the parent
 	 * <code>ModelNode</code> or the local <code>ModelNode</code>.
@@ -133,7 +134,7 @@ public class Joint implements Serializable, Savable {
 			return matrix;
 		}
 	}
-	
+
 	/**
 	 * Set the parent index of this <code>Joint</code>.
 	 * @param parent The index of the parent <code>Joint</code>.
@@ -141,7 +142,7 @@ public class Joint implements Serializable, Savable {
 	public void setParent(int parent) {
 		this.parent = parent;
 	}
-	
+
 	/**
 	 * Set the parent index of this <code>Joint</code> in the parent <code>ModelNode</code>.
 	 * @param outerParent The index of the parent <code>Joint</code>.
@@ -149,7 +150,7 @@ public class Joint implements Serializable, Savable {
 	public void setNodeParent(int outerParent) {
 		this.nodeParent = outerParent;
 	}
-	
+
 	/**
 	 * Set one of the 6 transform values.
 	 * @param index The index of the transform values.
@@ -157,19 +158,19 @@ public class Joint implements Serializable, Savable {
 	 */
 	public void setTransform(int index, float value) {
 		switch(index) {
-			case 0: this.translation.setX(value); break;
-			case 1: this.translation.setY(value); break;
-			case 2: this.translation.setZ(value); break;
-			case 3: this.orientation.x = value; break;
-			case 4: this.orientation.y = value; break;
-			case 5:
-				this.orientation.z = value;
-				this.processOrientation();
-				break;
-			default: break;
+		case 0: this.translation.setX(value); break;
+		case 1: this.translation.setY(value); break;
+		case 2: this.translation.setZ(value); break;
+		case 3: this.orientation.x = value; break;
+		case 4: this.orientation.y = value; break;
+		case 5:
+			this.orientation.z = value;
+			this.processOrientation();
+			break;
+		default: break;
 		}
 	}
-	
+
 	/**
 	 * Compute the w value of the orientation.
 	 */
@@ -178,7 +179,7 @@ public class Joint implements Serializable, Savable {
 		if (t < 0.0f) this.orientation.w = 0.0f;
 		else this.orientation.w = -(FastMath.sqrt(t));
 	}
-	
+
 	/**
 	 * Retrieve the translation of this <code>Joint</code> read from MD5 file.
 	 * @return The <code>Vector3f</code> translation read directly from MD5 file.
@@ -186,7 +187,7 @@ public class Joint implements Serializable, Savable {
 	public Vector3f getTranslation() {
 		return this.translation;
 	}
-	
+
 	/**
 	 * Retrieve the orientation of this <code>Joint</code> read from MD5 file.
 	 * @return The <code>Quaternion</code> orientation read directly from MD5 file.
@@ -202,7 +203,7 @@ public class Joint implements Serializable, Savable {
 	public TransformMatrix getTransform() {
 		return this.transform;
 	}
-	
+
 	/**
 	 * Retrieve the index number of the parent <code>Joint</code>.
 	 * @return The index number of the parent <code>Joint</code>.
@@ -210,7 +211,7 @@ public class Joint implements Serializable, Savable {
 	public int getParent() {
 		return this.parent;
 	}
-	
+
 	/**
 	 * Retrieve the name ID of this <code>Joint</code>.
 	 * @return The name ID of this <code>Joint</code>.
