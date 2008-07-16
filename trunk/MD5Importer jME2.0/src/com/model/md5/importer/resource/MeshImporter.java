@@ -119,7 +119,6 @@ public class MeshImporter {
 					jointIndex++;
 				}
 				break;
-			default: break;
 			}
 		}
 	}
@@ -191,8 +190,6 @@ public class MeshImporter {
 					int length = (int)this.reader.nval;
 					vertex.setWeightIndices(start, length);
 					pointer++;
-					break;
-				default:
 					break;
 				}
 			}

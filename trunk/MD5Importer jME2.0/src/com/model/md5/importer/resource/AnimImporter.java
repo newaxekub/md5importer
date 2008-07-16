@@ -173,8 +173,6 @@ public class AnimImporter {
 				pointer = 0;
 				jointIndex++;
 				break;
-			default:
-				break;
 			}
 		}
 		for(int i = 0 ; i < this.parentHierarchy.length; i++) {

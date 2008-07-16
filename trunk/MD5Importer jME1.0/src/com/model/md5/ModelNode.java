@@ -15,13 +15,13 @@ import com.model.md5.resource.mesh.Mesh;
 /**
  * <code>ModelNode</code> is the final product of MD5 loading process.
  * <p>
- * <code>ModelNode</code> maintains the loaded <code>Joint</code> and <code>Mesh</code>
- * objects and updates them accordingly.
+ * <code>ModelNode</code> maintains the loaded <code>Joint</code> and
+ * <code>Mesh</code> objects and updates them accordingly.
  * <p>
- * <code>ModelNode</code> implements <code>Cloneable</code> interface to provide the
- * cloning functionality so that users can fast clone model nodes that may be used by
- * multiple entities. The newly cloned <code>ModelNode</code> is already initialized
- * and ready to be used.
+ * <code>ModelNode</code> implements <code>Cloneable</code> interface to
+ * provide the cloning functionality so that users can fast clone model
+ * nodes that may be used by multiple entities. The newly cloned
+ * <code>ModelNode</code> is already initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
  * @version Modified date: 06-10-2008 15:22 EST
@@ -51,14 +51,14 @@ public class ModelNode extends Node implements Cloneable {
 	 * The <code>TriMesh</code> skin of this <code>ModelNode</code>.
 	 */
 	private TriMesh skin;
-	
+
 	/**
 	 * Default constructor of <code>ModelNode</code>.
 	 */
 	public ModelNode() {
 		super();
 	}
-	
+
 	/**
 	 * Constructor of <code>ModelNode</code>.
 	 * @param name The name of this <code>ModelNode</code>.
@@ -66,7 +66,7 @@ public class ModelNode extends Node implements Cloneable {
 	public ModelNode(String name) {
 		super(name);
 	}
-	
+
 	/**
 	 * Initialize the <code>ModelNode</code>.
 	 */
@@ -106,7 +106,7 @@ public class ModelNode extends Node implements Cloneable {
 		}
 		super.updateGeometricState(time, initiator);
 	}
-	
+
 	/**
 	 * Attach the given <code>ModelNode</code> to the <code>Joint</code> with given ID.
 	 * @param node The <code>ModelNode</code> needs to be attached.
@@ -122,7 +122,7 @@ public class ModelNode extends Node implements Cloneable {
 		}
 		this.attachChild(node, jointIndex);
 	}
-	
+
 	/**
 	 * Attach the given <code>ModelNode</code> to the <code>Joint</code> with given index.
 	 * @param node The <code>ModelNode</code> needs to be attached.
@@ -133,7 +133,7 @@ public class ModelNode extends Node implements Cloneable {
 		this.attachChild(node);
 		node.initialize();
 	}
-	
+
 	/**
 	 * Attach the given <code>ModelNode</code> as a dependent child which shares the
 	 * skeleton with this <code>ModelNode</code>.
@@ -145,7 +145,7 @@ public class ModelNode extends Node implements Cloneable {
 		this.attachChild(node);
 		node.initialize();
 	}
-	
+
 	/**
 	 * Get the root <code>Joint</code> of the given <code>ModelNode</code>.
 	 * @param node The <code>ModelNode</code> to check from.
@@ -157,7 +157,7 @@ public class ModelNode extends Node implements Cloneable {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Notify the <code>ModelNode</code> to update its geometric information.
 	 */
@@ -172,7 +172,7 @@ public class ModelNode extends Node implements Cloneable {
 	public void setJoints(Joint[] joints) {
 		this.joints = joints;
 	}
-	
+
 	/**
 	 * Set the <code>Mesh</code> of this <code>ModelNode</code>.
 	 * @param meshes The <code>Mesh</code> array.
@@ -180,7 +180,7 @@ public class ModelNode extends Node implements Cloneable {
 	public void setMeshes(Mesh[] meshes) {
 		this.meshes = meshes;
 	}
-	
+
 	/**
 	 * Retrieve the <code>Joint</code> array of this <code>ModelNode</code>.
 	 * @return The array of <code>Joint</code> of this <code>ModelNode</code>.
@@ -197,7 +197,7 @@ public class ModelNode extends Node implements Cloneable {
 	public Joint getJoint(int index) {
 		return this.joints[index];
 	}
-	
+
 	/**
 	 * Retrieve the <code>Mesh</code> with given index.
 	 * @param index The index number of the <code>Mesh</code>.
@@ -206,13 +206,13 @@ public class ModelNode extends Node implements Cloneable {
 	public Mesh getMesh(int index) {
 		return this.meshes[index];
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Class getClassTag() {
 		return ModelNode.class;
 	}
-	
+
 	@Override
 	public void write(JMEExporter ex) throws IOException {
 		this.detachChild(this.skin);
