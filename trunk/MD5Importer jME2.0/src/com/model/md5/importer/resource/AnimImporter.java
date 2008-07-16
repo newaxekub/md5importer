@@ -24,7 +24,7 @@ public class AnimImporter {
 	 */
 	private StreamTokenizer reader;
 	/**
-	 * The framerate of the <code>JointAnimation</code>.
+	 * The frame rate of the <code>JointAnimation</code>.
 	 */
 	private float frameRate;
 	/**
@@ -52,7 +52,7 @@ public class AnimImporter {
 	 * The final <code>JointAnimation</code> instance.
 	 */
 	private JointAnimation animation;
-	
+
 	/**
 	 * Constructor of <code>AnimImporter</code>.
 	 * @param reader The <code>StreamTokenizer</code> instance setup for reading file.
@@ -60,22 +60,22 @@ public class AnimImporter {
 	public AnimImporter(StreamTokenizer reader) {
 		this.reader = reader;
 	}
-	
+
 	/**
 	 * Read the md5anim file and construct the final <code>JointAnimation</code>.
 	 * @param name The name of the loaded <code>JointAnimation</code>.
 	 * @return The loaded <code>JointAnimation</code> instance.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	public JointAnimation loadAnim(String name) throws IOException {
 		this.processAnim();
 		this.constructAnimation(name);
 		return this.animation;
 	}
-	
+
 	/**
 	 * Process the information in md5anim file.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processAnim() throws IOException {
 		String sval = null;
@@ -113,10 +113,10 @@ public class AnimImporter {
 			}
 		}
 	}
-	
+
 	/**
 	 * Process the hierarchy section to obtain the <code>BitSet</code> flags.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processHierarchy() throws IOException {
 		this.frameflags = new BitSet();
@@ -126,26 +126,26 @@ public class AnimImporter {
 		while(this.reader.nextToken() != '}') {
 			pointer++;
 			switch(this.reader.ttype) {
-				case '"':
-					this.idHierarchy[joint] = this.reader.sval;
+			case '"':
+				this.idHierarchy[joint] = this.reader.sval;
+				break;
+			case StreamTokenizer.TT_NUMBER:
+				switch(pointer) {
+				case 2:
+					this.parentHierarchy[joint] = (int)this.reader.nval;
 					break;
-				case StreamTokenizer.TT_NUMBER:
-					switch(pointer) {
-						case 2:
-							this.parentHierarchy[joint] = (int)this.reader.nval;
-							break;
-						case 3:
-							flag = (int)this.reader.nval;
-							for(int i = 0; i < 6; i++) {
-								this.frameflags.set(joint * 6 + i, (flag & (1 << i)) != 0);
-							}
-							break;
+				case 3:
+					flag = (int)this.reader.nval;
+					for(int i = 0; i < 6; i++) {
+						this.frameflags.set(joint * 6 + i, (flag & (1 << i)) != 0);
 					}
 					break;
-				case StreamTokenizer.TT_EOL:
-					pointer = 0;
-					joint++;
-					break;
+				}
+				break;
+			case StreamTokenizer.TT_EOL:
+				pointer = 0;
+				joint++;
+				break;
 			}
 		}
 		this.baseframe.setParents(this.parentHierarchy);
@@ -153,7 +153,7 @@ public class AnimImporter {
 			this.frames[i].setParents(this.parentHierarchy);
 		}
 	}
-	
+
 	/**
 	 * Process information to construct the base <code>Frame</code>.
 	 * @throws IOException Thrown when errors occured during file reading.
@@ -163,18 +163,18 @@ public class AnimImporter {
 		int jointIndex = -1;
 		while(this.reader.nextToken() != '}') {
 			switch(this.reader.ttype) {
-				case '(':
-					while(this.reader.nextToken() != ')') {
-						this.baseframe.setTransform(jointIndex, pointer, (float)this.reader.nval);
-						pointer++;
-					}
-					break;
-				case StreamTokenizer.TT_EOL:
-					pointer = 0;
-					jointIndex++;
-					break;
-				default:
-					break;
+			case '(':
+				while(this.reader.nextToken() != ')') {
+					this.baseframe.setTransform(jointIndex, pointer, (float)this.reader.nval);
+					pointer++;
+				}
+				break;
+			case StreamTokenizer.TT_EOL:
+				pointer = 0;
+				jointIndex++;
+				break;
+			default:
+				break;
 			}
 		}
 		for(int i = 0 ; i < this.parentHierarchy.length; i++) {
@@ -183,7 +183,7 @@ public class AnimImporter {
 			}
 		}
 	}
-	
+
 	/**
 	 * Process information to construct in a single <code>Frame</code>.
 	 * @param index The index number of the <code>Frame</code>.
@@ -214,7 +214,7 @@ public class AnimImporter {
 			}
 		}
 	}
-	
+
 	/**
 	 * Construct <code>JointAnimation</code> based on information read in.
 	 * @param name The name of the loaded <code>JointAnimation</code>.

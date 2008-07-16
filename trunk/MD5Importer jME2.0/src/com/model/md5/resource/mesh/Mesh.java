@@ -30,15 +30,17 @@ import com.model.md5.resource.mesh.primitive.Weight;
 /**
  * <code>Mesh</code> represents a mesh in md5mesh file.
  * <p>
- * <code>Mesh</code> maintains a number of <code>Vertex</code>, <code>Weight</code>
- * and <code>Triangle</code> to represent the basic geometry of a <code>ModelNode</code>.
- * It extends <code>TriMesh</code> to interface with jME rendering system.
+ * <code>Mesh</code> maintains a number of <code>Vertex</code>,
+ * <code>Weight</code> and <code>Triangle</code> to represent the basic
+ * geometry of a <code>ModelNode</code>. It extends <code>TriMesh</code>
+ * to interface with jME rendering system.
  * <p>
- * <code>Mesh</code> does not directly process any geometric information but delegates
- * the process down to the primitive elements it maintains.
+ * <code>Mesh</code> does not directly process any geometric information
+ * but delegates the process down to the primitive elements it maintains.
  * <p>
- * <code>Mesh</code> cannot be cloned directly. The cloning process of a <code>Mesh</code>
- * can only be initiated by the cloning process of the parent <code>ModelNode</code>.
+ * <code>Mesh</code> cannot be cloned directly. The cloning process of a
+ * <code>Mesh</code> can only be initiated by the cloning process of the
+ * parent <code>ModelNode</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
@@ -70,14 +72,14 @@ public class Mesh extends TriMesh {
 	 * The array of <code>Weight</code> in this <code>Mesh</code>.
 	 */
 	private Weight[] weights;
-	
+
 	/**
 	 * Default constructor of <code>Mesh</code>.
 	 */
 	public Mesh() {
 		super();
 	}
-	
+
 	/**
 	 * Constructor of <code>Mesh</code>.
 	 * @param modelNode The <code>ModelNode</code> this <code>Mesh</code> belongs to.
@@ -86,7 +88,7 @@ public class Mesh extends TriMesh {
 		super();
 		this.modelNode = modelNode;
 	}
-	
+
 	/**
 	 * Initialize this <code>Mesh</code> and its geometric data.
 	 */
@@ -99,7 +101,7 @@ public class Mesh extends TriMesh {
 		this.processTexture();
 		this.processBounding();
 	}
-	
+
 	/**
 	 * Update this <code>Mesh</code> and its geometric data.
 	 */
@@ -111,7 +113,7 @@ public class Mesh extends TriMesh {
 		this.processNormal();
 		this.updateModelBound();
 	}
-	
+
 	/**
 	 * Process and setup the index buffer.
 	 */
@@ -126,7 +128,7 @@ public class Mesh extends TriMesh {
 		indexBuffer.flip();
 		this.setIndexBuffer(indexBuffer);
 	}
-	
+
 	/**
 	 * Process and setup the vertex position buffer.
 	 */
@@ -140,7 +142,7 @@ public class Mesh extends TriMesh {
 		}
 		this.setVertexBuffer(vertexBuffer);
 	}
-	
+
 	/**
 	 * Process and setup the normal position buffer.
 	 */
@@ -157,7 +159,7 @@ public class Mesh extends TriMesh {
 		}
 		this.setNormalBuffer(normalBuffer);
 	}
-	
+
 	/**
 	 * Process and setup the <code>TextureState</code> and texture UV buffer.
 	 */
@@ -185,7 +187,7 @@ public class Mesh extends TriMesh {
 		state.setTexture(color);
 		this.setRenderState(state);
 	}
-	
+
 	/**
 	 * Process and setup the bounding volume of the <code>Mesh</code>.
 	 */
@@ -203,7 +205,7 @@ public class Mesh extends TriMesh {
 	public void setTexture(String texture) {
 		this.texture = texture;
 	}
-	
+
 	/**
 	 * Setup the vertices array based on the given count.
 	 * @param count The number of vertices in this <code>Mesh</code>.
@@ -211,7 +213,7 @@ public class Mesh extends TriMesh {
 	public void setVrticesCount(int count) {
 		this.vertices = new Vertex[count];
 	}
-	
+
 	/**
 	 * Set the <code>Vertex</code> with given index number.
 	 * @param index The index of the <code>Vertex</code>.
@@ -220,7 +222,7 @@ public class Mesh extends TriMesh {
 	public void setVertex(int index, Vertex vertex) {
 		this.vertices[index] = vertex;
 	}
-	
+
 	/**
 	 * Setup the triangles array based on the given count.
 	 * @param count The number of triangles in this <code>Mesh</code>.
@@ -228,7 +230,7 @@ public class Mesh extends TriMesh {
 	public void setTrianglesCount(int count) {
 		this.triangles = new Triangle[count];
 	}
-	
+
 	/**
 	 * Set the <code>Triangle</code> with given index number.
 	 * @param index The index of the <code>Triangle</code>.
@@ -237,7 +239,7 @@ public class Mesh extends TriMesh {
 	public void setTriangle(int index, Triangle triangle) {
 		this.triangles[index] = triangle;
 	}
-	
+
 	/**
 	 * Setup the weights array based on the given count.
 	 * @param count The number of weights in this <code>Mesh</code>.
@@ -245,7 +247,7 @@ public class Mesh extends TriMesh {
 	public void setWeightCount(int count) {
 		this.weights = new Weight[count];
 	}
-	
+
 	/**
 	 * Set the <code>Weight</code> with given index number.
 	 * @param index The index of the <code>Weight</code>.
@@ -254,7 +256,7 @@ public class Mesh extends TriMesh {
 	public void setWeight(int index, Weight weight) {
 		this.weights[index] = weight;
 	}
-	
+
 	/**
 	 * Retrieve the <code>ModelNode</code> this <code>Mesh</code> belongs to.
 	 * @return The <code>ModelNode</code> this <code>Mesh</code> belongs to.
@@ -262,7 +264,7 @@ public class Mesh extends TriMesh {
 	public ModelNode getModelNode() {
 		return this.modelNode;
 	}
-	
+
 	/**
 	 * Retrieve the <code>Vertex</code> with given index number.
 	 * @param index The index number of the <code>Vertex</code>.
@@ -271,7 +273,7 @@ public class Mesh extends TriMesh {
 	public Vertex getVertex(int index) {
 		return this.vertices[index];
 	}
-	
+
 	/**
 	 * Retrieve the <code>Weight</code> with given index number.
 	 * @param index The index number of the <code>Weight</code>.

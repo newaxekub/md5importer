@@ -14,14 +14,15 @@ import com.model.md5.resource.mesh.Mesh;
 /**
  * <code>Triangle</code> represents a tri in md5mesh file.
  * <p>
- * <code>Triangle</code> maintains three indices of <code>Vertex</code> that define
- * this <code>Triangle</code>.
+ * <code>Triangle</code> maintains three indices of <code>Vertex</code> that
+ * define this <code>Triangle</code>.
  * <p>
- * <code>Triangle</code> is responsible for calculating the normal vector for each
- * <code>Vertex</code>.
+ * <code>Triangle</code> is responsible for calculating the normal vector for
+ * each <code>Vertex</code>.
  * <p>
- * <code>Triangle</code> cannot be cloned directly. The cloning process of a <code>Triangle</code>
- * can only be initiated by the cloning process of the parent <code>Mesh</code>.
+ * <code>Triangle</code> cannot be cloned directly. The cloning process of a
+ * <code>Triangle</code> can only be initiated by the cloning process of the
+ * parent <code>Mesh</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
@@ -49,7 +50,7 @@ public class Triangle implements Serializable, Savable {
 	 * The second temporary <code>Vector3f</code> for normal calculation.
 	 */
 	private final Vector3f temp2;
-	
+
 	/**
 	 * Default constructor of <code>Triangle</code>.
 	 */
@@ -57,7 +58,7 @@ public class Triangle implements Serializable, Savable {
 		this.temp1 = new Vector3f();
 		this.temp2 = new Vector3f();
 	}
-	
+
 	/**
 	 * Constructor of <code>Triangle</code>.
 	 * @param mesh The <code>Mesh</code> this <code>Triangle</code> belongs to.
@@ -68,7 +69,7 @@ public class Triangle implements Serializable, Savable {
 		this.temp1 = new Vector3f();
 		this.temp2 = new Vector3f();
 	}
-	
+
 	/**
 	 * Process the normal of vertices and store the normal values in the
 	 * <code>Vertex</code> instances.
@@ -85,7 +86,7 @@ public class Triangle implements Serializable, Savable {
 		vert2.setNormal(this.temp2.set(this.temp1).multLocal(1.0f/(float)vert2.getUsedTimes()));
 		vert3.setNormal(this.temp1.multLocal(1.0f/(float)vert3.getUsedTimes()));
 	}
-	
+
 	/**
 	 * Set the index of one <code>Vertex</code> in this <code>Triangle</code>.
 	 * @param index The index of the <code>Vertex</code> in the indices array.
@@ -94,7 +95,7 @@ public class Triangle implements Serializable, Savable {
 	public void setVertexIndex(int index, int vertex) {
 		this.vertexIndices[index] = vertex;
 	}
-	
+
 	/**
 	 * Retrieve the <code>Vertex</code> index with given array index.
 	 * @param index The array index number in the <code>Triangle</code>.
