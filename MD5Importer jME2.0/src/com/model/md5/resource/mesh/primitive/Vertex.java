@@ -15,14 +15,15 @@ import com.model.md5.resource.mesh.Mesh;
 /**
  * <code>Vertex</code> represents a vert in md5mesh file.
  * <p>
- * <code>Vertex</code> maintains its texture coordinates, normal vector and position
- * vecotr.
+ * <code>Vertex</code> maintains its texture coordinates, normal vector and
+ * position vector.
  * <p>
- * <code>Vertex</code> stores an array of <code>Weight</code> indices which are used
- * to calculate the position vector.
+ * <code>Vertex</code> stores an array of <code>Weight</code> indices which
+ * are used to calculate the position vector.
  * <p>
- * <code>Vertex</code> cannot be cloned directly. The cloning process of <code>Vertex</code>
- * can only be initiated by the cloning process of the parent <code>Mesh</code>.
+ * <code>Vertex</code> cannot be cloned directly. The cloning process of
+ * <code>Vertex</code> can only be initiated by the cloning process of the
+ * parent <code>Mesh</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
@@ -62,14 +63,14 @@ public class Vertex implements Serializable, Savable {
 	 * The temporary <code>Vector3f</code> for position calculation.
 	 */
 	private final Vector3f temp;
-	
+
 	/**
 	 * Default constructor of <code>Vertex</code>.
 	 */
 	public Vertex() {
 		this.temp = new Vector3f();
 	}
-	
+
 	/**
 	 * Constructor of <code>Vertex</code>.
 	 * @param mesh The <code>Mesh</code> this <code>Vertex</code> belongs to.
@@ -79,7 +80,7 @@ public class Vertex implements Serializable, Savable {
 		this.position = new Vector3f();
 		this.temp = new Vector3f();
 	}
-	
+
 	/**
 	 * Process the <code>Vertex</code> position.
 	 */
@@ -92,7 +93,7 @@ public class Vertex implements Serializable, Savable {
 			this.position.addLocal(this.temp);
 		}
 	}
-	
+
 	/**
 	 * Reset the normal and position information of this <code>Vertex</code>.
 	 */
@@ -108,7 +109,7 @@ public class Vertex implements Serializable, Savable {
 	public void incrementUsedTimes() {
 		this.usedTimes++;
 	}
-	
+
 	/**
 	 * Set the texture coordinates of this <code>Vertex</code>.
 	 * @param u The u value.
@@ -119,7 +120,7 @@ public class Vertex implements Serializable, Savable {
 		float invertV = 1.0f - v;
 		this.textureCoords = new Vector2f(u, invertV);
 	}
-	
+
 	/**
 	 * Set the indices of <code>Weight</code> that affects this <code>Vertex</code>.
 	 * @param start The starting index number.
@@ -131,7 +132,7 @@ public class Vertex implements Serializable, Savable {
 			this.weightIndices[i] = start + i;
 		}
 	}
-	
+
 	/**
 	 * Set the normal vector of this <code>Vertex</code>.
 	 * @param normal The normal <code>Vector3f</code> to be set.
@@ -141,7 +142,7 @@ public class Vertex implements Serializable, Savable {
 		// If this vertex has been used, add the new value.
 		else this.normal.addLocal(normal);
 	}
-	
+
 	/**
 	 * Retrieve the texture coordinates of this <code>Vertex</code>.
 	 * @return The <code>Vector2f</code> texture coordinates of this <code>Vertex</code>.
@@ -149,7 +150,7 @@ public class Vertex implements Serializable, Savable {
 	public Vector2f getTextureCoords() {
 		return this.textureCoords;
 	}
-	
+
 	/**
 	 * Retrieve the number of times this <code>Vertex</code> has been used.
 	 * @return The number of times this <code>Vertex</code> has been used.
@@ -157,7 +158,7 @@ public class Vertex implements Serializable, Savable {
 	public int getUsedTimes() {
 		return this.usedTimes;
 	}
-	
+
 	/**
 	 * Retrieve the position of this <code>Vertex</code>.
 	 * @return The <code>Vector3f</code> position of this <code>Vertex</code>.
@@ -165,7 +166,7 @@ public class Vertex implements Serializable, Savable {
 	public Vector3f getPosition() {
 		return this.position;
 	}
-	
+
 	/**
 	 * Retrieve the normal of this <code>Vertex</code>.
 	 * @return The <coed>Vector3f</code> normal of this <code>Vertex</code>.

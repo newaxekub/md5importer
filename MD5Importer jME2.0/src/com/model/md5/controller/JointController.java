@@ -21,8 +21,9 @@ import com.model.md5.resource.mesh.Joint;
 /**
  * <code>JointController</code> controls the skeleton of a <code>ModelNode</code>.
  * <p>
- * <code>JointController</code> interpolates the previous and next <code>Frame</code>
- * then updates the skeleton with interpolated translation and orientation values.
+ * <code>JointController</code> interpolates the previous and next
+ * <code>Frame</code> then updates the skeleton with interpolated translation
+ * and orientation values.
  * 
  * @author Yi Wang (Neakor)
  * @version Modified date: 06-11-2008 11:51 EST
@@ -72,7 +73,7 @@ public class JointController extends Controller {
 	 * The fading duration.
 	 */
 	private float fadingTime;
-	
+
 	/**
 	 * Default constructor of <code>JointController</code>.
 	 */
@@ -81,7 +82,7 @@ public class JointController extends Controller {
 		this.translation = new Vector3f();
 		this.orientation = new Quaternion();
 	}
-	
+
 	/**
 	 * Constructor of <code>JointController</code>.
 	 * @param joints The array of <code>Joint</code> to be controlled.
@@ -107,7 +108,7 @@ public class JointController extends Controller {
 		if(!this.fading) this.updateJoints();
 		else this.updateFading();
 	}
-	
+
 	/**
 	 * Update the total time elapsed with given value based on the repeat type. The
 	 * time is reseted after one cycle of the animation is completed.
@@ -116,26 +117,26 @@ public class JointController extends Controller {
 	private void updateTime(float time) {
 		if(this.activeAnimation != null) {
 			switch(this.getRepeatType()) {
-				case Controller.RT_WRAP:
-					this.time = this.time + (time * this.getSpeed());
-					if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
-					break;
-				case Controller.RT_CLAMP:
-					this.time = this.time + (time * this.getSpeed());
-					if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
-					break;
-				case Controller.RT_CYCLE:
-					if(!this.activeAnimation.isBackward()) this.time = this.time + (time * this.getSpeed());
-					else this.time = this.time - (time * this.getSpeed());
-					if(this.activeAnimation.isCyleComplete()) {
-						if(!this.activeAnimation.isBackward()) this.time = 0;
-						else this.time = this.activeAnimation.getAnimationTime();
-					}
-					break;
+			case Controller.RT_WRAP:
+				this.time = this.time + (time * this.getSpeed());
+				if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
+				break;
+			case Controller.RT_CLAMP:
+				this.time = this.time + (time * this.getSpeed());
+				if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
+				break;
+			case Controller.RT_CYCLE:
+				if(!this.activeAnimation.isBackward()) this.time = this.time + (time * this.getSpeed());
+				else this.time = this.time - (time * this.getSpeed());
+				if(this.activeAnimation.isCyleComplete()) {
+					if(!this.activeAnimation.isBackward()) this.time = 0;
+					else this.time = this.activeAnimation.getAnimationTime();
+				}
+				break;
 			}
 		}
 	}
-	
+
 	/**
 	 * Update the skeleton during normal animating process.
 	 */
@@ -149,7 +150,7 @@ public class JointController extends Controller {
 			this.joints[i].updateTransform(this.translation, this.orientation);
 		}
 	}
-	
+
 	/**
 	 * Update the fading process.
 	 */
@@ -166,7 +167,7 @@ public class JointController extends Controller {
 			this.fading = false;
 		}
 	}
-	
+
 	/**
 	 * Retrieve the <code>Frame</code> interpolation value.
 	 * @return The <code>Frame</code> interpolation value.
@@ -186,7 +187,7 @@ public class JointController extends Controller {
 			return (this.time/this.fadingTime);
 		}
 	}
-	
+
 	/**
 	 * Validate the given <code>JointAnimation</code> with controlled skeleton.
 	 * @param animation The <code>JointAnimation</code> to be validated.
@@ -202,7 +203,7 @@ public class JointController extends Controller {
 			return result;
 		}
 	}
-	
+
 	/**
 	 * Add a new <code>JointAnimation</code> to this <code>JointController</code>.
 	 * The new animation set it to be the active animation if currently there is no
@@ -216,7 +217,7 @@ public class JointController extends Controller {
 		}
 		else throw new InvalidAnimationException();
 	}
-	
+
 	/**
 	 * Set the <code>JointAnimation</code> with given name to be the active animation.
 	 * @param name The name of the <code>JointAnimation</code> to be activated.
@@ -225,7 +226,7 @@ public class JointController extends Controller {
 		if(this.animations.containsKey(name)) this.activeAnimation = this.animations.get(name);
 		else JointController.logger.info("Invalid animation name: " + name);
 	}
-	
+
 	/**
 	 * Set the given <code>JointAnimation</code> to the be active animation.
 	 * @param animation The <code>JointAnimation</code> to be set.
@@ -234,7 +235,7 @@ public class JointController extends Controller {
 		if(this.animations.containsValue(animation)) this.activeAnimation = animation;
 		else this.addAnimation(animation);
 	}
-	
+
 	/**
 	 * Set the <code>JointAnimation</code> with given name to be the active animation.
 	 * @param name The name of the <code>JointAnimation</code> to be activated.
@@ -244,7 +245,7 @@ public class JointController extends Controller {
 		this.enabledFading(fadingTime);
 		this.setActiveAnimation(name);
 	}
-	
+
 	/**
 	 * Set the given <code>JointAnimation</code> to be the active animation.
 	 * @param animation The <code>JointAnimation</code> to be set.
@@ -254,7 +255,7 @@ public class JointController extends Controller {
 		this.enabledFading(fadingTime);
 		this.setActiveAnimation(animation);
 	}
-	
+
 	/**
 	 * Enable fading between the current <code>Frame</code> and the new active animation.
 	 * @param fadingTime The time in seconds it takes to fade into the new active animation.
@@ -264,7 +265,7 @@ public class JointController extends Controller {
 		this.fadingTime = fadingTime;
 		this.time = 0;
 	}
-	
+
 	/**
 	 * Retrieve the current active <code>JointAnimation</code>.
 	 * @return The current active <code>JointAnimation</code>.
@@ -280,13 +281,13 @@ public class JointController extends Controller {
 	public Collection<JointAnimation> getAnimations() {
 		return Collections.unmodifiableCollection(this.animations.values());
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Class getClassTag() {
 		return JointController.class;
 	}
-	
+
 	@Override
 	public void write(JMEExporter e) throws IOException {
 		super.write(e);

@@ -48,15 +48,15 @@ public class Frame implements Serializable, Savable, Cloneable {
 	 * The orientations of <code>Joint</code> of this <code>Frame</code>.
 	 */
 	private Quaternion[] orientations;
-	
+
 	/**
 	 * Default constructor of <code>Frame</code>.
 	 */
 	public Frame() {}
-	
+
 	/**
 	 * Constructor of <code>Frame</code>.
-	 * @param baseframe True if this <code>Frame</code> is a baseframe. False otherwise.
+	 * @param baseframe True if this <code>Frame</code> is a base frame. False otherwise.
 	 * @param numJoints The total number of <code>Joint</code> in the animation.
 	 */
 	public Frame(boolean baseframe, int numJoints) {
@@ -68,7 +68,7 @@ public class Frame implements Serializable, Savable, Cloneable {
 			this.orientations[i] = new Quaternion();
 		}
 	}
-	
+
 	/**
 	 * Set the <code>Frame</code> hierarchy of the <code>Frame</code>.
 	 * @param parents The integer array of <code>Joint</code> hierarchy.
@@ -76,7 +76,7 @@ public class Frame implements Serializable, Savable, Cloneable {
 	public void setParents(int[] parents) {
 		this.parents = parents;
 	}
-	
+
 	/**
 	 * Set the transform of this <code>Frame</code>.
 	 * @param jointIndex The index of the <code>Joint</code>.
@@ -85,30 +85,18 @@ public class Frame implements Serializable, Savable, Cloneable {
 	 */
 	public void setTransform(int jointIndex, int index, float value) {
 		switch(index) {
-			case 0:
-				this.translations[jointIndex].x = value;
-				break;
-			case 1:
-				this.translations[jointIndex].y = value;
-				break;
-			case 2:
-				this.translations[jointIndex].z = value;
-				break;
-			case 3:
-				this.orientations[jointIndex].x = value;
-				break;
-			case 4:
-				this.orientations[jointIndex].y = value;
-				break;
-			case 5:
-				this.orientations[jointIndex].z = value;
-				this.processOrientation(jointIndex, this.orientations[jointIndex]);
-				break;
-			default:
-				break;
+		case 0: this.translations[jointIndex].x = value; break;
+		case 1: this.translations[jointIndex].y = value; break;
+		case 2: this.translations[jointIndex].z = value; break;
+		case 3: this.orientations[jointIndex].x = value; break;
+		case 4: this.orientations[jointIndex].y = value; break;
+		case 5:
+			this.orientations[jointIndex].z = value;
+			this.processOrientation(jointIndex, this.orientations[jointIndex]);
+			break;
 		}
 	}
-	
+
 	/**
 	 * Process the <code>Quaternion</code> orientation to finalize it.
 	 * @param jointIndex The index of the <code>Joint</code>.
@@ -119,7 +107,7 @@ public class Frame implements Serializable, Savable, Cloneable {
 		if (t < 0.0f) raw.w = 0.0f;
 		else raw.w = -(FastMath.sqrt(t));
 	}
-	
+
 	/**
 	 * Retrieve the parent index of the <code>Joint</code> with given index.
 	 * @return The index of the parent <code>Joint</code>.
@@ -127,7 +115,7 @@ public class Frame implements Serializable, Savable, Cloneable {
 	public int getParent(int index) {
 		return this.parents[index];
 	}
-	
+
 	/**
 	 * Retrieve the transform value with given indices.
 	 * @param jointIndex The <code>Joint</code> index.
@@ -136,23 +124,16 @@ public class Frame implements Serializable, Savable, Cloneable {
 	 */
 	public float getTransformValue(int jointIndex, int transIndex) {
 		switch(transIndex) {
-			case 0:
-				return this.translations[jointIndex].x;
-			case 1:
-				return this.translations[jointIndex].y;
-			case 2:
-				return this.translations[jointIndex].z;
-			case 3:
-				return this.orientations[jointIndex].x;
-			case 4:
-				return this.orientations[jointIndex].y;
-			case 5:
-				return this.orientations[jointIndex].z;
-			default:
-				return 0;
+		case 0: return this.translations[jointIndex].x;
+		case 1: return this.translations[jointIndex].y;
+		case 2: return this.translations[jointIndex].z;
+		case 3: return this.orientations[jointIndex].x;
+		case 4: return this.orientations[jointIndex].y;
+		case 5: return this.orientations[jointIndex].z;
+		default: return 0;
 		}
 	}
-	
+
 	/**
 	 * Retrieve the translation of the <code>Joint</code> with given index.
 	 * @param jointIndex The <code>Joint</code> index number.
@@ -161,7 +142,7 @@ public class Frame implements Serializable, Savable, Cloneable {
 	public Vector3f getTranslation(int jointIndex) {
 		return this.translations[jointIndex];
 	}
-	
+
 	/**
 	 * Retrieve the orientation of the <code>Joint</code> with given index.
 	 * @param jointIndex The <code>Joint</code> number.
@@ -170,7 +151,7 @@ public class Frame implements Serializable, Savable, Cloneable {
 	public Quaternion getOrientation(int jointIndex) {
 		return this.orientations[jointIndex];
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Class getClassTag() {

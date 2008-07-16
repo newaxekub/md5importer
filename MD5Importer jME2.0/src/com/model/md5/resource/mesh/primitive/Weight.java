@@ -13,8 +13,8 @@ import com.jme.util.export.Savable;
 /**
  * <code>Weight</code> represents a weight in md5mesh file.
  * <p>
- * <code>Weight</code> maintains the index number of the <code>Joint</code> which it
- * affects, a fixed weight value and a fixed position vector.
+ * <code>Weight</code> maintains the index number of the <code>Joint</code>
+ * which it affects, a fixed weight value and a fixed position vector.
  * <p>
  * <code>Weight</code> should not be cloned directly. The cloning process of a
  * <code>Weight</code> should be initiated by the cloning process of the parent
@@ -42,14 +42,14 @@ public class Weight implements Serializable, Savable, Cloneable {
 	 * The position vector of this <code>Weight</code>.
 	 */
 	private Vector3f position;
-	
+
 	/**
 	 * Default constructor of <code>Weight</code>.
 	 */
 	public Weight() {
 		this.position = new Vector3f();
 	}
-	
+
 	/**
 	 * Set the index of the <code>Joint</code> which this <code>Weight</code> affects.
 	 * @param index The index of the <code>Joint</code>.
@@ -57,7 +57,7 @@ public class Weight implements Serializable, Savable, Cloneable {
 	public void setJointIndex(int index) {
 		this.jointIndex = index;
 	}
-	
+
 	/**
 	 * Set the weight value of this <code>Weight</code>.
 	 * @param value The weight value of this <code>Weight</code>.
@@ -65,21 +65,21 @@ public class Weight implements Serializable, Savable, Cloneable {
 	public void setWeightValue(float value) {
 		this.value = value;
 	}
-	
+
 	/**
-	 * Set the fixedposition of this <code>Weight</code>.
+	 * Set the fixed position of this <code>Weight</code>.
 	 * @param index The index of position value to set.
 	 * @param value The float value to be set.
 	 */
 	public void setPosition(int index, float value) {
 		switch(index) {
-			case 0:	this.position.setX(value); break;
-			case 1: this.position.setY(value); break;
-			case 2: this.position.setZ(value); break;
-			default: break;
+		case 0:	this.position.setX(value); break;
+		case 1: this.position.setY(value); break;
+		case 2: this.position.setZ(value); break;
+		default: break;
 		}
 	}
-	
+
 	/**
 	 * Retrieve the index of the <code>Joint</code> this <code>Weight</code> affects.
 	 * @return The index number of the <code>Joint</code>.
@@ -87,7 +87,7 @@ public class Weight implements Serializable, Savable, Cloneable {
 	public int getJointIndex() {
 		return this.jointIndex;
 	}
-	
+
 	/**
 	 * Retrieve the fixed weight value of this <code>Weight</code>.
 	 * @return The float weight value.
@@ -95,7 +95,7 @@ public class Weight implements Serializable, Savable, Cloneable {
 	public float getWeightValue() {
 		return this.value;
 	}
-	
+
 	/**
 	 * Retrieve the fixed position of this <code>Weight</code>.
 	 * @return The <code>Vector3f</code> position of this <code>Weight</code>.

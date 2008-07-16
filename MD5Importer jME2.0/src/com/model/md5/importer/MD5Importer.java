@@ -16,14 +16,15 @@ import com.model.md5.importer.resource.AnimImporter;
 import com.model.md5.importer.resource.MeshImporter;
 
 /**
- * <code>MD5Importer</code> is a singleton utility class that provides a machanism
- * to load models and animations of MD5 format.
+ * <code>MD5Importer</code> is a singleton utility class that provides a
+ * mechanism to load models and animations of MD5 format.
  * <p>
- * <code>MD5Importer</code> allows seperate <code>Mesh</code> and <code>JointAnimation</code>
- * loading process. However, it also provides convinient methods for loading both
- * MD5 resources at once.
+ * <code>MD5Importer</code> allows separate <code>Mesh</code> and
+ * <code>JointAnimation</code> loading process. However, it also provides
+ * convenient methods for loading both MD5 resources at once.
  * <p>
- * <code>MD5Importer</code> should be cleaned up after the loading process is completed.
+ * <code>MD5Importer</code> should be cleaned up after the loading process
+ * is completed.
  * <P>
  * For details on MD5 format, please go to official MD5 wiki at
  * {@link}http://www.modwiki.net/wiki/MD5_(file_format).
@@ -81,7 +82,7 @@ public class MD5Importer {
 	 * Private default constructor of <code>MD5Importer</code>.
 	 */
 	private MD5Importer() {}
-	
+
 	/**
 	 * Retrieve the <code>MD5Importer</code> instance.
 	 * @return The <code>MD5Importer</code> instance.
@@ -101,38 +102,38 @@ public class MD5Importer {
 	 * @param md5anim The <code>URL</code> points to the md5anim file.
 	 * @param animName The name of the loaded <code>JointAnimation</code>.
 	 * @param repeatType The repeat type of the loaded <code>JointAnimation</code>.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	public void load(URL md5mesh, String modelName, URL md5anim, String animName, int repeatType) throws IOException {
 		this.loadMesh(md5mesh, modelName);
 		this.loadAnim(md5anim, animName);
 		this.assignAnimation(repeatType);
 	}
-	
+
 	/**
 	 * Load the given md5mesh file.
 	 * @param md5mesh The <code>URL</code> points to the md5mesh file.
 	 * @param name The name of the loaded <code>ModelNode</code>.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	public void loadMesh(URL md5mesh, String name) throws IOException {
 		this.setupReader(md5mesh.openStream());
 		MeshImporter meshImporter = new MeshImporter(this.reader);
 		this.modelNode = meshImporter.loadMesh(name);
 	}
-	
+
 	/**
 	 * Load the given md5anim file.
 	 * @param md5anim The <code>URL</code> points to the md5anim file.
 	 * @param name The name of the loaded <code>JointAnimation</code>.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	public void loadAnim(URL md5anim, String name) throws IOException {
 		this.setupReader(md5anim.openStream());
 		AnimImporter animImporter = new AnimImporter(this.reader);
 		this.animation = animImporter.loadAnim(name);
 	}
-	
+
 	/**
 	 * Setup the <code>StreamTokenizer</code> for file reading.
 	 * @param stream The <code>InputStream</code> of the file.
@@ -149,7 +150,7 @@ public class MD5Importer {
 		this.reader.slashSlashComments(true);
 		this.reader.eolIsSignificant(true);
 	}
-	
+
 	/**
 	 * Assign the loaded <code>JointAnimation</code> to the <code>ModelNode</code>.
 	 * @param repeatType The repeat type of this <code>JointAnimation</code>.
@@ -161,7 +162,7 @@ public class MD5Importer {
 		controller.setActive(true);
 		this.modelNode.addController(controller);
 	}
-	
+
 	/**
 	 * Set the minification (MM) <code>Texture</code> filter.
 	 * @param filter The minification (MM) <code>Texture</code> filter.
@@ -186,7 +187,7 @@ public class MD5Importer {
 		if(aniso >= 0) this.anisotropic = aniso;
 		else MD5Importer.logger.info("Invalid Anisotropic filter level. Default 16 used.");
 	}
-	
+
 	/**
 	 * Set if oriented bounding should be used for the <code>Mesh</code>.
 	 * @param orientedBounding True if oriented bounding should be used. False otherwise.
@@ -234,7 +235,7 @@ public class MD5Importer {
 	public JointAnimation getAnimation() {
 		return this.animation;
 	}
-	
+
 	/**
 	 * Check if oriented bounding should be used.
 	 * @return True if oriented bounding should be used. False otherwise.
