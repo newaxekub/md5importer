@@ -44,17 +44,21 @@ public class TestFading extends Test{
 	protected void setupGame() {
 		ModelNode node = (ModelNode)this.rootNode.getChild("ModelNode");
 		node.setLocalScale(1);
-		node.getController(0).setSpeed(1);
+		node.getController(0).setSpeed(0.2f);
 		this.controller = (JointController)node.getController(0);
 		this.addFadingAnim();
 		this.setupKey();
 	}
 	
 	protected void simpleUpdate() {
-		if(KeyBindingManager.getKeyBindingManager().isValidCommand("fade", false))
-		{
-			this.controller.setActiveAnimation("Stand", 10);
+		if(KeyBindingManager.getKeyBindingManager().isValidCommand("fade", false)) {
+			if(this.controller.getActiveAnimation().getName() != "Stand") {
+				this.controller.setFading("Stand", 5);
+			} else {
+				this.controller.setFading("BodyAnimation", 5);
+			}
 		}
+
 	}
 	
 	private void addFadingAnim() {
