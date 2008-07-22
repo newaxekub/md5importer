@@ -23,7 +23,7 @@ import com.model.md5.resource.mesh.Mesh;
  * <code>ModelNode</code> is already initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-10-2008 14:29 EST
+ * @version Modified date: 07-22-2008 14:48 EST
  */
 public class ModelNode extends Node implements Cloneable {
 	/**
