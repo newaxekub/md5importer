@@ -257,6 +257,16 @@ public class ModelNode extends Node implements Cloneable {
 			clone.meshes[i] = this.meshes[i].clone(clone);
 		}
 		clone.initialize();
+		clone.setCullHint(this.getCullHint());
+		clone.setIsCollidable(this.isCollidable());
+		clone.setLightCombineMode(this.getLightCombineMode());
+		clone.setLocalRotation(this.getLocalRotation());
+		clone.setLocalScale(this.getLocalScale());
+		clone.setLocalTranslation(this.getLocalTranslation());
+		clone.setNormalsMode(this.getLocalNormalsMode());
+		clone.setRenderQueueMode(this.getRenderQueueMode());
+		clone.setTextureCombineMode(this.getTextureCombineMode());
+		clone.setZOrder(this.getZOrder());
 		return clone;
 	}
 }
