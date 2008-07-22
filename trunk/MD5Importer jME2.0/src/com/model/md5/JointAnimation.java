@@ -24,7 +24,7 @@ import com.model.md5.resource.anim.Frame;
  * <code>JointAnimation</code> is initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 07-07-2008 11:14 EST
+ * @version Modified date: 07-22-2008 17:58 EST
  */
 public class JointAnimation implements Serializable, Savable, Cloneable {
 	/**
@@ -217,7 +217,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 		if(this.animations == null) this.animations = new ArrayList<JointAnimation>();
 		this.animations.add(animation);
 	}
-
+	
 	/**
 	 * Set the IDs of <code>Joint</code> of this <code>JointAnimation</code>.
 	 * @param IDs The array of IDs of <code>Joint</code>.
@@ -348,6 +348,17 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 		this.frameRate = ic.readFloat("FrameRate", 0);
 		this.frameTimes = ic.readFloatArray("FrameTimes", null);
 		this.animations = (ArrayList<JointAnimation>)ic.readSavableArrayList("Animations", null);
+	}
+
+	/**
+	 * Reset the time and frame index information.
+	 */
+	public void reset() {
+		this.backward = false;
+		this.time = 0;
+		this.prevFrame = 0;
+		this.nextFrame = 1;
+		this.complete = false;
 	}
 
 	@Override
