@@ -26,7 +26,7 @@ import com.model.md5.resource.mesh.Joint;
  * and orientation values.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-11-2008 11:51 EST
+ * @version Modified date: 07-22-2008 18:30 EST
  */
 public class JointController extends Controller {
 	/**
@@ -70,10 +70,18 @@ public class JointController extends Controller {
 	 */
 	private boolean fading;
 	/**
-	 * The fading duration.
+	 * The fading duration value in seconds.
 	 */
-	private float fadingTime;
-
+	private float duration;
+	/**
+	 * The array of <code>Vector3f</code> translations used for fading.
+	 */
+	private Vector3f[] translations;
+	/**
+	 * The array of <code>Quaternion</code> orientations used for fading.
+	 */
+	private Quaternion[] orientations;
+	
 	/**
 	 * Default constructor of <code>JointController</code>.
 	 */
@@ -104,8 +112,10 @@ public class JointController extends Controller {
 	public void update(float time) {
 		if(this.activeAnimation == null) return;
 		this.updateTime(time);
-		this.activeAnimation.update(time, this.getRepeatType(), this.getSpeed());
-		if(!this.fading) this.updateJoints();
+		if(!this.fading) {
+			this.activeAnimation.update(time, this.getRepeatType(), this.getSpeed());
+			this.updateJoints();
+		}
 		else this.updateFading();
 	}
 
@@ -116,18 +126,22 @@ public class JointController extends Controller {
 	 */
 	private void updateTime(float time) {
 		if(this.activeAnimation != null) {
+			if(this.fading) {
+				this.time += time;
+				return;
+			}
 			switch(this.getRepeatType()) {
 			case Controller.RT_WRAP:
-				this.time = this.time + (time * this.getSpeed());
+				this.time += (time * this.getSpeed());
 				if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
 				break;
 			case Controller.RT_CLAMP:
-				this.time = this.time + (time * this.getSpeed());
+				this.time += (time * this.getSpeed());
 				if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
 				break;
 			case Controller.RT_CYCLE:
 				if(!this.activeAnimation.isBackward()) this.time = this.time + (time * this.getSpeed());
-				else this.time = this.time - (time * this.getSpeed());
+				else this.time -= (time * this.getSpeed());
 				if(this.activeAnimation.isCyleComplete()) {
 					if(!this.activeAnimation.isBackward()) this.time = 0;
 					else this.time = this.activeAnimation.getAnimationTime();
@@ -155,16 +169,15 @@ public class JointController extends Controller {
 	 * Update the fading process.
 	 */
 	private void updateFading() {
-		this.interpolation = this.getInterpolation();
+		this.interpolation = this.time/this.duration;
 		for(int i = 0; i < this.joints.length; i++) {
-			this.translation.interpolate(this.joints[i].getTranslation(),
-					this.activeAnimation.getPreviousFrame().getTranslation(i), this.interpolation);
-			this.orientation.slerp(this.joints[i].getOrientation(),
-					this.activeAnimation.getPreviousFrame().getOrientation(i), this.interpolation);
+			this.translation.interpolate(this.translations[i], this.activeAnimation.getPreviousFrame().getTranslation(i), this.interpolation);
+			this.orientation.slerp(this.orientations[i], this.activeAnimation.getPreviousFrame().getOrientation(i), this.interpolation);
 			this.joints[i].updateTransform(this.translation, this.orientation);
 		}
 		if(this.interpolation >= 1) {
 			this.fading = false;
+			this.time = 0;
 		}
 	}
 
@@ -173,19 +186,15 @@ public class JointController extends Controller {
 	 * @return The <code>Frame</code> interpolation value.
 	 */
 	private float getInterpolation() {
-		if(!this.fading) {
-			float prev = this.activeAnimation.getPreviousTime();
-			float next = this.activeAnimation.getNextTime();
-			if(prev == next) return 0.0f;
-			float interpolation = (this.time - prev) / (next - prev);
-			// Add 1 if it is playing backwards.
-			if(this.activeAnimation.isBackward()) interpolation = 1 + interpolation;
-			if(interpolation < 0.0f) return 0.0f;
-			else if (interpolation > 1.0f) return 1.0f;
-			else return interpolation;
-		} else {
-			return (this.time/this.fadingTime);
-		}
+		float prev = this.activeAnimation.getPreviousTime();
+		float next = this.activeAnimation.getNextTime();
+		if(prev == next) return 0.0f;
+		float interpolation = (this.time - prev) / (next - prev);
+		// Add 1 if it is playing backwards.
+		if(this.activeAnimation.isBackward()) interpolation = 1 + interpolation;
+		if(interpolation < 0.0f) return 0.0f;
+		else if (interpolation > 1.0f) return 1.0f;
+		else return interpolation;
 	}
 
 	/**
@@ -237,33 +246,48 @@ public class JointController extends Controller {
 	}
 
 	/**
-	 * Set the <code>JointAnimation</code> with given name to be the active animation.
-	 * @param name The name of the <code>JointAnimation</code> to be activated.
-	 * @param fadingTime The time in seconds it takes to fade into the new active animation.
+	 * Fade from the current active animation to the given animation.
+	 * @param name The name of the<code>JointAnimation</code> to be faded into.
+	 * @param duration The fading duration in seconds.
 	 */
-	public void setActiveAnimation(String name, float fadingTime) {
-		this.enabledFading(fadingTime);
+	public void setFading(String name, float duration) {
+		this.enabledFading(duration);
 		this.setActiveAnimation(name);
 	}
 
 	/**
-	 * Set the given <code>JointAnimation</code> to be the active animation.
-	 * @param animation The <code>JointAnimation</code> to be set.
-	 * @param fadingTime The time in seconds it takes to fade into the new active animation.
+	 * Fade from the current active animation to the given animation.
+	 * @param animation The <code>JointAnimation</code> to be faded into.
+	 * @param duration The fading duration in seconds.
 	 */
-	public void setActiveAnimation(JointAnimation animation, float fadingTime) {
-		this.enabledFading(fadingTime);
+	public void setFading(JointAnimation animation, float iteration) {
+		this.enabledFading(iteration);
 		this.setActiveAnimation(animation);
 	}
 
 	/**
 	 * Enable fading between the current <code>Frame</code> and the new active animation.
-	 * @param fadingTime The time in seconds it takes to fade into the new active animation.
+	 * @param duration The fading duration in seconds.
 	 */
-	private void enabledFading(float fadingTime) {
+	private void enabledFading(float duration) {
+		this.activeAnimation.reset();
 		this.fading = true;
-		this.fadingTime = fadingTime;
+		this.duration = duration;
 		this.time = 0;
+		if(this.translations == null && this.orientations == null) {
+			this.translations = new Vector3f[this.joints.length];
+			this.orientations = new Quaternion[this.joints.length];
+			for(int i = 0; i < this.joints.length; i++) {
+				this.translations[i] = this.joints[i].getTranslation().clone();
+				this.orientations[i] = new Quaternion();
+				this.orientations[i].set(this.joints[i].getOrientation());
+			}
+		} else {
+			for(int i = 0; i < this.joints.length; i++) {
+				this.translations[i].set(this.joints[i].getTranslation());
+				this.orientations[i].set(this.joints[i].getOrientation());
+			}
+		}
 	}
 
 	/**
