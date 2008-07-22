@@ -1,3 +1,11 @@
+== 07/22/08 ==
+
+*MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.3 both Java6 and Java5 release.*
+
+1. Fixed a bug in JointController that causes jittering and other incorrect behavior when using animation fading feature.
+2. Added method invocations in ModelNode clone() method to preserve jME Spatial information such as CullHint.
+3. Added reset() method in JointAnimation that resets the animation to the starting frame.
+
 == 07/07/08 ==
 
 *MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.2 both Java6 and Java5 release.*
