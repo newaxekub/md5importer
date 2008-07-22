@@ -24,7 +24,7 @@ import com.model.md5.resource.mesh.Mesh;
  * <code>ModelNode</code> is already initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-10-2008 15:22 EST
+ * @version Modified date: 07-22-2008 14:48 EST
  */
 public class ModelNode extends Node implements Cloneable {
 	/**
@@ -257,6 +257,16 @@ public class ModelNode extends Node implements Cloneable {
 			clone.meshes[i] = this.meshes[i].clone(clone);
 		}
 		clone.initialize();
+		clone.setCullMode(this.getCullMode());
+		clone.setIsCollidable(this.isCollidable());
+		clone.setLightCombineMode(this.getLightCombineMode());
+		clone.setLocalRotation(this.getLocalRotation());
+		clone.setLocalScale(this.getLocalScale());
+		clone.setLocalTranslation(this.getLocalTranslation());
+		clone.setNormalsMode(this.getLocalNormalsMode());
+		clone.setRenderQueueMode(this.getRenderQueueMode());
+		clone.setTextureCombineMode(this.getTextureCombineMode());
+		clone.setZOrder(this.getZOrder());
 		return clone;
 	}
 }
