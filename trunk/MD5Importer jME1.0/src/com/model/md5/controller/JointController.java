@@ -26,7 +26,7 @@ import com.model.md5.resource.mesh.Joint;
  * and orientation values.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 07-22-2008 18:30 EST
+ * @version Modified date: 07-23-2008 12:07 EST
  */
 public class JointController extends Controller {
 	/**
@@ -228,31 +228,13 @@ public class JointController extends Controller {
 	}
 
 	/**
-	 * Set the <code>JointAnimation</code> with given name to be the active animation.
-	 * @param name The name of the <code>JointAnimation</code> to be activated.
-	 */
-	public void setActiveAnimation(String name) {
-		if(this.animations.containsKey(name)) this.activeAnimation = this.animations.get(name);
-		else JointController.logger.info("Invalid animation name: " + name);
-	}
-
-	/**
-	 * Set the given <code>JointAnimation</code> to the be active animation.
-	 * @param animation The <code>JointAnimation</code> to be set.
-	 */
-	public void setActiveAnimation(JointAnimation animation) {
-		if(this.animations.containsValue(animation)) this.activeAnimation = animation;
-		else this.addAnimation(animation);
-	}
-
-	/**
 	 * Fade from the current active animation to the given animation.
 	 * @param name The name of the<code>JointAnimation</code> to be faded into.
 	 * @param duration The fading duration in seconds.
 	 */
 	public void setFading(String name, float duration) {
 		this.enabledFading(duration);
-		this.setActiveAnimation(name);
+		this.setActiveAnimation(this.animations.get(name));
 	}
 
 	/**
@@ -260,8 +242,8 @@ public class JointController extends Controller {
 	 * @param animation The <code>JointAnimation</code> to be faded into.
 	 * @param duration The fading duration in seconds.
 	 */
-	public void setFading(JointAnimation animation, float iteration) {
-		this.enabledFading(iteration);
+	public void setFading(JointAnimation animation, float duration) {
+		this.enabledFading(duration);
 		this.setActiveAnimation(animation);
 	}
 
@@ -288,6 +270,16 @@ public class JointController extends Controller {
 				this.orientations[i].set(this.joints[i].getOrientation());
 			}
 		}
+	}
+
+	/**
+	 * Set the given <code>JointAnimation</code> to the be active animation.
+	 * @param animation The <code>JointAnimation</code> to be set.
+	 */
+	private void setActiveAnimation(JointAnimation animation) {
+		if(animation == null) JointController.logger.info("Given animation is null.");
+		else if(this.animations.containsValue(animation)) this.activeAnimation = animation;
+		else this.addAnimation(animation);
 	}
 
 	/**
