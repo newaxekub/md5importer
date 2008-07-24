@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
@@ -26,7 +27,7 @@ import com.model.md5.resource.mesh.Joint;
  * and orientation values.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 07-23-2008 12:04 EST
+ * @version Modified date: 07-24-2008 11:15 EST
  */
 public class JointController extends Controller {
 	/**
@@ -81,6 +82,10 @@ public class JointController extends Controller {
 	 * The array of <code>Quaternion</code> orientations used for fading.
 	 */
 	private Quaternion[] orientations;
+	/**
+	 * The flag indicates if fading should scale with controller speed.
+	 */
+	private boolean scale;
 	
 	/**
 	 * Default constructor of <code>JointController</code>.
@@ -127,21 +132,22 @@ public class JointController extends Controller {
 	private void updateTime(float time) {
 		if(this.activeAnimation != null) {
 			if(this.fading) {
-				this.time += time;
+				if(this.scale) this.time += time * this.getSpeed();
+				else this.time += time;
 				return;
 			}
 			switch(this.getRepeatType()) {
 			case Controller.RT_WRAP:
-				this.time += (time * this.getSpeed());
+				this.time += time * this.getSpeed();
 				if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
 				break;
 			case Controller.RT_CLAMP:
-				this.time += (time * this.getSpeed());
+				this.time += time * this.getSpeed();
 				if(this.activeAnimation.isCyleComplete()) this.time = 0.0f;
 				break;
 			case Controller.RT_CYCLE:
-				if(!this.activeAnimation.isBackward()) this.time = this.time + (time * this.getSpeed());
-				else this.time -= (time * this.getSpeed());
+				if(!this.activeAnimation.isBackward()) this.time += time * this.getSpeed();
+				else this.time -= time * this.getSpeed();
 				if(this.activeAnimation.isCyleComplete()) {
 					if(!this.activeAnimation.isBackward()) this.time = 0;
 					else this.time = this.activeAnimation.getAnimationTime();
@@ -222,7 +228,7 @@ public class JointController extends Controller {
 	public void addAnimation(JointAnimation animation) {
 		if(this.validateAnimation(animation)) {
 			this.animations.put(animation.getName(), animation);
-			if(this.activeAnimation == null) this.activeAnimation = animation;
+			if(this.activeAnimation == null) this.setFading(animation, 0, true);
 		}
 		else throw new InvalidAnimationException();
 	}
@@ -231,30 +237,33 @@ public class JointController extends Controller {
 	 * Fade from the current active animation to the given animation.
 	 * @param name The name of the<code>JointAnimation</code> to be faded into.
 	 * @param duration The fading duration in seconds.
+	 * @param scale True if fading duration should scale with controller speed.
 	 */
-	public void setFading(String name, float duration) {
-		this.enabledFading(duration);
+	public void setFading(String name, float duration, boolean scale) {
 		this.setActiveAnimation(this.animations.get(name));
+		this.enabledFading(duration, scale);
 	}
 
 	/**
 	 * Fade from the current active animation to the given animation.
 	 * @param animation The <code>JointAnimation</code> to be faded into.
 	 * @param duration The fading duration in seconds.
+	 * @param scale True if fading duration should scale with controller speed.
 	 */
-	public void setFading(JointAnimation animation, float duration) {
-		this.enabledFading(duration);
+	public void setFading(JointAnimation animation, float duration, boolean scale) {
 		this.setActiveAnimation(animation);
+		this.enabledFading(duration, scale);
 	}
 
 	/**
 	 * Enable fading between the current <code>Frame</code> and the new active animation.
 	 * @param duration The fading duration in seconds.
 	 */
-	private void enabledFading(float duration) {
+	private void enabledFading(float duration, boolean scale) {
 		this.activeAnimation.reset();
 		this.fading = true;
-		this.duration = duration;
+		this.duration = FastMath.abs(duration);
+		this.scale = scale;
 		this.time = 0;
 		if(this.translations == null && this.orientations == null) {
 			this.translations = new Vector3f[this.joints.length];
