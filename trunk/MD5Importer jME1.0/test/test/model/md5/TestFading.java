@@ -53,9 +53,9 @@ public class TestFading extends Test{
 	protected void simpleUpdate() {
 		if(KeyBindingManager.getKeyBindingManager().isValidCommand("fade", false)) {
 			if(this.controller.getActiveAnimation().getName() != "Stand") {
-				this.controller.setFading("Stand", 5);
+				this.controller.setFading("Stand", 3, false);
 			} else {
-				this.controller.setFading("BodyAnimation", 5);
+				this.controller.setFading("BodyAnimation", 3, false);
 			}
 		}
 
