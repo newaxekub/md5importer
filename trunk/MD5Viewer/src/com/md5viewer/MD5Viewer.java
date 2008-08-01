@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.jme.app.SimpleGame;
 import com.jme.input.KeyBindingManager;
@@ -28,13 +28,9 @@ import com.model.md5.importer.MD5Importer;
  * 
  * @author Yi Wang (Neakor)
  * @version Creation date: 05-21-08 11:30
- * @version Modified date: 07-23-08 11:58
+ * @version Modified date: 08-01-08 11:22
  */
 public class MD5Viewer extends SimpleGame{
-	/**
-	 * The <code>Logger</code> instance.
-	 */
-	private final Logger logger;
 	/**
 	 * The <code>JFileChooser</code> instance.
 	 */
@@ -73,7 +69,6 @@ public class MD5Viewer extends SimpleGame{
 	public MD5Viewer() {
 		this.initTheme();
 		this.setConfigShowMode(ConfigShowMode.AlwaysShow);
-		this.logger = Logger.getLogger(MD5Viewer.class.toString());
 		this.chooser = new JFileChooser();
 		this.speed = 1;
 		this.scale = 1;
@@ -134,48 +129,28 @@ public class MD5Viewer extends SimpleGame{
 	 */
 	private URL selectFile(EFileType type) {
 		String promt = "";
-		String error = "";
+		FileNameExtensionFilter filter = null;
 		switch(type) {
 		case Mesh:
 			promt = "Select MD5Mesh file";
-			error = "Invalid MD5Mesh file.";
+			filter = new FileNameExtensionFilter("Mesh", "md5mesh");
 			break;
 		case Animation:
 			promt = "Select MD5Anim file";
-			error = "Invalid MD5Anim file.";
+			filter = new FileNameExtensionFilter("Animation", "md5anim");
 			break;
 		}
 		this.chooser.setDialogTitle(promt);
+		this.chooser.setFileFilter(filter);
 		if (this.chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			File file = this.chooser.getSelectedFile();
-			if(this.validateFile(type, file.getName())) {
-				try {
-					return file.toURI().toURL();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-			} else {
-				this.logger.info(error);
-				if(type.equals(EFileType.Mesh)) System.exit(-1);
+			try {
+				return file.toURI().toURL();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Validate the given file name with <code>FileType</code>.
-	 * @param type The <code>FileType</code> standard.
-	 * @param filename The file name to be validated.
-	 * @return True if the given file name is valid. False otherwise.
-	 */
-	private boolean validateFile(EFileType type, String filename) {
-		switch(type) {
-		case Mesh:
-			return (filename.substring(filename.lastIndexOf(".")+1, filename.length()).equalsIgnoreCase("md5mesh"));
-		case Animation:
-			return (filename.substring(filename.lastIndexOf(".")+1, filename.length()).equalsIgnoreCase("md5anim"));
-		}
-		return false;
 	}
 
 	@Override
