@@ -24,7 +24,7 @@ import com.model.md5.resource.anim.Frame;
  * <code>JointAnimation</code> is initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 07-22-2008 17:58 EST
+ * @version Modified date: 08-06-2008 11:38 EST
  */
 public class JointAnimation implements Serializable, Savable, Cloneable {
 	/**
@@ -251,6 +251,14 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	}
 
 	/**
+	 * Retrieve the total number of frames.
+	 * @return The total number of frames.
+	 */
+	public int getFrameCount() {
+		return this.frames.length;
+	}
+
+	/**
 	 * Retrieve the previous <code>Frame</code>.
 	 * @return The previous <code>Frame</code>.
 	 */
@@ -291,7 +299,7 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 	public String[] getJointIDs() {
 		return this.jointIDs;
 	}
-
+	
 	/**
 	 * Retrieve the name of this <code>JointAnimation</code>.
 	 * @return The name of this <code>JointAnimation</code>.
