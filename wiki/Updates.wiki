@@ -1,3 +1,14 @@
+== 08/07/08 ==
+
+*MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.4 both Java6 and Java5 release.*
+
+1. Fixed a bug in JointAnimation that causes the clamped animation to revert back to the beginning of the animation.
+2. Added in scale with controller speed parameter in setFading(...) method.
+
+*MD5Viewer jME2.0 version 1.2.0 Win32 and Mac release.*
+
+1. Updated to MD5Importer jME2.0 version 1.2.4.
+
 == 07/22/08 ==
 
 *MD5Importer jME1.0 and MD5Importer jME2.0 version 1.2.3 both Java6 and Java5 release.*
