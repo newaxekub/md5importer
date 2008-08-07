@@ -24,7 +24,7 @@ import com.model.md5.resource.anim.Frame;
  * <code>JointAnimation</code> is initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 08-06-2008 11:38 EST
+ * @version Modified date: 08-07-2008 11:37 EST
  */
 public class JointAnimation implements Serializable, Savable, Cloneable {
 	/**
@@ -143,8 +143,8 @@ public class JointAnimation implements Serializable, Savable, Cloneable {
 			this.nextFrame++;
 			this.prevFrame = this.nextFrame - 1;
 			if(this.nextFrame > this.frames.length - 1) {
-				this.nextFrame = 1;
-				this.prevFrame = 0;
+				this.nextFrame = this.frames.length - 1;
+				this.prevFrame = this.frames.length - 2;
 				this.complete = true;
 				this.time = 0.0f;
 				break;
