@@ -15,7 +15,7 @@ import com.model.md5.resource.anim.Frame;
 
 /**
  * <code>AnimImporter</code> is responsible for importing MD5Anim resources and
- * constructing the final <code>JointAnimation</code> instance.
+ * constructing the final <code>IMD5Animation</code> instance.
  * <p>
  * <code>AnimImporter</code> is used by <code>MD5Importer</code> internally only.
  *
