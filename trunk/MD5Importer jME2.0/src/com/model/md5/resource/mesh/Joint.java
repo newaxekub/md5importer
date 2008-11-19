@@ -11,7 +11,7 @@ import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
-import com.model.md5.interfaces.IJoint;
+import com.model.md5.interfaces.mesh.IJoint;
 
 /**
  * <code>Joint</code> defines the concrete implementation of a joint in the

@@ -1,6 +1,7 @@
 package com.model.md5.interfaces;
 
 import com.jme.util.export.Savable;
+import com.model.md5.interfaces.anim.IFrame;
 
 /**
  * <code>IMD5Animation</code> defines the interface of a completed loaded MD5 animation.

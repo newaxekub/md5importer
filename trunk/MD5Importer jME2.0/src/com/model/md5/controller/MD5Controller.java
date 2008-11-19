@@ -16,10 +16,10 @@ import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
 import com.model.md5.exception.InvalidAnimationException;
-import com.model.md5.interfaces.IJoint;
 import com.model.md5.interfaces.IMD5Animation;
 import com.model.md5.interfaces.IMD5Controller;
 import com.model.md5.interfaces.IMD5Node;
+import com.model.md5.interfaces.mesh.IJoint;
 
 /**
  * <code>MD5Controller</code> defines the concrete implementation of a MD5

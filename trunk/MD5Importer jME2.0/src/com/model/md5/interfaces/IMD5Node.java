@@ -1,6 +1,8 @@
 package com.model.md5.interfaces;
 
 import com.jme.util.export.Savable;
+import com.model.md5.interfaces.mesh.IJoint;
+import com.model.md5.interfaces.mesh.IMesh;
 
 /**
  * <code>IMD5Node</code> defines the interface of a completed loaded MD5 model.

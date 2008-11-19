@@ -1,4 +1,4 @@
-package com.model.md5.interfaces;
+package com.model.md5.interfaces.mesh.primitive;
 
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;

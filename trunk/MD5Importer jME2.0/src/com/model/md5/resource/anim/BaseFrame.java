@@ -6,7 +6,7 @@ import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
-import com.model.md5.interfaces.IBaseFrame;
+import com.model.md5.interfaces.anim.IBaseFrame;
 
 /**
  * <code>BaseFrame</code> defines the concrete implementation of a base frame.

@@ -22,11 +22,11 @@ import com.jme.util.export.Savable;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.resource.ResourceLocatorTool;
 import com.model.md5.importer.MD5Importer;
-import com.model.md5.interfaces.IJoint;
-import com.model.md5.interfaces.IMesh;
-import com.model.md5.interfaces.ITriangle;
-import com.model.md5.interfaces.IVertex;
-import com.model.md5.interfaces.IWeight;
+import com.model.md5.interfaces.mesh.IJoint;
+import com.model.md5.interfaces.mesh.IMesh;
+import com.model.md5.interfaces.mesh.primitive.ITriangle;
+import com.model.md5.interfaces.mesh.primitive.IVertex;
+import com.model.md5.interfaces.mesh.primitive.IWeight;
 
 /**
  * <code>Mesh</code> defines the concrete implementation of a mesh. It does

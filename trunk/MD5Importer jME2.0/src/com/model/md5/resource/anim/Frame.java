@@ -11,7 +11,7 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
-import com.model.md5.interfaces.IFrame;
+import com.model.md5.interfaces.anim.IFrame;
 
 /**
  * <code>Frame</code> defines the concrete implementation of a frame.

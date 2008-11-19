@@ -11,10 +11,10 @@ import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
 import com.model.md5.controller.MD5Controller;
-import com.model.md5.interfaces.IJoint;
 import com.model.md5.interfaces.IMD5Controller;
 import com.model.md5.interfaces.IMD5Node;
-import com.model.md5.interfaces.IMesh;
+import com.model.md5.interfaces.mesh.IJoint;
+import com.model.md5.interfaces.mesh.IMesh;
 
 /**
  * <code>MD5Node</code> is the final product of MD5 loading process.
