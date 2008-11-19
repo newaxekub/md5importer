@@ -11,114 +11,148 @@ import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
-import com.jme.util.export.Savable;
-import com.model.md5.ModelNode;
+import com.model.md5.interfaces.IJoint;
 
 /**
- * <code>Joint</code> represents a joint in md5mesh file.
- * <p>
- * <code>Joint</code> maintains its own transform information and the index
- * number of its parent <code>Joint</code>.
+ * <code>Joint</code> defines the concrete implementation of a joint in the
+ * skeleton system of a model.
  * <p>
  * <code>Joint</code> cannot be cloned directly. The cloning process of a
  * <code>Joint</code> can only be initiated by the cloning process of the
- * parent <code>ModelNode</code>.
+ * parent <code>IModelNode</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-10-2008 14:36 EST
+ * @version Modified date: 11-19-2008 15:34 EST
  */
-public class Joint implements Serializable, Savable {
+public class Joint implements Serializable, IJoint {
 	/**
 	 * Serial version.
 	 */
 	private static final long serialVersionUID = -926371530130383637L;
 	/**
-	 * The <code>ModelNode</code> this <code>Joint</code> belongs.
+	 * The <code>Integer</code> index.
 	 */
-	private ModelNode modelNode;
+	private int index;
 	/**
-	 * The name ID of the <code>Joint</code>.
+	 * The name ID of the <code>IJoint</code>.
 	 */
 	private String name;
 	/**
-	 * The parent index of this <code>Joint</code> in the local <code>ModelNode</code>.
+	 * The parent <code>IJoint</code> instance.
 	 */
-	private int parent;
+	private IJoint parent;
 	/**
-	 * The parent index of this <code>Joint</code> in the parent <code>ModelNode</code>.
+	 * The super parent <code>IJoint</code> instance.
 	 */
-	private int nodeParent;
+	private IJoint superParent;
 	/**
-	 * The translation value.
+	 * The <code>Vector3f</code> translation value.
 	 */
 	private Vector3f translation;
 	/**
-	 * The orientation value.
+	 * The <code>Quaternion</code> orientation value.
 	 */
 	private Quaternion orientation;
 	/**
-	 * The relative <code>TransformMatrix</code> of this <code>Joint</code> to its parent.
+	 * The relative <code>TransformMatrix</code> of this joint to its parent.
 	 */
 	private TransformMatrix transform;
+	/**
+	 * The base <code>TransformMatrix</code> instance.
+	 */
+	private final TransformMatrix baseTransform;
+	/**
+	 * The temporary <code>TransformMatric</code> for updating relative transform.
+	 */
+	private final TransformMatrix tempTransform;
+	/**
+	 * The temporary <code>Vector3f</code> for updating relative transform.
+	 */
+	private final Vector3f tempVector;
 
 	/**
-	 * Default constructor of <code>Joint</code>.
+	 * Constructor of <code>Joint</code>.
 	 */
 	public Joint() {
-		this.nodeParent = -1;
+		super();
+		this.baseTransform = new TransformMatrix();
+		this.tempTransform = new TransformMatrix();
+		this.tempVector = new Vector3f();
 	}
 
 	/**
 	 * Constructor of <code>Joint</code>.
-	 * @param name The name ID of the <code>Joint</code>.
+	 * @param index The <code>Integer</code> index.
+	 * @param name The <code>String</code> name ID.
+	 * @param translation The <code>Vector3f</code> translation value.
+	 * @param orientation The un-processed <code>Vector3f</code> orientation value.
 	 */
-	public Joint(String name, ModelNode modelNode) {
+	public Joint(int index, String name, Vector3f translation, Vector3f orientation) {
+		this.index = index;
 		this.name = name;
-		this.modelNode = modelNode;
-		this.parent = -1;
-		this.nodeParent = -1;
-		this.translation = new Vector3f();
+		this.translation = translation;
 		this.orientation = new Quaternion();
+		this.orientation.x = orientation.x;
+		this.orientation.y = orientation.y;
+		this.orientation.z = orientation.z;
+		float t = 1.0f-(this.orientation.x*this.orientation.x)-(this.orientation.y*this.orientation.y)-(this.orientation.z*this.orientation.z);
+		if (t < 0.0f) this.orientation.w = 0.0f;
+		else this.orientation.w = -(FastMath.sqrt(t));
 		this.transform = new TransformMatrix();
+		this.baseTransform = new TransformMatrix();
+		this.tempTransform = new TransformMatrix();
+		this.tempVector = new Vector3f();
+	}
+	
+	/**
+	 * Constructor of <code>Joint</code>.
+	 * @param index The <code>Integer</code> index.
+	 * @param name The <code>String</code> name ID.
+	 * @param translation The <code>Vector3f</code> translation value.
+	 * @param orientation The <code>Quaternion</code> orientation value.
+	 */
+	private Joint(int index, String name, Vector3f translation, Quaternion orientation, TransformMatrix transform) {
+		this.index = index;
+		this.name = name;
+		this.translation = translation;
+		this.orientation = orientation;
+		this.transform = transform;
+		this.baseTransform = new TransformMatrix();
+		this.tempTransform = new TransformMatrix();
+		this.tempVector = new Vector3f();
 	}
 
-	/**
-	 * Update the translation and orientation of this <code>Joint</code>.
-	 * @param translation The new <code>Vector3f</code> translation value.
-	 * @param orientation The new </code>Quaternion</code> orientation value.
-	 */
+	@Override
 	public void updateTransform(Vector3f translation, Quaternion orientation) {
 		this.translation.set(translation);
 		this.orientation.set(orientation);
-		this.modelNode.flagUpdate();
 	}
-
-	/**
-	 * Process the translation and orientation of this <code>Joint</code> This process
-	 * has to be started from the bottom of skeleton tree up to the root <code>Joint</code>.
-	 * @param parentTrans The parent <code>Vector3f</code> translation value.
-	 * @param parentOrien The parent <code>Quaternion</code> orientation value.
-	 */
-	public void processTransform(Vector3f parentTrans, Quaternion parentOrien) {
-		if(parentTrans == null || parentOrien == null) {
-			parentOrien = new Quaternion();
+	
+	@Override
+	public void processTransform() {
+		Vector3f parentTrans = null;
+		Quaternion parentOrien = null;
+		if(this.parent == null) {
 			parentTrans = new Vector3f();
+			parentOrien = new Quaternion();
+		} else {
+			parentTrans = this.parent.getTranslation();
+			parentOrien = this.parent.getOrientation();
 		}
 		this.orientation.set(parentOrien.inverse().multLocal(this.orientation));
 		this.translation.subtractLocal(parentTrans);
 		parentOrien.inverse().multLocal(this.translation);
 	}
 
-	/**
-	 * Process the relative transforms of this <code>Joint</code>.
-	 */
+	@Override
 	public void processRelative() {
 		this.transform.loadIdentity();
-		if(this.parent >= 0) this.transform.set(this.modelNode.getJoint(this.parent).getTransform());
+		if(this.parent != null) this.transform.set(this.parent.getTransform());
 		else this.transform.set(this.getBaseTransform());
-		this.transform.multLocal(new TransformMatrix(this.orientation, this.translation), new Vector3f());
+		this.tempTransform.set(this.orientation, this.translation);
+		this.transform.multLocal(this.tempTransform, this.tempVector);
 	}
 
 	/**
@@ -127,97 +161,57 @@ public class Joint implements Serializable, Savable {
 	 * @return The base <code>TransformMatrix</code>.
 	 */
 	private TransformMatrix getBaseTransform() {
-		if(this.nodeParent < 0) return new TransformMatrix();
+		if(this.superParent == null) this.baseTransform.loadIdentity();
 		else {
-			TransformMatrix matrix = new TransformMatrix();
-			matrix.combineWithParent(((ModelNode)this.modelNode.getParent()).getJoint(this.nodeParent).getTransform());
-			return matrix;
+			this.baseTransform.loadIdentity();
+			this.baseTransform.combineWithParent(this.superParent.getTransform());
 		}
+		return this.baseTransform;
 	}
 
-	/**
-	 * Set the parent index of this <code>Joint</code>.
-	 * @param parent The index of the parent <code>Joint</code>.
-	 */
-	public void setParent(int parent) {
+	@Override
+	public void setParent(IJoint parent) {
 		this.parent = parent;
 	}
 
-	/**
-	 * Set the parent index of this <code>Joint</code> in the parent <code>ModelNode</code>.
-	 * @param outerParent The index of the parent <code>Joint</code>.
-	 */
-	public void setNodeParent(int outerParent) {
-		this.nodeParent = outerParent;
+	@Override
+	public void setSuperParent(IJoint superParent) {
+		this.superParent = superParent;
 	}
 
-	/**
-	 * Set one of the 6 transform values.
-	 * @param index The index of the transform values.
-	 * @param value The actual value to be set.
-	 */
-	public void setTransform(int index, float value) {
-		switch(index) {
-		case 0: this.translation.setX(value); break;
-		case 1: this.translation.setY(value); break;
-		case 2: this.translation.setZ(value); break;
-		case 3: this.orientation.x = value; break;
-		case 4: this.orientation.y = value; break;
-		case 5:
-			this.orientation.z = value;
-			this.processOrientation();
-			break;
-		default: break;
-		}
-	}
-
-	/**
-	 * Compute the w value of the orientation.
-	 */
-	private void processOrientation() {
-		float t = 1.0f-(this.orientation.x*this.orientation.x)-(this.orientation.y*this.orientation.y)-(this.orientation.z*this.orientation.z);
-		if (t < 0.0f) this.orientation.w = 0.0f;
-		else this.orientation.w = -(FastMath.sqrt(t));
-	}
-
-	/**
-	 * Retrieve the translation of this <code>Joint</code> read from MD5 file.
-	 * @return The <code>Vector3f</code> translation read directly from MD5 file.
-	 */
+	@Override
 	public Vector3f getTranslation() {
 		return this.translation;
 	}
 
-	/**
-	 * Retrieve the orientation of this <code>Joint</code> read from MD5 file.
-	 * @return The <code>Quaternion</code> orientation read directly from MD5 file.
-	 */
+	@Override
 	public Quaternion getOrientation() {
 		return this.orientation;
 	}
 
-	/**
-	 * Retrieve the relative <code>TransformMatrix</code> of this <code>Joint</code>.
-	 * @return The relative <code>TransformMatrix</code> of this <code>Joint</code>.
-	 */
+	@Override
 	public TransformMatrix getTransform() {
 		return this.transform;
 	}
+	
+	@Override
+	public IJoint getSuperParent() {
+		return this.superParent;
+	}
 
-	/**
-	 * Retrieve the index number of the parent <code>Joint</code>.
-	 * @return The index number of the parent <code>Joint</code>.
-	 */
-	public int getParent() {
+	@Override
+	public IJoint getParent() {
 		return this.parent;
 	}
 
-	/**
-	 * Retrieve the name ID of this <code>Joint</code>.
-	 * @return The name ID of this <code>Joint</code>.
-	 */
+	@Override
 	public String getName() {
 		return this.name;
+	}
+
+	@Override
+	public int getIndex() {
+		return this.index;
 	}
 
 	@Override
@@ -229,9 +223,10 @@ public class Joint implements Serializable, Savable {
 	@Override
 	public void write(JMEExporter ex) throws IOException {
 		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.modelNode, "ModelNode", null);
+		oc.write(this.index, "Index", -1);
 		oc.write(this.name, "Name", null);
-		oc.write(this.parent, "Parent", -1);
+		oc.write(this.parent, "Parent", null);
+		oc.write(this.superParent, "SuperParent", null);
 		oc.write(this.translation, "Translation", null);
 		oc.write(this.orientation, "Orientation", null);
 		oc.write(this.transform, "Transform", null);
@@ -240,28 +235,17 @@ public class Joint implements Serializable, Savable {
 	@Override
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule ic = im.getCapsule(this);
-		this.modelNode = (ModelNode)ic.readSavable("ModelNode", null);
+		this.index = ic.readInt("Index", -1);
 		this.name = ic.readString("Name", null);
-		this.parent = ic.readInt("Parent", -1);
+		this.parent = (IJoint)ic.readSavable("Parent", null);
+		this.superParent = (IJoint)ic.readSavable("SuperParent", null);
 		this.translation = (Vector3f)ic.readSavable("Translation", null);
 		this.orientation = (Quaternion)ic.readSavable("Orientation", null);
 		this.transform = (TransformMatrix)ic.readSavable("Transform", null);
 	}
 
-	/**
-	 * Clone this join with given newly cloned <code>ModelNode</code> parent.
-	 * @param mesh The cloned <code>ModelNode</code> parent.
-	 * @return The cloned copy of this <code>Joint</code>
-	 */
-	public Joint clone(ModelNode modelNode) {
-		Joint clone = new Joint();
-		clone.modelNode = modelNode;
-		clone.name = new String(this.name.toCharArray());
-		clone.parent = this.parent;
-		clone.translation = this.translation.clone();
-		clone.orientation = this.orientation.clone();
-		clone.transform = new TransformMatrix();
-		clone.transform.set(this.transform);
-		return clone;
+	@Override
+	public IJoint clone() {
+		return new Joint(this.index, new String(this.name), this.translation.clone(), this.orientation.clone(), this.transform.clone());
 	}
 }

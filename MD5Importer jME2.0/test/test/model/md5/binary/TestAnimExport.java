@@ -2,6 +2,7 @@ package test.model.md5.binary;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import test.model.md5.TestAnim;
@@ -9,10 +10,11 @@ import test.model.md5.TestAnim;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.util.export.binary.BinaryExporter;
-import com.model.md5.JointAnimation;
-import com.model.md5.ModelNode;
-import com.model.md5.controller.JointController;
+import com.model.md5.controller.MD5Controller;
 import com.model.md5.importer.MD5Importer;
+import com.model.md5.interfaces.IMD5Animation;
+import com.model.md5.interfaces.IMD5Controller;
+import com.model.md5.interfaces.IMD5Node;
 
 /**
  * Demo shows how to export anim files.
@@ -23,8 +25,8 @@ import com.model.md5.importer.MD5Importer;
 public class TestAnimExport extends TestMeshExport {
 	private final String body = "bodyanim.jme";
 	private final String head = "headanim.jme";
-	private JointAnimation bodyAnim;
-	private JointAnimation headAnim;
+	private IMD5Animation bodyAnim;
+	private IMD5Animation headAnim;
 	private File bodyanimFile;
 	private File headanimFile;
 
@@ -33,7 +35,7 @@ public class TestAnimExport extends TestMeshExport {
 	}
 	
 	@Override
-	protected ModelNode loadModel() {
+	protected IMD5Node loadModel() {
 		super.loadModel();
 		URL bodyURL = TestAnim.class.getClassLoader().getResource("test/model/md5/data/marine.md5anim");
 		URL headURL = TestAnim.class.getClassLoader().getResource("test/model/md5/data/sarge.md5anim");
@@ -46,12 +48,12 @@ public class TestAnimExport extends TestMeshExport {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		JointController bodycontroller = new JointController(this.bodyNode.getJoints());
+		IMD5Controller bodycontroller = new MD5Controller(this.bodyNode);
 		bodycontroller.addAnimation(this.bodyAnim);
 		bodycontroller.setRepeatType(1);
 		bodycontroller.setActive(true);
 		this.bodyNode.addController(bodycontroller);
-		JointController headcontroller = new JointController(this.headNode.getJoints());
+		IMD5Controller headcontroller = new MD5Controller(this.headNode);
 		headcontroller.addAnimation(this.headAnim);
 		headcontroller.setRepeatType(1);
 		headcontroller.setActive(true);
@@ -62,15 +64,12 @@ public class TestAnimExport extends TestMeshExport {
 	@Override
 	protected void setupGame() {
 		KeyBindingManager.getKeyBindingManager().set("export", KeyInput.KEY_O);
-		URL url = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/");
-		String raw = url.toString().replaceAll("%20", " ");
-		String path = raw.substring(raw.indexOf("/") + 1, raw.length()).replaceFirst("bin", "test");
-		this.bodyanimFile = new File(path + this.body);
-		this.headanimFile = new File(path + this.head);
+		URL bodyURL = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/" + this.body);
+		URL headURL = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/" + this.head);
 		try {
-			this.bodyanimFile.createNewFile();
-			this.headanimFile.createNewFile();
-		} catch (IOException e) {
+			this.bodyanimFile = new File(bodyURL.toURI());
+			this.headanimFile = new File(headURL.toURI());
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}

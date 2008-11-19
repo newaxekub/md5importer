@@ -5,10 +5,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import com.jme.app.SimpleGame;
+import com.jme.scene.Spatial;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jme.util.resource.MultiFormatResourceLocator;
 import com.jme.util.resource.ResourceLocatorTool;
-import com.model.md5.ModelNode;
+import com.model.md5.MD5Node;
+import com.model.md5.interfaces.IMD5Node;
 
 /**
  * Simple test to show how to load in the exported mesh.
@@ -18,8 +20,8 @@ import com.model.md5.ModelNode;
 public class TestMeshImport extends SimpleGame{
 	private final String body = "bodymesh.jme";
 	private final String head = "headmesh.jme";
-	protected ModelNode bodyNode;
-	protected ModelNode headNode;
+	protected IMD5Node bodyNode;
+	protected IMD5Node headNode;
 	protected double bodytime;
 	protected double headtime;
 	
@@ -34,18 +36,18 @@ public class TestMeshImport extends SimpleGame{
 		URL headURL = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/" + this.head);
 		try {
 			long start = System.nanoTime();
-			this.bodyNode = (ModelNode)BinaryImporter.getInstance().load(bodyURL);
+			this.bodyNode = (MD5Node)BinaryImporter.getInstance().load(bodyURL);
 			long end = System.nanoTime();
 			this.bodytime = (end - start)/1000000.0;
 			start = System.nanoTime();
-			this.headNode = (ModelNode)BinaryImporter.getInstance().load(headURL);
+			this.headNode = (MD5Node)BinaryImporter.getInstance().load(headURL);
 			end = System.nanoTime();
 			this.headtime = (end - start)/1000000.0;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.bodyNode.attachChild(this.headNode, "Shoulders");
-		this.rootNode.attachChild(this.bodyNode);
+		this.rootNode.attachChild((Spatial)this.bodyNode);
 	}
 	
 	private void overrideTextureKey() {

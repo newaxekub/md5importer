@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.jme.scene.Controller;
-import com.model.md5.ModelNode;
+import com.model.md5.MD5Node;
 import com.model.md5.importer.MD5Importer;
 
 
@@ -19,7 +19,7 @@ public class TestAnim extends Test{
 	}
 
 	@Override
-	protected ModelNode loadModel() {
+	protected MD5Node loadModel() {
 		URL bodyMesh = TestAnim.class.getClassLoader().getResource("test/model/md5/data/marine.md5mesh");
 		URL bodyAnim = TestAnim.class.getClassLoader().getResource("test/model/md5/data/marine.md5anim");
 		try {
@@ -27,7 +27,7 @@ public class TestAnim extends Test{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ModelNode body = MD5Importer.getInstance().getModelNode();
+		MD5Node body = (MD5Node) MD5Importer.getInstance().getModelNode();
 		MD5Importer.getInstance().cleanup();
 		URL headMesh = TestAnim.class.getClassLoader().getResource("test/model/md5/data/sarge.md5mesh");
 		URL headAnim = TestAnim.class.getClassLoader().getResource("test/model/md5/data/sarge.md5anim");
@@ -43,7 +43,7 @@ public class TestAnim extends Test{
 
 	@Override
 	protected void setupGame() {
-		ModelNode node = (ModelNode)this.rootNode.getChild("ModelNode");
+		MD5Node node = (MD5Node)this.rootNode.getChild("ModelNode");
 		node.setLocalScale(1);
 		node.getController(0).setSpeed(2f);
 	}

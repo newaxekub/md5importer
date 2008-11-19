@@ -6,15 +6,15 @@ import com.jme.app.SimpleGame;
 import com.jme.scene.Node;
 import com.jme.util.resource.MultiFormatResourceLocator;
 import com.jme.util.resource.ResourceLocatorTool;
-import com.model.md5.ModelNode;
 import com.model.md5.importer.MD5Importer;
+import com.model.md5.interfaces.IMD5Node;
 
 public abstract class Test extends SimpleGame{
 
 	@Override
 	protected void simpleInitGame() {
 		this.overrideTextureKey();
-		Node node = this.loadModel();
+		Node node = (Node)this.loadModel();
 		node.setLocalTranslation(0, -40, -300);
 		this.rootNode.attachChild(node);
 		this.setupGame();
@@ -31,7 +31,7 @@ public abstract class Test extends SimpleGame{
 		}
 	}
 
-	abstract protected ModelNode loadModel();
+	abstract protected IMD5Node loadModel();
 	
 	abstract protected void setupGame();
 }

@@ -1,0 +1,47 @@
+package com.model.md5.interfaces;
+
+import com.jme.util.export.Savable;
+
+
+/**
+ * <code>IMesh</code> defines the interface of a mesh in the model. It
+ * maintains a number of vertices that compose a number of triangles. And
+ * each vertex is affected with a weight.
+ *
+ * @author Yi Wang (Neakor)
+ * @version Creation date: 11-17-2008 20:12 EST
+ * @version Modified date: 11-18-2008 22:45 EST
+ */
+public interface IMesh extends Savable {
+
+	/**
+	 * Initialize this mesh and its geometric data.
+	 */
+	public void initialize();
+
+	/**
+	 * Update this mesh and its geometric data.
+	 */
+	public void updateMesh();
+
+	/**
+	 * Retrieve the vertex with given index number.
+	 * @param index The <code>Integer</code> index number of the <code>IVertex</code>.
+	 * @return The <code>IVertex</code> instance with given index number.
+	 */
+	public IVertex getVertex(int index);
+
+	/**
+	 * Retrieve the weight with given index number.
+	 * @param index The <code>Integer</code> index number of the <code>Weight</code>.
+	 * @return The <code>Weight</code> instance with given index number.
+	 */
+	public IWeight getWeight(int index);
+
+	/**
+	 * Clone this mesh.
+	 * @param clonedJoints The array of cloned <code>IJoint</code>.
+	 * @return The cloned copy of this <code>IMesh</code>
+	 */
+	public IMesh clone(IJoint[] clonedJoints);
+}

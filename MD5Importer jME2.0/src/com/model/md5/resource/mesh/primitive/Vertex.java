@@ -10,53 +10,48 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
-import com.model.md5.resource.mesh.Mesh;
+import com.model.md5.interfaces.IVertex;
+import com.model.md5.interfaces.IWeight;
 
 /**
- * <code>Vertex</code> represents a vert in md5mesh file.
- * <p>
- * <code>Vertex</code> maintains its texture coordinates, normal vector and
- * position vector.
- * <p>
- * <code>Vertex</code> stores an array of <code>Weight</code> indices which
- * are used to calculate the position vector.
+ * <code>Vertex</code> defines the concrete implementation of a vertex.
  * <p>
  * <code>Vertex</code> cannot be cloned directly. The cloning process of
  * <code>Vertex</code> can only be initiated by the cloning process of the
- * parent <code>Mesh</code>.
+ * parent <code>IMesh</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-10-2008 13:08 EST
+ * @version Modified date: 11-18-2008 22:55 EST
  */
-public class Vertex implements Serializable, Savable {
+public class Vertex implements Serializable, IVertex {
 	/**
 	 * Serial version.
 	 */
 	private static final long serialVersionUID = 6774812007144718188L;
 	/**
-	 * The <code>Mesh</code> this <code>Vertex</code> belongs to.
+	 * The <code>Integer</code> index of this vertex.
 	 */
-	private Mesh mesh;
+	private int index;
 	/**
-	 * The texture coordinates of this <code>Vertex</code>.
+	 * The <code>Vector2f</code> texture coordinates.
 	 */
 	private Vector2f textureCoords;
 	/**
-	 * The array of <code>Weight</code> indices.
+	 * The array of <code>IWeight</code> instances.
 	 */
-	private int[] weightIndices;
+	private IWeight[] weights;
 	/**
-	 * The number of times this <code>Vertex</code> has been used by <code>Triangle</code>.
+	 * The number of times this vertex has been used.
 	 */
 	private int usedTimes;
 	/**
-	 * The normal of this <code>Vertex</code>.
+	 * The <code>Vector3f</code> normal.
 	 */
 	private Vector3f normal;
 	/**
-	 * The position of this <code>Vertex</code>.
+	 * The <code>Vector3f</code> position.
 	 */
 	private Vector3f position;
 	/**
@@ -65,7 +60,7 @@ public class Vertex implements Serializable, Savable {
 	private final Vector3f temp;
 
 	/**
-	 * Default constructor of <code>Vertex</code>.
+	 * Constructor of <code>Vertex</code>.
 	 */
 	public Vertex() {
 		this.temp = new Vector3f();
@@ -73,106 +68,100 @@ public class Vertex implements Serializable, Savable {
 
 	/**
 	 * Constructor of <code>Vertex</code>.
-	 * @param mesh The <code>Mesh</code> this <code>Vertex</code> belongs to.
+	 * @param index The <code>Integer</code> index value.
 	 */
-	public Vertex(Mesh mesh) {
-		this.mesh = mesh;
+	public Vertex(int index) {
+		this.index = index;
 		this.position = new Vector3f();
 		this.temp = new Vector3f();
 	}
-
+	
 	/**
-	 * Process the <code>Vertex</code> position.
+	 * Constructor of <code>Vertex</code>.
+	 * @param index The <code>Integer</code> index of this vertex.
+	 * @param textureCoords The <code>Vector2f</code> texture coordinates.
+	 * @param weights The array of <code>IWeight</code> instances.
+	 * @param usedTimes The number of times this vertex has been used.
+	 * @param normal The <code>Vector3f</code> normal.
+	 * @param position The <code>Vector3f</code> position.
 	 */
+	private Vertex(int index, Vector2f textureCoords, IWeight[] weights, int usedTimes, Vector3f normal, Vector3f position) {
+		this.index = index;
+		this.textureCoords = textureCoords;
+		this.weights = weights;
+		this.usedTimes = usedTimes;
+		this.normal = normal;
+		this.position = position;
+		this.temp = new Vector3f();
+	}
+
+	@Override
 	public void processPosition() {
 		this.position.zero();
-		for(int i = 0; i < this.weightIndices.length; i++) {
-			this.temp.set(this.mesh.getWeight(this.weightIndices[i]).getPosition());
-			this.mesh.getModelNode().getJoint(this.mesh.getWeight(this.weightIndices[i]).getJointIndex()).getTransform().multPoint(this.temp);
-			this.temp.multLocal(this.mesh.getWeight(this.weightIndices[i]).getWeightValue());
+		for(IWeight weight : this.weights) {
+			this.temp.set(weight.getPosition());
+			weight.getJoint().getTransform().multPoint(this.temp);
+			this.temp.multLocal(weight.getWeightValue());
 			this.position.addLocal(this.temp);
 		}
 	}
 
-	/**
-	 * Reset the normal and position information of this <code>Vertex</code>.
-	 */
+	@Override
 	public void resetInformation() {
 		this.normal.zero();
 		this.position.zero();
 	}
 
-	/**
-	 * Increment the number of times this <code>Vertex</code> has been used by
-	 * <code>Triangle</code>.
-	 */
+	@Override
 	public void incrementUsedTimes() {
 		this.usedTimes++;
 	}
 
-	/**
-	 * Set the texture coordinates of this <code>Vertex</code>.
-	 * @param u The u value.
-	 * @param v The un-inverted v value.
-	 */
+	@Override
 	public void setTextureCoords(float u, float v) {
 		// Invert the v value.
 		float invertV = 1.0f - v;
 		this.textureCoords = new Vector2f(u, invertV);
 	}
 
-	/**
-	 * Set the indices of <code>Weight</code> that affects this <code>Vertex</code>.
-	 * @param start The starting index number.
-	 * @param length The number of weights that affect this <code>Vertex</code>.
-	 */
-	public void setWeightIndices(int start, int length) {
-		this.weightIndices = new int[length];
-		for(int i = 0; i < this.weightIndices.length; i++) {
-			this.weightIndices[i] = start + i;
+	@Override
+	public void setWeights(IWeight... weights) {
+		this.weights = new IWeight[weights.length];
+		for(int i = 0; i < this.weights.length; i++) {
+			this.weights[i] = weights[i];
 		}
 	}
 
-	/**
-	 * Set the normal vector of this <code>Vertex</code>.
-	 * @param normal The normal <code>Vector3f</code> to be set.
-	 */
+	@Override
 	public void setNormal(Vector3f normal) {
 		if(this.normal == null) this.normal = new Vector3f(normal);
 		// If this vertex has been used, add the new value.
 		else this.normal.addLocal(normal);
 	}
 
-	/**
-	 * Retrieve the texture coordinates of this <code>Vertex</code>.
-	 * @return The <code>Vector2f</code> texture coordinates of this <code>Vertex</code>.
-	 */
+	@Override
 	public Vector2f getTextureCoords() {
 		return this.textureCoords;
 	}
 
-	/**
-	 * Retrieve the number of times this <code>Vertex</code> has been used.
-	 * @return The number of times this <code>Vertex</code> has been used.
-	 */
+	@Override
 	public int getUsedTimes() {
 		return this.usedTimes;
 	}
 
-	/**
-	 * Retrieve the position of this <code>Vertex</code>.
-	 * @return The <code>Vector3f</code> position of this <code>Vertex</code>.
-	 */
+	@Override
 	public Vector3f getPosition() {
 		return this.position;
 	}
 
-	/**
-	 * Retrieve the normal of this <code>Vertex</code>.
-	 * @return The <coed>Vector3f</code> normal of this <code>Vertex</code>.
-	 */
+	@Override
 	public Vector3f getNormal() {
 		return this.normal;
+	}
+
+	@Override
+	public int getIndex() {
+		return this.index;
 	}
 
 	@Override
@@ -184,9 +173,9 @@ public class Vertex implements Serializable, Savable {
 	@Override
 	public void write(JMEExporter ex) throws IOException {
 		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.mesh, "Mesh", null);
+		oc.write(this.index, "Index", -1);
 		oc.write(this.textureCoords, "TextureCoords", null);
-		oc.write(this.weightIndices, "WeightIndices", null);
+		oc.write(this.weights, "Weights", null);
 		oc.write(this.usedTimes, "UsedTimes", 0);
 		oc.write(this.normal, "Normal", null);
 		oc.write(this.position, "Position", null);
@@ -195,28 +184,20 @@ public class Vertex implements Serializable, Savable {
 	@Override
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule ic = im.getCapsule(this);
-		this.mesh = (Mesh)ic.readSavable("Mesh", null);
+		this.index = ic.readInt("Index", -1);
 		this.textureCoords = (Vector2f)ic.readSavable("TextureCoords", null);
-		this.weightIndices = ic.readIntArray("WeightIndices", null);
+		Savable[] temp = ic.readSavableArray("Weights", null);
+		this.weights = new IWeight[temp.length];
+		for(int i = 0; i < this.weights.length; i++) this.weights[i] = (IWeight)temp[i];
 		this.usedTimes = ic.readInt("UsedTimes", 0);
 		this.normal = (Vector3f)ic.readSavable("Normal", null);
 		this.position = (Vector3f)ic.readSavable("Position", null);
 	}
 
-	/**
-	 * Clone this vertex with given newly cloned mesh parent.
-	 * @param mesh The cloned <code>Mesh</code> parent.
-	 * @return The cloned copy of this <code>Vertex</code>
-	 */
-	public Vertex clone(Mesh mesh) {
-		Vertex clone = new Vertex();
-		clone.mesh = mesh;
-		clone.textureCoords = this.textureCoords.clone();
-		clone.weightIndices = new int[this.weightIndices.length];
-		System.arraycopy(this.weightIndices, 0, clone.weightIndices, 0, this.weightIndices.length);
-		clone.usedTimes = this.usedTimes;
-		clone.normal = this.normal.clone();
-		clone.position = this.position.clone();
-		return clone;
+	@Override
+	public IVertex clone(IWeight[] clonedWeights) {
+		IWeight[] weights = new IWeight[this.weights.length];
+		for(int i = 0; i < weights.length; i++) weights[i] = clonedWeights[this.weights[i].getIndex()];
+		return new Vertex(this.index, this.textureCoords.clone(), weights, this.usedTimes, this.normal.clone(), this.position.clone());
 	}
 }
