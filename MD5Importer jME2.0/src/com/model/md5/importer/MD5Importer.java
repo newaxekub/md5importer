@@ -21,7 +21,7 @@ import com.model.md5.interfaces.IMD5Node;
  * mechanism to load models and animations of MD5 format.
  * <p>
  * <code>MD5Importer</code> allows separate <code>Mesh</code> and
- * <code>JointAnimation</code> loading process. However, it also provides
+ * <code>IMD5Animation</code> loading process. However, it also provides
  * convenient methods for loading both MD5 resources at once.
  * <p>
  * <code>MD5Importer</code> should be cleaned up after the loading process
@@ -51,15 +51,15 @@ public class MD5Importer {
 	 */
 	private static MD5Importer instance;
 	/**
-	 * The minification (MM) <code>Texture</code> filter.
+	 * The <code>MinificationFilter</code> enumeration.
 	 */
 	private Texture.MinificationFilter miniFilter = Texture.MinificationFilter.Trilinear;
 	/**
-	 * The magnification (FM) <code>Texture</code> filter.
+	 * The <code>MagnificationFilter</code> enumeration.
 	 */
 	private Texture.MagnificationFilter magFilter = Texture.MagnificationFilter.Bilinear;
 	/**
-	 * The anisotropic level value.
+	 * The <code>Integer</code> anisotropic level value.
 	 */
 	private int anisotropic = 16;
 	/**
@@ -85,12 +85,14 @@ public class MD5Importer {
 	private MD5Importer() {}
 
 	/**
-	 * Retrieve the <code>MD5Importer</code> instance.
+	 * Retrieve the importer singleton instance.
 	 * @return The <code>MD5Importer</code> instance.
 	 */
 	public static MD5Importer getInstance() {
 		if(MD5Importer.instance == null) {
-			MD5Importer.instance = new MD5Importer();
+			synchronized(MD5Importer.class) {
+				if(MD5Importer.instance == null) MD5Importer.instance = new MD5Importer();
+			}
 		}
 		return MD5Importer.instance;
 	}
@@ -99,10 +101,10 @@ public class MD5Importer {
 	 * Load the given md5mesh and md5anim files and assign the loaded
 	 * <code>JointAnimation</code> to the <code>Mesh</code>.
 	 * @param md5mesh The <code>URL</code> of the md5mesh file.
-	 * @param modelName The name of the loaded <code>ModelNode</code>.
+	 * @param modelName The <code>String</code> name of the loaded model.
 	 * @param md5anim The <code>URL</code> points to the md5anim file.
-	 * @param animName The name of the loaded <code>JointAnimation</code>.
-	 * @param repeatType The repeat type of the loaded <code>JointAnimation</code>.
+	 * @param animName The <code>String</code> name of the loaded animation.
+	 * @param repeatType The <code>Integer</code> repeat type.
 	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	public void load(URL md5mesh, String modelName, URL md5anim, String animName, int repeatType) throws IOException {
@@ -114,7 +116,7 @@ public class MD5Importer {
 	/**
 	 * Load the given md5mesh file.
 	 * @param md5mesh The <code>URL</code> points to the md5mesh file.
-	 * @param name The name of the loaded <code>ModelNode</code>.
+	 * @param name The <code>String</code> name of the loaded model.
 	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	public void loadMesh(URL md5mesh, String name) throws IOException {
@@ -126,7 +128,7 @@ public class MD5Importer {
 	/**
 	 * Load the given md5anim file.
 	 * @param md5anim The <code>URL</code> points to the md5anim file.
-	 * @param name The name of the loaded <code>JointAnimation</code>.
+	 * @param name The <code>String</code> name of the loaded animation.
 	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	public void loadAnim(URL md5anim, String name) throws IOException {
@@ -136,7 +138,7 @@ public class MD5Importer {
 	}
 
 	/**
-	 * Setup the <code>StreamTokenizer</code> for file reading.
+	 * Setup the reader for file reading.
 	 * @param stream The <code>InputStream</code> of the file.
 	 */
 	private void setupReader(InputStream stream) {
@@ -153,8 +155,8 @@ public class MD5Importer {
 	}
 
 	/**
-	 * Assign the loaded <code>JointAnimation</code> to the <code>ModelNode</code>.
-	 * @param repeatType The repeat type of this <code>JointAnimation</code>.
+	 * Assign the loaded animation to the node.
+	 * @param repeatType The <code>Integer</code> repeat type.
 	 */
 	private void assignAnimation(int repeatType) {
 		IMD5Controller controller = new MD5Controller(this.node);
@@ -181,8 +183,8 @@ public class MD5Importer {
 	}
 
 	/**
-	 * Set the <code>Texture</code> anisotropic level.
-	 * @param value The anisotropic level value.
+	 * Set the texture anisotropic level.
+	 * @param value The <code>Integer</code> anisotropic level value.
 	 */
 	public void setAnisotropic(int aniso) {
 		if(aniso >= 0) this.anisotropic = aniso;
@@ -190,7 +192,7 @@ public class MD5Importer {
 	}
 
 	/**
-	 * Set if oriented bounding should be used for the <code>Mesh</code>.
+	 * Set if oriented bounding should be used for the meshes.
 	 * @param orientedBounding True if oriented bounding should be used. False otherwise.
 	 */
 	public void setOrientedBounding(boolean orientedBounding) {
@@ -198,16 +200,16 @@ public class MD5Importer {
 	}
 
 	/**
-	 * Retrieve the minification (MM) <code>Texture</code> filter.
-	 * @return The minification (MM) <code>Texture</code> filter.
+	 * Retrieve the minification (MM) texture filter.
+	 * @return The <code>MinificationFilter</code> enumeration.
 	 */
 	public Texture.MinificationFilter getMiniFilter() {
 		return this.miniFilter;
 	}
 
 	/**
-	 * Retrieve the magnification (FM) <code>Texture</code> filter.
-	 * @return The magnification (FM) <code>Texture</code> filter.
+	 * Retrieve the magnification (FM) texture filter.
+	 * @return The <code>MagnificationFilter</code> enumeration.
 	 */
 	public Texture.MagnificationFilter getMagFilter() {
 		return this.magFilter;
@@ -215,7 +217,7 @@ public class MD5Importer {
 
 	/**
 	 * Retrieve the anisotropic level.
-	 * @return The anisotropic level.
+	 * @return The <code>Integer</code> anisotropic level.
 	 */
 	public int getAnisotropic() {
 		return this.anisotropic;
@@ -223,7 +225,7 @@ public class MD5Importer {
 
 	/**
 	 * Retrieve the MD5 node instance.
-	 * @return The <code>ModelNode</code> instance.
+	 * @return The <code>IMD5Node</code> instance.
 	 */
 	public IMD5Node getModelNode() {
 		return this.node;
@@ -231,7 +233,7 @@ public class MD5Importer {
 
 	/**
 	 * Retrieve the MD5 animation instance.
-	 * @return The <code>JointAnimation</code> instance.
+	 * @return The <code>IMD5Animation</code> instance.
 	 */
 	public IMD5Animation getAnimation() {
 		return this.animation;
@@ -246,7 +248,7 @@ public class MD5Importer {
 	}
 
 	/**
-	 * Cleanup the <code>MD5Importer</code>.
+	 * Cleanup the importer.
 	 */
 	public void cleanup() {
 		this.reader = null;

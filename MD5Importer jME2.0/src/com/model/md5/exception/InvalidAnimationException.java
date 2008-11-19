@@ -2,7 +2,7 @@ package com.model.md5.exception;
 
 /**
  * <code>InvalidAnimationException</code> is thrown when an invalid
- * <code>JointAnimation</code> is being set to a previously loaded skeletal
+ * <code>IMD5Animation</code> is being set to a previously loaded skeletal
  * system.
  * 
  * @author Yi Wang (Neakor)

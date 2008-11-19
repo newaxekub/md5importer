@@ -22,7 +22,7 @@ import com.model.md5.resource.mesh.primitive.Weight;
 
 /**
  * <code>MeshImporter</code> is responsible for importing MD5Mesh resources and
- * constructing the final <code>ModelNode</code> instance.
+ * constructing the final <code>IMD5Node</code> instance.
  * <p>
  * <code>MeshImporter</code> is used by <code>MD5Importer</code> internally only.
  *
