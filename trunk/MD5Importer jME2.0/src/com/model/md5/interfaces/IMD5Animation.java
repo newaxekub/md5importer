@@ -8,7 +8,7 @@ import com.model.md5.interfaces.anim.IFrame;
  *
  * @author Yi Wang (Neakor)
  * @version Creation date: 11-17-2008 22:46 EST
- * @version Modified date: 11-18-2008 12:22 EST
+ * @version Modified date: 11-19-2008 17:36 EST
  */
 public interface IMD5Animation extends Savable {
 
@@ -38,6 +38,12 @@ public interface IMD5Animation extends Savable {
 	 */
 	public int getFrameCount();
 	
+	/**
+	 * Get the complete percentage of the current cycle.
+	 * @return The <code>Float</code> percentage value.
+	 */
+	public float getPercentage();
+
 	/**
 	 * Retrieve the previous frame.
 	 * @return The previous <code>IFrame</code>.

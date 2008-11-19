@@ -24,7 +24,7 @@ import com.model.md5.interfaces.anim.IFrame;
  * The newly cloned <code>MD5Animation</code> is initialized and ready to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 11-18-2008 23:14 EST
+ * @version Modified date: 11-19-2008 17:38 EST
  */
 public class MD5Animation implements Serializable, IMD5Animation {
 	/**
@@ -218,6 +218,11 @@ public class MD5Animation implements Serializable, IMD5Animation {
 	@Override
 	public int getFrameCount() {
 		return this.frames.length;
+	}
+
+	@Override
+	public float getPercentage() {
+		return this.nextFrame / this.getFrameCount();
 	}
 
 	@Override
