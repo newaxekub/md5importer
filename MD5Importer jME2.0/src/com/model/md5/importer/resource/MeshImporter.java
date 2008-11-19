@@ -27,7 +27,7 @@ import com.model.md5.resource.mesh.primitive.Weight;
  * <code>MeshImporter</code> is used by <code>MD5Importer</code> internally only.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 11-18-2008 22:49 EST
+ * @version Modified date: 11-19-2008 17:13 EST
  */
 public class MeshImporter extends Importer {
 	/**
@@ -287,7 +287,8 @@ public class MeshImporter extends Importer {
 				}
 			}
 		}
-		this.weights[index] = new Weight(index, joint, value, position);
+		this.weights[index] = new Weight(index, value, position);
+		this.weights[index].setJoint(joint);
 	}
 
 	/**

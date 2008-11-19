@@ -28,7 +28,7 @@ import com.model.md5.interfaces.mesh.IMesh;
  * to be used.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 11-19-2008 15:36 EST
+ * @version Modified date: 11-19-2008 17:14 EST
  */
 public class MD5Node extends Node implements IMD5Node {
 	/**
@@ -136,10 +136,18 @@ public class MD5Node extends Node implements IMD5Node {
 	@Override
 	public void attachDependent(IMD5Node node) {
 		this.dependents.add(node);
-		((MD5Node)node).dependent = true;
-		((MD5Node)node).joints = this.joints;
+		node.setAsDependent(this);
 		this.attachChild((Spatial)node);
 		node.initialize();
+	}
+
+	@Override
+	public void setAsDependent(IMD5Node parent) {
+		this.dependent = true;
+		this.joints = parent.getJoints();
+		for(IMesh mesh : this.meshes) {
+			mesh.setShare(this.joints);
+		}
 	}
 
 	/**

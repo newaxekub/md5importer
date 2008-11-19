@@ -21,7 +21,7 @@ import com.model.md5.interfaces.mesh.primitive.IWeight;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 11-18-2008 22:50 EST
+ * @version Modified date: 11-19-2008 17:13 EST
  */
 public class Weight implements Serializable, IWeight {
 	/**
@@ -49,21 +49,24 @@ public class Weight implements Serializable, IWeight {
 	 * Constructor of <code>Weight</code>.
 	 */
 	public Weight() {
-		this(-1, null, -1, null);
+		this(-1, -1, null);
 	}
 	
 	/**
 	 * Constructor of <code>Weight</code>.
 	 * @param index The <code>Integer</code> index value.
-	 * @param joint The <code>IJoint</code> this weight affects.
 	 * @param value The fixed <code>Float</code> weight value.
 	 * @param position The fixed <code>Vector3f</code> position vector.
 	 */
-	public Weight(int index, IJoint joint, float value, Vector3f position) {
+	public Weight(int index, float value, Vector3f position) {
 		this.index = index;
-		this.joint = joint;
 		this.value = value;
 		this.position = position;
+	}
+
+	@Override
+	public void setJoint(IJoint joint) {
+		this.joint = joint;
 	}
 
 	@Override
@@ -112,6 +115,8 @@ public class Weight implements Serializable, IWeight {
 
 	@Override
 	public IWeight clone(IJoint[] clonedJoints) {
-		return new Weight(this.index, clonedJoints[this.joint.getIndex()], this.value, this.position.clone());
+		IWeight cloned = new Weight(this.index, this.value, this.position.clone());
+		cloned.setJoint(clonedJoints[this.joint.getIndex()]);
+		return cloned;
 	}
 }
