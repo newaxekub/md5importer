@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.BitSet;
 
-import com.model.md5.JointAnimation;
+import com.model.md5.MD5Animation;
 import com.model.md5.exception.InvalidVersionException;
 import com.model.md5.importer.MD5Importer;
+import com.model.md5.interfaces.IBaseFrame;
+import com.model.md5.interfaces.IFrame;
+import com.model.md5.interfaces.IMD5Animation;
+import com.model.md5.resource.anim.BaseFrame;
 import com.model.md5.resource.anim.Frame;
 
 /**
@@ -16,23 +20,19 @@ import com.model.md5.resource.anim.Frame;
  * <code>AnimImporter</code> is used by <code>MD5Importer</code> internally only.
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 05-02-2008 19:15 EST
+ * @version Modified date: 11-18-2008 00:21 EST
  */
-public class AnimImporter {
-	/**
-	 * The <code>StreamTokenizer</code> instance.
-	 */
-	private StreamTokenizer reader;
+public class AnimImporter extends Importer {
 	/**
 	 * The frame rate of the <code>JointAnimation</code>.
 	 */
 	private float frameRate;
 	/**
-	 * The array of <code>Joint</code> name IDs.
+	 * The <code>String</code> array of joint name IDs.
 	 */
 	private String[] idHierarchy;
 	/**
-	 * The array of <code>Joint</code> parent index.
+	 * The <code>Integer</code> array of parent index.
 	 */
 	private int[] parentHierarchy;
 	/**
@@ -41,33 +41,33 @@ public class AnimImporter {
 	 */
 	private BitSet frameflags;
 	/**
-	 * The base <code>Frame</code> of the <code>JointAnimation</code>.
+	 * The base <code>IFrame</code> of the animation.
 	 */
-	private Frame baseframe;
+	private IBaseFrame baseframe;
 	/**
-	 * The array of <code>Frame</code> for the <code>JointAnimation</code>.
+	 * The array of <code>IFrame</code> for the animation.
 	 */
-	private Frame[] frames;
+	private IFrame[] frames;
 	/**
-	 * The final <code>JointAnimation</code> instance.
+	 * The final <code>IMD5Animation</code> instance.
 	 */
-	private JointAnimation animation;
+	private IMD5Animation animation;
 
 	/**
 	 * Constructor of <code>AnimImporter</code>.
 	 * @param reader The <code>StreamTokenizer</code> instance setup for reading file.
 	 */
 	public AnimImporter(StreamTokenizer reader) {
-		this.reader = reader;
+		super(reader);
 	}
 
 	/**
-	 * Read the md5anim file and construct the final <code>JointAnimation</code>.
+	 * Read the md5anim file and construct the final MD5 animation.
 	 * @param name The name of the loaded <code>JointAnimation</code>.
-	 * @return The loaded <code>JointAnimation</code> instance.
+	 * @return The loaded <code>IMD5Animation</code> instance.
 	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
-	public JointAnimation loadAnim(String name) throws IOException {
+	public IMD5Animation loadAnim(String name) throws IOException {
 		this.processAnim();
 		this.constructAnimation(name);
 		return this.animation;
@@ -91,10 +91,6 @@ public class AnimImporter {
 				} else if(sval.equals("numJoints")) {
 					this.reader.nextToken();
 					int numJoints = (int)this.reader.nval;
-					this.baseframe = new Frame(true, numJoints);
-					for(int i = 0; i < this.frames.length; i++) {
-						this.frames[i] = new Frame(false, numJoints);
-					}
 					this.idHierarchy = new String[numJoints];
 					this.parentHierarchy = new int[numJoints];
 				} else if(sval.equals("frameRate")) {
@@ -148,17 +144,14 @@ public class AnimImporter {
 				break;
 			}
 		}
-		this.baseframe.setParents(this.parentHierarchy);
-		for(int i = 0; i < this.frames.length; i++) {
-			this.frames[i].setParents(this.parentHierarchy);
-		}
 	}
 
 	/**
 	 * Process information to construct the base <code>Frame</code>.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processBaseframe() throws IOException {
+		this.baseframe = new BaseFrame(this.idHierarchy.length, this.parentHierarchy);
 		int pointer = -1;
 		int jointIndex = -1;
 		while(this.reader.nextToken() != '}') {
@@ -185,9 +178,10 @@ public class AnimImporter {
 	/**
 	 * Process information to construct in a single <code>Frame</code>.
 	 * @param index The index number of the <code>Frame</code>.
-	 * @throws IOException Thrown when errors occured during file reading.
+	 * @throws IOException Thrown when errors occurred during file reading.
 	 */
 	private void processFrame(int index) throws IOException {
+		this.frames[index] = new Frame(this.idHierarchy.length);
 		float[] values = new float[6];
 		for(int i = 0; i < this.parentHierarchy.length; i++) {
 			for(int j = 0; j < values.length; j++) {
@@ -218,7 +212,7 @@ public class AnimImporter {
 	 * @param name The name of the loaded <code>JointAnimation</code>.
 	 */
 	private void constructAnimation(String name) {
-		this.animation = new JointAnimation(name, this.idHierarchy, this.frames, this.frameRate);
+		this.animation = new MD5Animation(name, this.idHierarchy, this.frames, this.frameRate);
 		this.idHierarchy = null;
 		this.parentHierarchy = null;
 		this.frameflags = null;

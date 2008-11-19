@@ -1,6 +1,7 @@
 package test.model.md5.clone;
 
-import com.model.md5.ModelNode;
+import com.jme.scene.Spatial;
+import com.model.md5.interfaces.IMD5Node;
 
 import test.model.md5.binary.TestMeshImport;
 
@@ -10,8 +11,8 @@ import test.model.md5.binary.TestMeshImport;
  * @author Yi Wang (Neakor)
  */
 public class TestMeshClone extends TestMeshImport {
-	protected ModelNode bodyclone;
-	protected ModelNode headclone;
+	protected IMD5Node bodyclone;
+	protected IMD5Node headclone;
 	private double headclonetime;
 	private double bodyclonetime;
 
@@ -31,8 +32,8 @@ public class TestMeshClone extends TestMeshImport {
 		end = System.nanoTime();
 		this.headclonetime = (end - start)/1000000.0;
 		this.bodyclone.attachChild(this.headclone, "Shoulders");
-		this.bodyclone.setLocalTranslation(35, 0, 0);
-		this.rootNode.attachChild(this.bodyclone);
+		((Spatial)this.bodyclone).setLocalTranslation(0, -30, -100);
+		this.rootNode.attachChild((Spatial)this.bodyclone);
 		this.printResult();
 	}
 	

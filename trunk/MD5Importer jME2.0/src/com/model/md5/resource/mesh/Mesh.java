@@ -21,79 +21,73 @@ import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.resource.ResourceLocatorTool;
-import com.model.md5.ModelNode;
 import com.model.md5.importer.MD5Importer;
-import com.model.md5.resource.mesh.primitive.Triangle;
-import com.model.md5.resource.mesh.primitive.Vertex;
-import com.model.md5.resource.mesh.primitive.Weight;
+import com.model.md5.interfaces.IJoint;
+import com.model.md5.interfaces.IMesh;
+import com.model.md5.interfaces.ITriangle;
+import com.model.md5.interfaces.IVertex;
+import com.model.md5.interfaces.IWeight;
 
 /**
- * <code>Mesh</code> represents a mesh in md5mesh file.
- * <p>
- * <code>Mesh</code> maintains a number of <code>Vertex</code>,
- * <code>Weight</code> and <code>Triangle</code> to represent the basic
- * geometry of a <code>ModelNode</code>. It extends <code>TriMesh</code>
- * to interface with jME rendering system.
- * <p>
- * <code>Mesh</code> does not directly process any geometric information
- * but delegates the process down to the primitive elements it maintains.
+ * <code>Mesh</code> defines the concrete implementation of a mesh. It does
+ * not directly process any geometric information but delegates the process
+ * down to the primitive elements it maintains.
  * <p>
  * <code>Mesh</code> cannot be cloned directly. The cloning process of a
  * <code>Mesh</code> can only be initiated by the cloning process of the
- * parent <code>ModelNode</code>.
+ * parent <code>IIMD5Node</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-10-2008 14:23 EST
+ * @version Modified date: 11-18-2008 22:39 EST
  */
-public class Mesh extends TriMesh {
+public class Mesh extends TriMesh implements IMesh {
 	/**
 	 * Serial version.
 	 */
 	private static final long serialVersionUID = -6431941710991131243L;
 	/**
-	 * The <code>ModelNode</code> this <code>Mesh</code> belongs to.
-	 */
-	private ModelNode modelNode;
-	/**
-	 * The texture file name without extension.
+	 * The <code>String</code> texture file name without extension.
 	 */
 	private String texture;
 	/**
-	 * The array of <code>Vertex</code> in this <code>Mesh</code>.
+	 * The array of <code>IVertex</code> in this mesh.
 	 */
-	private Vertex[] vertices;
+	private IVertex[] vertices;
 	/**
-	 * The array of <code>Triangle</code> in this <code>Mesh</code>.
+	 * The array of <code>ITriangle</code> in this mesh.
 	 */
-	private Triangle[] triangles;
+	private ITriangle[] triangles;
 	/**
-	 * The array of <code>Weight</code> in this <code>Mesh</code>.
+	 * The array of <code>IWeight</code> in this mesh.
 	 */
-	private Weight[] weights;
+	private IWeight[] weights;
 
 	/**
-	 * Default constructor of <code>Mesh</code>.
+	 * Constructor of <code>Mesh</code>.
 	 */
 	public Mesh() {
 		super();
 	}
-
+	
 	/**
 	 * Constructor of <code>Mesh</code>.
-	 * @param modelNode The <code>ModelNode</code> this <code>Mesh</code> belongs to.
+	 * @param texture The <code>String</code> texture file name without extension.
+	 * @param vertices The array of <code>IVertex</code> in this mesh.
+	 * @param triangles The array of <code>ITriangle</code> in this mesh.
+	 * @param weights The array of <code>IWeight</code> in this mesh.
 	 */
-	public Mesh(ModelNode modelNode) {
-		super();
-		this.modelNode = modelNode;
+	public Mesh(String texture, IVertex[] vertices, ITriangle[] triangles, IWeight[] weights) {
+		this.texture = texture;
+		this.vertices = vertices;
+		this.triangles = triangles;
+		this.weights = weights;
 	}
 
-	/**
-	 * Initialize this <code>Mesh</code> and its geometric data.
-	 */
+	@Override
 	public void initialize() {
-		this.setName(this.modelNode.getName()+"Mesh");
+		this.setName("Mesh");
 		this.setNormalsMode(Spatial.NormalsMode.AlwaysNormalize);
 		this.processIndex();
 		this.processVertex();
@@ -102,12 +96,10 @@ public class Mesh extends TriMesh {
 		this.processBounding();
 	}
 
-	/**
-	 * Update this <code>Mesh</code> and its geometric data.
-	 */
+	@Override
 	public void updateMesh() {
-		for(int i = 0; i < this.vertices.length; i++) {
-			this.vertices[i].resetInformation();
+		for(IVertex vertex : this.vertices) {
+			vertex.resetInformation();
 		}
 		this.processVertex();
 		this.processNormal();
@@ -120,9 +112,9 @@ public class Mesh extends TriMesh {
 	private void processIndex() {
 		IntBuffer indexBuffer = BufferUtils.createIntBuffer(this.triangles.length*3);
 		indexBuffer.clear();
-		for(int i = 0; i < this.triangles.length; i++) {
+		for(ITriangle triangle : this.triangles) {
 			for(int j = 0; j < 3; j++) {
-				indexBuffer.put(this.triangles[i].getVertexIndex(j));
+				indexBuffer.put(triangle.getVertex(j).getIndex());
 			}
 		}
 		indexBuffer.flip();
@@ -134,30 +126,34 @@ public class Mesh extends TriMesh {
 	 */
 	private void processVertex() {
 		FloatBuffer vertexBuffer = this.getVertexBuffer();
-		if(vertexBuffer == null) vertexBuffer = BufferUtils.createVector3Buffer(this.vertices.length);
+		if(vertexBuffer == null) {
+			vertexBuffer = BufferUtils.createVector3Buffer(this.vertices.length);
+			this.setVertexBuffer(vertexBuffer);
+		}
 		vertexBuffer.clear();
 		for(int i = 0; i < this.vertices.length; i++) {
 			this.vertices[i].processPosition();
 			BufferUtils.setInBuffer(this.vertices[i].getPosition(), vertexBuffer, i);
 		}
-		this.setVertexBuffer(vertexBuffer);
 	}
 
 	/**
 	 * Process and setup the normal position buffer.
 	 */
 	private void processNormal() {
-		// Triangles have to process thr normal first incase the vertices are not in order.
+		// Triangles have to process the normal first in case the vertices are not in order.
 		for(int i = 0; i < this.triangles.length; i++) {
 			this.triangles[i].processNormal();
 		}
 		FloatBuffer normalBuffer = this.getNormalBuffer();
-		if(normalBuffer == null) normalBuffer = BufferUtils.createVector3Buffer(this.vertices.length);
+		if(normalBuffer == null) {
+			normalBuffer = BufferUtils.createVector3Buffer(this.vertices.length);
+			this.setNormalBuffer(normalBuffer);
+		}
 		normalBuffer.clear();
 		for(int i = 0; i < this.vertices.length; i++) {
 			BufferUtils.setInBuffer(this.vertices[i].getNormal(), normalBuffer, i);
 		}
-		this.setNormalBuffer(normalBuffer);
 	}
 
 	/**
@@ -167,12 +163,14 @@ public class Mesh extends TriMesh {
 		MD5Importer instance = MD5Importer.getInstance();
 		FloatBuffer textureBuffer = BufferUtils.createVector2Buffer(this.vertices.length);
 		float maxU = 1; float maxV = 1; float minU = 0; float minV = 0;
-		for(int i = 0; i < this.vertices.length; i++) {
-			BufferUtils.setInBuffer(this.vertices[i].getTextureCoords(), textureBuffer, i);
-			if(this.vertices[i].getTextureCoords().x > maxU) maxU = this.vertices[i].getTextureCoords().x;
-			else if(this.vertices[i].getTextureCoords().x < minU) minU = this.vertices[i].getTextureCoords().x;
-			if(this.vertices[i].getTextureCoords().y > maxV) maxV = this.vertices[i].getTextureCoords().y;
-			else if(this.vertices[i].getTextureCoords().y < minV) minV = this.vertices[i].getTextureCoords().y;
+		int index = 0;
+		for(IVertex vertex : this.vertices) {
+			BufferUtils.setInBuffer(vertex.getTextureCoords(), textureBuffer, index);
+			if(vertex.getTextureCoords().x > maxU) maxU = vertex.getTextureCoords().x;
+			else if(vertex.getTextureCoords().x < minU) minU = vertex.getTextureCoords().x;
+			if(vertex.getTextureCoords().y > maxV) maxV = vertex.getTextureCoords().y;
+			else if(vertex.getTextureCoords().y < minV) minV = vertex.getTextureCoords().y;
+			index++;
 		}
 		this.setTextureCoords(new TexCoords(textureBuffer));
 		URL url = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, this.texture);
@@ -198,88 +196,13 @@ public class Mesh extends TriMesh {
 		this.updateGeometricState(0, true);
 	}
 
-	/**
-	 * Set the texture file name of this <code>Mesh</code>.
-	 * @param texture The texture file name without extension.
-	 */
-	public void setTexture(String texture) {
-		this.texture = texture;
-	}
-
-	/**
-	 * Setup the vertices array based on the given count.
-	 * @param count The number of vertices in this <code>Mesh</code>.
-	 */
-	public void setVrticesCount(int count) {
-		this.vertices = new Vertex[count];
-	}
-
-	/**
-	 * Set the <code>Vertex</code> with given index number.
-	 * @param index The index of the <code>Vertex</code>.
-	 * @param vertex The <code>Vertex</code> to be set.
-	 */
-	public void setVertex(int index, Vertex vertex) {
-		this.vertices[index] = vertex;
-	}
-
-	/**
-	 * Setup the triangles array based on the given count.
-	 * @param count The number of triangles in this <code>Mesh</code>.
-	 */
-	public void setTrianglesCount(int count) {
-		this.triangles = new Triangle[count];
-	}
-
-	/**
-	 * Set the <code>Triangle</code> with given index number.
-	 * @param index The index of the <code>Triangle</code>.
-	 * @param triangle The <code>Triangle</code> to be set.
-	 */
-	public void setTriangle(int index, Triangle triangle) {
-		this.triangles[index] = triangle;
-	}
-
-	/**
-	 * Setup the weights array based on the given count.
-	 * @param count The number of weights in this <code>Mesh</code>.
-	 */
-	public void setWeightCount(int count) {
-		this.weights = new Weight[count];
-	}
-
-	/**
-	 * Set the <code>Weight</code> with given index number.
-	 * @param index The index of the <code>Weight</code>.
-	 * @param weight The <code>Weight</code> to be set.
-	 */
-	public void setWeight(int index, Weight weight) {
-		this.weights[index] = weight;
-	}
-
-	/**
-	 * Retrieve the <code>ModelNode</code> this <code>Mesh</code> belongs to.
-	 * @return The <code>ModelNode</code> this <code>Mesh</code> belongs to.
-	 */
-	public ModelNode getModelNode() {
-		return this.modelNode;
-	}
-
-	/**
-	 * Retrieve the <code>Vertex</code> with given index number.
-	 * @param index The index number of the <code>Vertex</code>.
-	 * @return The <code>Vertex</code> instance with given index number.
-	 */
-	public Vertex getVertex(int index) {
+	@Override
+	public IVertex getVertex(int index) {
 		return this.vertices[index];
 	}
 
-	/**
-	 * Retrieve the <code>Weight</code> with given index number.
-	 * @param index The index number of the <code>Weight</code>.
-	 * @return The <code>Weight</code> instance with given index number.
-	 */
-	public Weight getWeight(int index) {
+	@Override
+	public IWeight getWeight(int index) {
 		return this.weights[index];
 	}
 
@@ -293,7 +216,6 @@ public class Mesh extends TriMesh {
 	public void write(JMEExporter ex) throws IOException {
 		super.write(ex);
 		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.modelNode, "ModelNode", null);
 		oc.write(this.texture, "Texture", null);
 		oc.write(this.vertices, "Vertices", null);
 		oc.write(this.triangles, "Triangles", null);
@@ -305,46 +227,35 @@ public class Mesh extends TriMesh {
 		super.read(im);
 		Savable[] temp = null;
 		InputCapsule ic = im.getCapsule(this);
-		this.modelNode = (ModelNode)ic.readSavable("ModelNode", null);
 		this.texture = ic.readString("Texture", null);
 		temp = ic.readSavableArray("Vertices", null);
-		this.vertices = new Vertex[temp.length];
+		this.vertices = new IVertex[temp.length];
 		for(int i = 0; i < temp.length; i++) {
-			this.vertices[i] = (Vertex)temp[i];
+			this.vertices[i] = (IVertex)temp[i];
 		}
 		temp = ic.readSavableArray("Triangles", null);
-		this.triangles = new Triangle[temp.length];
+		this.triangles = new ITriangle[temp.length];
 		for(int i = 0; i < temp.length; i++) {
-			this.triangles[i] = (Triangle)temp[i];
+			this.triangles[i] = (ITriangle)temp[i];
 		}
 		temp = ic.readSavableArray("Weights", null);
-		this.weights = new Weight[temp.length];
+		this.weights = new IWeight[temp.length];
 		for(int i = 0; i < temp.length; i++) {
-			this.weights[i] = (Weight)temp[i];
+			this.weights[i] = (IWeight)temp[i];
 		}
 	}
 
-	/**
-	 * Clone this mesh with given newly cloned <code>ModelNode</code> parent.
-	 * @param mesh The cloned <code>ModelNode</code> parent.
-	 * @return The cloned copy of this <code>Mesh</code>
-	 */
-	public Mesh clone(ModelNode modelNode) {
-		Mesh clone = new Mesh();
-		clone.modelNode = modelNode;
-		clone.texture = new String(this.texture.toCharArray());
-		clone.vertices = new Vertex[this.vertices.length];
-		for(int i = 0; i < clone.vertices.length; i++) {
-			clone.vertices[i] = this.vertices[i].clone(clone);
-		}
-		clone.triangles = new Triangle[this.triangles.length];
-		for(int i = 0; i < clone.triangles.length; i++) {
-			clone.triangles[i] = this.triangles[i].clone(clone);
-		}
-		clone.weights = new Weight[this.weights.length];
-		for(int i = 0; i < clone.weights.length; i++) {
-			clone.weights[i] = this.weights[i].clone();
-		}
-		return clone;
+	@Override
+	public IMesh clone(IJoint[] clonedJoints) {
+		// Weights need to be cloned first.
+		IWeight[] clonedWeights = new IWeight[this.weights.length];
+		for(int i = 0; i < clonedWeights.length; i++) clonedWeights[i] = this.weights[i].clone(clonedJoints);
+		// Then pass cloned weights to clone vertices.
+		IVertex[] clonedVertices = new IVertex[this.vertices.length];
+		for(int i = 0; i < clonedVertices.length; i++) clonedVertices[i] = this.vertices[i].clone(clonedWeights);
+		// Then pass cloned vertices to clone triangles.
+		ITriangle[] clonedTriangles = new ITriangle[this.triangles.length];
+		for(int i = 0; i < clonedTriangles.length; i++) clonedTriangles[i] = this.triangles[i].clone(clonedVertices);
+		return new Mesh(new String(this.texture), clonedVertices, clonedTriangles, clonedWeights);
 	}
 }

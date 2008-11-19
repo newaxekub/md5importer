@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.jme.util.export.binary.BinaryImporter;
-import com.model.md5.JointAnimation;
-import com.model.md5.controller.JointController;
+import com.model.md5.MD5Animation;
+import com.model.md5.controller.MD5Controller;
+import com.model.md5.interfaces.IMD5Controller;
 
 /**
  * Simple test to show how to load in the exported animations.
@@ -15,8 +16,8 @@ import com.model.md5.controller.JointController;
 public class TestAnimImport extends TestMeshImport {
 	private final String body = "bodyanim.jme";
 	private final String head = "headanim.jme";
-	private JointAnimation bodyAnim;
-	private JointAnimation headAnim;
+	private MD5Animation bodyAnim;
+	private MD5Animation headAnim;
 
 	public static void main(String[] args) {
 		new TestAnimImport().start();
@@ -28,17 +29,17 @@ public class TestAnimImport extends TestMeshImport {
 		URL bodyURL = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/" + this.body);
 		URL headURL = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/" + this.head);
 		try {
-			this.bodyAnim = (JointAnimation)BinaryImporter.getInstance().load(bodyURL);
-			this.headAnim = (JointAnimation)BinaryImporter.getInstance().load(headURL);
+			this.bodyAnim = (MD5Animation)BinaryImporter.getInstance().load(bodyURL);
+			this.headAnim = (MD5Animation)BinaryImporter.getInstance().load(headURL);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		JointController bodycontroller = new JointController(this.bodyNode.getJoints());
+		IMD5Controller bodycontroller = new MD5Controller(this.bodyNode);
 		bodycontroller.addAnimation(this.bodyAnim);
 		bodycontroller.setRepeatType(1);
 		bodycontroller.setActive(true);
 		this.bodyNode.addController(bodycontroller);
-		JointController headcontroller = new JointController(this.headNode.getJoints());
+		IMD5Controller headcontroller = new MD5Controller(this.headNode);
 		headcontroller.addAnimation(this.headAnim);
 		headcontroller.setRepeatType(1);
 		headcontroller.setActive(true);

@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.jme.util.export.binary.BinaryImporter;
-import com.model.md5.JointAnimation;
-import com.model.md5.controller.JointController;
+import com.model.md5.MD5Animation;
+import com.model.md5.controller.MD5Controller;
+import com.model.md5.interfaces.IMD5Animation;
+import com.model.md5.interfaces.IMD5Controller;
 
 /**
  * Test to show how fast animation cloning is over reading binary file.
@@ -15,8 +17,8 @@ import com.model.md5.controller.JointController;
 public class TestAnimClone extends TestMeshClone {
 	private final String body = "bodyanim.jme";
 	private final String head = "headanim.jme";
-	private JointAnimation bodyAnim;
-	private JointAnimation headAnim;
+	private MD5Animation bodyAnim;
+	private MD5Animation headAnim;
 	private double headanimtime;
 	private double bodyanimtime;
 	private double headanimclonetime;
@@ -39,22 +41,22 @@ public class TestAnimClone extends TestMeshClone {
 		URL headURL = this.getClass().getClassLoader().getResource("test/model/md5/data/binary/" + this.head);
 		try {
 			long start = System.nanoTime();
-			this.bodyAnim = (JointAnimation)BinaryImporter.getInstance().load(bodyURL);
+			this.bodyAnim = (MD5Animation)BinaryImporter.getInstance().load(bodyURL);
 			long end = System.nanoTime();
 			this.bodyanimtime = (end - start)/1000000.0;
 			start = System.nanoTime();
-			this.headAnim = (JointAnimation)BinaryImporter.getInstance().load(headURL);
+			this.headAnim = (MD5Animation)BinaryImporter.getInstance().load(headURL);
 			end = System.nanoTime();
 			this.headanimtime = (end - start)/1000000.0;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		JointController bodycontroller = new JointController(this.bodyNode.getJoints());
+		IMD5Controller bodycontroller = new MD5Controller(this.bodyNode);
 		bodycontroller.addAnimation(this.bodyAnim);
 		bodycontroller.setRepeatType(1);
 		bodycontroller.setActive(true);
 		this.bodyNode.addController(bodycontroller);
-		JointController headcontroller = new JointController(this.headNode.getJoints());
+		IMD5Controller headcontroller = new MD5Controller(this.headNode);
 		headcontroller.addAnimation(this.headAnim);
 		headcontroller.setRepeatType(1);
 		headcontroller.setActive(true);
@@ -63,20 +65,20 @@ public class TestAnimClone extends TestMeshClone {
 
 	private void cloneAnim() {
 		long start = System.nanoTime();
-		JointAnimation bodyclone = this.bodyAnim.clone();
+		IMD5Animation bodyclone = this.bodyAnim.clone();
 		long end = System.nanoTime();
 		this.bodyanimclonetime = (end - start)/1000000.0;
 		start = System.nanoTime();
-		JointAnimation headclone = this.headAnim.clone();
+		IMD5Animation headclone = this.headAnim.clone();
 		end = System.nanoTime();
 		this.headanimclonetime = (end - start)/1000000.0;
-		JointController bodycontroller = new JointController(this.bodyclone.getJoints());
+		IMD5Controller bodycontroller = new MD5Controller(this.bodyclone);
 		bodycontroller.addAnimation(bodyclone);
 		bodycontroller.setRepeatType(1);
 		bodycontroller.setActive(true);
 		bodycontroller.setSpeed(0.2f);
 		this.bodyclone.addController(bodycontroller);
-		JointController headcontroller = new JointController(this.headclone.getJoints());
+		IMD5Controller headcontroller = new MD5Controller(this.headclone);
 		headcontroller.addAnimation(headclone);
 		headcontroller.setRepeatType(1);
 		headcontroller.setActive(true);

@@ -6,19 +6,20 @@ import java.net.URL;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.scene.Controller;
-import com.model.md5.ModelNode;
-import com.model.md5.controller.JointController;
+import com.jme.scene.Spatial;
 import com.model.md5.importer.MD5Importer;
+import com.model.md5.interfaces.IMD5Controller;
+import com.model.md5.interfaces.IMD5Node;
 
 public class TestFading extends Test{
-	private JointController controller;
+	private IMD5Controller controller;
 
 	public static void main(String[] args) {
 		new TestFading().start();	
 	}
 
 	@Override
-	protected ModelNode loadModel() {
+	protected IMD5Node loadModel() {
 		URL bodyMesh = TestFading.class.getClassLoader().getResource("test/model/md5/data/marine.md5mesh");
 		URL bodyAnim = TestFading.class.getClassLoader().getResource("test/model/md5/data/marine.md5anim");
 		try {
@@ -26,7 +27,7 @@ public class TestFading extends Test{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ModelNode body = MD5Importer.getInstance().getModelNode();
+		IMD5Node body = MD5Importer.getInstance().getModelNode();
 		MD5Importer.getInstance().cleanup();
 		URL headMesh = TestFading.class.getClassLoader().getResource("test/model/md5/data/sarge.md5mesh");
 		URL headAnim = TestFading.class.getClassLoader().getResource("test/model/md5/data/sarge.md5anim");
@@ -42,10 +43,10 @@ public class TestFading extends Test{
 
 	@Override
 	protected void setupGame() {
-		ModelNode node = (ModelNode)this.rootNode.getChild("ModelNode");
+		Spatial node = this.rootNode.getChild("ModelNode");
 		node.setLocalScale(1);
 		node.getController(0).setSpeed(0.2f);
-		this.controller = (JointController)node.getController(0);
+		this.controller = (IMD5Controller)node.getController(0);
 		this.addFadingAnim();
 		this.setupKey();
 	}

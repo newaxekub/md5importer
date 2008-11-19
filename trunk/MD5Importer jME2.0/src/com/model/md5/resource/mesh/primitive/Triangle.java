@@ -9,39 +9,36 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
-import com.model.md5.resource.mesh.Mesh;
+import com.model.md5.interfaces.ITriangle;
+import com.model.md5.interfaces.IVertex;
 
 /**
- * <code>Triangle</code> represents a tri in md5mesh file.
- * <p>
- * <code>Triangle</code> maintains three indices of <code>Vertex</code> that
- * define this <code>Triangle</code>.
- * <p>
- * <code>Triangle</code> is responsible for calculating the normal vector for
- * each <code>Vertex</code>.
+ * <code>Triangle</code> defines the concrete implementation of a triangle.
+ * It is responsible for calculating the normal vector for each
+ * <code>Vertex</code>.
  * <p>
  * <code>Triangle</code> cannot be cloned directly. The cloning process of a
  * <code>Triangle</code> can only be initiated by the cloning process of the
- * parent <code>Mesh</code>.
+ * parent <code>IMesh</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-10-2008 13:12 EST
+ * @version Modified date: 11-18-2008 22:57 EST
  */
-public class Triangle implements Serializable, Savable {
+public class Triangle implements Serializable, ITriangle {
 	/**
 	 * Serial version.
 	 */
 	private static final long serialVersionUID = -6234457193386375719L;
 	/**
-	 * The <code>Mesh</code> this <code>Triangle</code> belongs to.
+	 * The <code>Integer</code> index value.
 	 */
-	private Mesh mesh;
+	private int index;
 	/**
-	 * The array of <code>Vertex</code> index.
+	 * The array of <code>IVertex</code> instances.
 	 */
-	private int[] vertexIndices;
+	private IVertex[] vertices;
 	/**
 	 * The first temporary <code>Vector3f</code> for normal calculation.
 	 */
@@ -50,59 +47,48 @@ public class Triangle implements Serializable, Savable {
 	 * The second temporary <code>Vector3f</code> for normal calculation.
 	 */
 	private final Vector3f temp2;
-
+	
 	/**
-	 * Default constructor of <code>Triangle</code>.
+	 * Constructor of <code>Triangle</code>.
 	 */
 	public Triangle() {
-		this.temp1 = new Vector3f();
-		this.temp2 = new Vector3f();
+		this(-1, null);
 	}
 
 	/**
 	 * Constructor of <code>Triangle</code>.
-	 * @param mesh The <code>Mesh</code> this <code>Triangle</code> belongs to.
+	 * @param index The <code>Integer</code> index value.
+	 * @param vertices The array of <code>IVertex</code> instances.
 	 */
-	public Triangle(Mesh mesh) {
-		this.mesh = mesh;
-		this.vertexIndices = new int[3];
+	public Triangle(int index, IVertex[] vertices) {
+		this.index = index;
+		this.vertices = vertices;
 		this.temp1 = new Vector3f();
 		this.temp2 = new Vector3f();
 	}
 
-	/**
-	 * Process the normal of vertices and store the normal values in the
-	 * <code>Vertex</code> instances.
-	 */
+	@Override
 	public void processNormal() {
-		Vertex vert1 = this.mesh.getVertex(this.vertexIndices[0]);
-		Vertex vert2 = this.mesh.getVertex(this.vertexIndices[1]);
-		Vertex vert3 = this.mesh.getVertex(this.vertexIndices[2]);
-		this.temp1.set(vert2.getPosition()).subtractLocal(vert1.getPosition());
-		this.temp2.set(vert3.getPosition()).subtractLocal(vert2.getPosition());
+		IVertex vertex1 = this.vertices[0];
+		IVertex vertex2 = this.vertices[1];
+		IVertex vertex3 = this.vertices[2];
+		this.temp1.set(vertex2.getPosition()).subtractLocal(vertex1.getPosition());
+		this.temp2.set(vertex3.getPosition()).subtractLocal(vertex2.getPosition());
 		this.temp1.crossLocal(this.temp2);
 		this.temp1.normalizeLocal();
-		vert1.setNormal(this.temp2.set(this.temp1).multLocal(1.0f/(float)vert1.getUsedTimes()));
-		vert2.setNormal(this.temp2.set(this.temp1).multLocal(1.0f/(float)vert2.getUsedTimes()));
-		vert3.setNormal(this.temp1.multLocal(1.0f/(float)vert3.getUsedTimes()));
+		vertex1.setNormal(this.temp2.set(this.temp1).multLocal(1.0f/(float)vertex1.getUsedTimes()));
+		vertex2.setNormal(this.temp2.set(this.temp1).multLocal(1.0f/(float)vertex2.getUsedTimes()));
+		vertex3.setNormal(this.temp1.multLocal(1.0f/(float)vertex3.getUsedTimes()));
 	}
 
-	/**
-	 * Set the index of one <code>Vertex</code> in this <code>Triangle</code>.
-	 * @param index The index of the <code>Vertex</code> in the indices array.
-	 * @param vertex The index of the <code>Vertex</code> to be set.
-	 */
-	public void setVertexIndex(int index, int vertex) {
-		this.vertexIndices[index] = vertex;
+	@Override
+	public IVertex getVertex(int index) {
+		return this.vertices[index];
 	}
 
-	/**
-	 * Retrieve the <code>Vertex</code> index with given array index.
-	 * @param index The array index number in the <code>Triangle</code>.
-	 * @return The index number of the <code>Vertex</code> with given array index.
-	 */
-	public int getVertexIndex(int index) {
-		return this.vertexIndices[index];
+	@Override
+	public int getIndex() {
+		return this.index;
 	}
 
 	@Override
@@ -114,27 +100,23 @@ public class Triangle implements Serializable, Savable {
 	@Override
 	public void write(JMEExporter ex) throws IOException {
 		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.mesh, "Mesh", null);
-		oc.write(this.vertexIndices, "VertexIndices", null);
+		oc.write(this.index, "Index", -1);
+		oc.write(this.vertices, "Vertices", null);
 	}
 
 	@Override
 	public void read(JMEImporter im) throws IOException {
 		InputCapsule ic = im.getCapsule(this);
-		this.mesh = (Mesh)ic.readSavable("Mesh", null);
-		this.vertexIndices = ic.readIntArray("VertexIndices", null);
+		this.index = ic.readInt("Index", -1);
+		Savable[] temp = ic.readSavableArray("Vertices", null);
+		this.vertices = new IVertex[temp.length];
+		for(int i = 0; i < this.vertices.length; i++) this.vertices[i] = (IVertex)temp[i];
 	}
 
-	/**
-	 * Clone this triangle with given newly cloned mesh parent.
-	 * @param mesh The cloned <code>Mesh</code> parent.
-	 * @return The cloned copy of this <code>Triangle</code>
-	 */
-	public Triangle clone(Mesh mesh) {
-		Triangle clone = new Triangle();
-		clone.mesh = mesh;
-		clone.vertexIndices = new int[this.vertexIndices.length];
-		System.arraycopy(this.vertexIndices, 0, clone.vertexIndices, 0, this.vertexIndices.length);
-		return clone;
+	@Override
+	public ITriangle clone(IVertex[] clonedVertices) {
+		IVertex[] vertices = new IVertex[this.vertices.length];
+		for(int i = 0; i < vertices.length; i++) vertices[i] = clonedVertices[this.vertices[i].getIndex()];
+		return new Triangle(this.index, vertices);
 	}
 }

@@ -9,11 +9,12 @@ import java.util.logging.Logger;
 
 import com.jme.image.Texture;
 import com.jme.math.Quaternion;
-import com.model.md5.JointAnimation;
-import com.model.md5.ModelNode;
-import com.model.md5.controller.JointController;
+import com.model.md5.controller.MD5Controller;
 import com.model.md5.importer.resource.AnimImporter;
 import com.model.md5.importer.resource.MeshImporter;
+import com.model.md5.interfaces.IMD5Animation;
+import com.model.md5.interfaces.IMD5Controller;
+import com.model.md5.interfaces.IMD5Node;
 
 /**
  * <code>MD5Importer</code> is a singleton utility class that provides a
@@ -30,7 +31,7 @@ import com.model.md5.importer.resource.MeshImporter;
  * {@link}http://www.modwiki.net/wiki/MD5_(file_format).
  *
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-09-2008 19:52 EST
+ * @version Modified date: 11-18-2008 00:24 EST
  */
 public class MD5Importer {
 	/**
@@ -70,13 +71,13 @@ public class MD5Importer {
 	 */
 	private StreamTokenizer reader;
 	/**
-	 * The <code>ModelNode</code> instance.
+	 * The <code>IMD5Node</code> instance.
 	 */
-	private ModelNode modelNode;
+	private IMD5Node node;
 	/**
-	 * The <code>JointAnimation</code> instance.
+	 * The <code>IMD5Animation</code> instance.
 	 */
-	private JointAnimation animation;
+	private IMD5Animation animation;
 
 	/**
 	 * Private default constructor of <code>MD5Importer</code>.
@@ -119,7 +120,7 @@ public class MD5Importer {
 	public void loadMesh(URL md5mesh, String name) throws IOException {
 		this.setupReader(md5mesh.openStream());
 		MeshImporter meshImporter = new MeshImporter(this.reader);
-		this.modelNode = meshImporter.loadMesh(name);
+		this.node = meshImporter.loadMesh(name);
 	}
 
 	/**
@@ -156,11 +157,11 @@ public class MD5Importer {
 	 * @param repeatType The repeat type of this <code>JointAnimation</code>.
 	 */
 	private void assignAnimation(int repeatType) {
-		JointController controller = new JointController(this.modelNode.getJoints());
+		IMD5Controller controller = new MD5Controller(this.node);
 		controller.setRepeatType(repeatType);
 		controller.addAnimation(this.animation);
 		controller.setActive(true);
-		this.modelNode.addController(controller);
+		this.node.addController(controller);
 	}
 
 	/**
@@ -221,18 +222,18 @@ public class MD5Importer {
 	}
 
 	/**
-	 * Retrieve the <code>ModelNode</code> instance.
+	 * Retrieve the MD5 node instance.
 	 * @return The <code>ModelNode</code> instance.
 	 */
-	public ModelNode getModelNode() {
-		return this.modelNode;
+	public IMD5Node getModelNode() {
+		return this.node;
 	}
 
 	/**
-	 * Retrieve the <code>JointAnimation</code> instance.
+	 * Retrieve the MD5 animation instance.
 	 * @return The <code>JointAnimation</code> instance.
 	 */
-	public JointAnimation getAnimation() {
+	public IMD5Animation getAnimation() {
 		return this.animation;
 	}
 
@@ -249,7 +250,7 @@ public class MD5Importer {
 	 */
 	public void cleanup() {
 		this.reader = null;
-		this.modelNode = null;
+		this.node = null;
 		this.animation = null;
 		MD5Importer.instance = null;
 	}

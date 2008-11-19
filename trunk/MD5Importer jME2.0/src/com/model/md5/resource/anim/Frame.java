@@ -11,56 +11,46 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
+import com.model.md5.interfaces.IFrame;
 
 /**
- * <code>Frame</code> represents a frame in the md5anim file.
- * <p>
- * <code>Frame</code> maintains translation and orientation information of each
- * <code>Joint</code> in the animation of the current frame.
+ * <code>Frame</code> defines the concrete implementation of a frame.
  * <p>
  * <code>Frame</code> should not be cloned directly. The cloning process of a
  * <code>Frame</code> should be initiated by the cloning process of the parent
- * <code>JointAnimation</code>.
+ * <code>IMD5Animation</code>.
  * <p>
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 06-10-2008 12:28 EST
+ * @version Modified date: 11-18-2008 23:19 EST
  */
-public class Frame implements Serializable, Savable, Cloneable {
+public class Frame implements Serializable, IFrame {
 	/**
 	 * Serial version.
 	 */
 	private static final long serialVersionUID = 8891271219195292580L;
 	/**
-	 * The flag indicates if this <code>Frame</code> is a baseframe.
+	 * The array of <code>Vector3f</code> translations.
 	 */
-	private boolean baseframe;
+	protected Vector3f[] translations;
 	/**
-	 * The array of parent indices for each <code>Joint</code>.
+	 * The array of <code>Quaternion</code> orientations.
 	 */
-	private int[] parents;
-	/**
-	 * The translations of <code>Joint</code> of this <code>Frame</code>.
-	 */
-	private Vector3f[] translations;
-	/**
-	 * The orientations of <code>Joint</code> of this <code>Frame</code>.
-	 */
-	private Quaternion[] orientations;
-
-	/**
-	 * Default constructor of <code>Frame</code>.
-	 */
-	public Frame() {}
+	protected Quaternion[] orientations;
 
 	/**
 	 * Constructor of <code>Frame</code>.
-	 * @param baseframe True if this <code>Frame</code> is a base frame. False otherwise.
-	 * @param numJoints The total number of <code>Joint</code> in the animation.
 	 */
-	public Frame(boolean baseframe, int numJoints) {
-		this.baseframe = baseframe;
+	public Frame() {
+		super();
+	}
+
+	/**
+	 * Constructor of <code>Frame</code>.
+	 * @param numJoints The <code>Integer</code> number of joints.
+	 */
+	public Frame(int numJoints) {
 		this.translations = new Vector3f[numJoints];
 		this.orientations = new Quaternion[numJoints];
 		for(int i = 0; i < this.translations.length && i < this.orientations.length; i++) {
@@ -68,15 +58,17 @@ public class Frame implements Serializable, Savable, Cloneable {
 			this.orientations[i] = new Quaternion();
 		}
 	}
-
+	
 	/**
-	 * Set the <code>Frame</code> hierarchy of the <code>Frame</code>.
-	 * @param parents The integer array of <code>Joint</code> hierarchy.
+	 * Constructor of <code>Frame</code>.
+	 * @param translations The array of <code>Vector3f</code> translations.
+	 * @param orientations The array of <code>Quaternion</code> orientations.
 	 */
-	public void setParents(int[] parents) {
-		this.parents = parents;
+	protected Frame(Vector3f[] translations, Quaternion[] orientations) {
+		this.translations = translations;
+		this.orientations = orientations;
 	}
-
+	
 	/**
 	 * Set the transform of this <code>Frame</code>.
 	 * @param jointIndex The index of the <code>Joint</code>.
@@ -92,36 +84,33 @@ public class Frame implements Serializable, Savable, Cloneable {
 		case 4: this.orientations[jointIndex].y = value; break;
 		case 5:
 			this.orientations[jointIndex].z = value;
-			this.processOrientation(jointIndex, this.orientations[jointIndex]);
+			this.processOrientation(this.orientations[jointIndex]);
 			break;
 		}
 	}
-
+	
 	/**
-	 * Process the <code>Quaternion</code> orientation to finalize it.
-	 * @param jointIndex The index of the <code>Joint</code>.
+	 * Process the orientation to finalize it.
 	 * @param raw The raw orientation value.
 	 */
-	private void processOrientation(int jointIndex, Quaternion raw) {
+	private void processOrientation(Quaternion raw) {
 		float t = 1.0f - (raw.x * raw.x) - (raw.y * raw.y) - (raw.z * raw.z);
 		if (t < 0.0f) raw.w = 0.0f;
 		else raw.w = -(FastMath.sqrt(t));
 	}
 
-	/**
-	 * Retrieve the parent index of the <code>Joint</code> with given index.
-	 * @return The index of the parent <code>Joint</code>.
-	 */
-	public int getParent(int index) {
-		return this.parents[index];
+
+	@Override
+	public Vector3f getTranslation(int jointIndex) {
+		return this.translations[jointIndex];
 	}
 
-	/**
-	 * Retrieve the transform value with given indices.
-	 * @param jointIndex The <code>Joint</code> index.
-	 * @param transIndex The transform index.
-	 * @return The transform value.
-	 */
+	@Override
+	public Quaternion getOrientation(int jointIndex) {
+		return this.orientations[jointIndex];
+	}
+
+	@Override
 	public float getTransformValue(int jointIndex, int transIndex) {
 		switch(transIndex) {
 		case 0: return this.translations[jointIndex].x;
@@ -134,24 +123,6 @@ public class Frame implements Serializable, Savable, Cloneable {
 		}
 	}
 
-	/**
-	 * Retrieve the translation of the <code>Joint</code> with given index.
-	 * @param jointIndex The <code>Joint</code> index number.
-	 * @return The <code>Vector3f</code> translation value.
-	 */
-	public Vector3f getTranslation(int jointIndex) {
-		return this.translations[jointIndex];
-	}
-
-	/**
-	 * Retrieve the orientation of the <code>Joint</code> with given index.
-	 * @param jointIndex The <code>Joint</code> number.
-	 * @return The <code>Quaternion</code> orientation value.
-	 */
-	public Quaternion getOrientation(int jointIndex) {
-		return this.orientations[jointIndex];
-	}
-
 	@Override
 	@SuppressWarnings("unchecked")
 	public Class getClassTag() {
@@ -161,8 +132,6 @@ public class Frame implements Serializable, Savable, Cloneable {
 	@Override
 	public void write(JMEExporter ex) throws IOException {
 		OutputCapsule oc = ex.getCapsule(this);
-		oc.write(this.baseframe, "Baseframe", false);
-		oc.write(this.parents, "Parents", null);
 		oc.write(this.translations, "Translations", null);
 		oc.write(this.orientations, "Orientations", null);
 	}
@@ -171,8 +140,6 @@ public class Frame implements Serializable, Savable, Cloneable {
 	public void read(JMEImporter im) throws IOException {
 		Savable[] temp = null;
 		InputCapsule ic = im.getCapsule(this);
-		this.baseframe = ic.readBoolean("Baseframe", false);
-		this.parents = ic.readIntArray("Parents", null);
 		temp = ic.readSavableArray("Translations", null);
 		this.translations = new Vector3f[temp.length];
 		for(int i = 0; i < temp.length; i++) {
@@ -186,19 +153,11 @@ public class Frame implements Serializable, Savable, Cloneable {
 	}
 
 	@Override
-	public Frame clone() {
-		Frame clone = new Frame();
-		clone.baseframe = this.baseframe;
-		clone.parents = new int[this.parents.length];
-		System.arraycopy(this.parents, 0, clone.parents, 0, this.parents.length);
-		clone.translations = new Vector3f[this.translations.length];
-		for(int i = 0; i < clone.translations.length; i++) {
-			clone.translations[i] = this.translations[i].clone();
-		}
-		clone.orientations = new Quaternion[this.orientations.length];
-		for(int i = 0; i < clone.orientations.length; i++) {
-			clone.orientations[i] = this.orientations[i].clone();
-		}
-		return clone;
+	public IFrame clone() {
+		Vector3f[] clonedTranslations = new Vector3f[this.translations.length];
+		for(int i = 0; i < clonedTranslations.length; i++) clonedTranslations[i] = this.translations[i].clone();
+		Quaternion[] clonedOrientations = new Quaternion[this.orientations.length];
+		for(int i = 0; i < clonedOrientations.length; i++) clonedOrientations[i] = this.orientations[i].clone();
+		return new Frame(clonedTranslations, clonedOrientations);
 	}
 }
