@@ -10,8 +10,8 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 import com.jme.util.export.Savable;
-import com.model.md5.interfaces.IVertex;
-import com.model.md5.interfaces.IWeight;
+import com.model.md5.interfaces.mesh.primitive.IVertex;
+import com.model.md5.interfaces.mesh.primitive.IWeight;
 
 /**
  * <code>Vertex</code> defines the concrete implementation of a vertex.

@@ -1,4 +1,4 @@
-package com.model.md5.interfaces;
+package com.model.md5.interfaces.mesh;
 
 import com.jme.math.Quaternion;
 import com.jme.math.TransformMatrix;

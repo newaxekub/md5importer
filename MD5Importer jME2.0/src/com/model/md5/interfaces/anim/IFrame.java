@@ -1,4 +1,4 @@
-package com.model.md5.interfaces;
+package com.model.md5.interfaces.anim;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;

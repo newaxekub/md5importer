@@ -1,7 +1,8 @@
-package com.model.md5.interfaces;
+package com.model.md5.interfaces.mesh.primitive;
 
 import com.jme.math.Vector3f;
 import com.jme.util.export.Savable;
+import com.model.md5.interfaces.mesh.IJoint;
 
 /**
  * <code>IWeight</code> defines the interface of a weight that affects a

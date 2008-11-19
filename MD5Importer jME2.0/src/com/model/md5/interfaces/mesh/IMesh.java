@@ -1,6 +1,8 @@
-package com.model.md5.interfaces;
+package com.model.md5.interfaces.mesh;
 
 import com.jme.util.export.Savable;
+import com.model.md5.interfaces.mesh.primitive.IVertex;
+import com.model.md5.interfaces.mesh.primitive.IWeight;
 
 
 /**

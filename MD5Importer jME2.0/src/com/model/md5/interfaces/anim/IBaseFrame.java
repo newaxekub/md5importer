@@ -1,4 +1,4 @@
-package com.model.md5.interfaces;
+package com.model.md5.interfaces.anim;
 
 /**
  * <code>IBaseFrame</code> defines the the interface of the base frame of

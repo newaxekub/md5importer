@@ -7,9 +7,9 @@ import java.util.BitSet;
 import com.model.md5.MD5Animation;
 import com.model.md5.exception.InvalidVersionException;
 import com.model.md5.importer.MD5Importer;
-import com.model.md5.interfaces.IBaseFrame;
-import com.model.md5.interfaces.IFrame;
 import com.model.md5.interfaces.IMD5Animation;
+import com.model.md5.interfaces.anim.IBaseFrame;
+import com.model.md5.interfaces.anim.IFrame;
 import com.model.md5.resource.anim.BaseFrame;
 import com.model.md5.resource.anim.Frame;
 
