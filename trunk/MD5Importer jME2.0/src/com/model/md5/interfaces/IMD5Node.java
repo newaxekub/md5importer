@@ -9,7 +9,7 @@ import com.model.md5.interfaces.mesh.IMesh;
  *
  * @author Yi Wang (Neakor)
  * @version Creation date: 11-17-2008 22:27 EST
- * @version Modified date: 11-18-2008 14:40 EST
+ * @version Modified date: 11-19-2008 17:07 EST
  */
 public interface IMD5Node extends Savable {
 
@@ -45,6 +45,13 @@ public interface IMD5Node extends Savable {
 	 */
 	public void attachDependent(IMD5Node node);
 	
+	/**
+	 * Set this MD5 node as a dependent child of another MD5 node. This
+	 * makes this node share the skeleton structure of its parent node.
+	 * @param parent The parent <code>IMD5Node</code>.
+	 */
+	public void setAsDependent(IMD5Node parent);
+
 	/**
 	 * Notify the <code>IMD5Node</code> that its skeleton has been modified.
 	 */

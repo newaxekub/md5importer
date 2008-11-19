@@ -10,9 +10,15 @@ import com.model.md5.interfaces.mesh.IJoint;
  *
  * @author Yi Wang (Neakor)
  * @version Creation date: 11-17-2008 21:39 EST
- * @version Modified date: 11-18-2008 22:46 EST
+ * @version Modified date: 11-19-2008 17:11 EST
  */
 public interface IWeight extends Savable {
+	
+	/**
+	 * Set the joint this weight affects.
+	 * @param joint The <code>IJoint</code> instance.
+	 */
+	public void setJoint(IJoint joint);
 
 	/**
 	 * Retrieve the fixed weight value of this <code>Weight</code>.

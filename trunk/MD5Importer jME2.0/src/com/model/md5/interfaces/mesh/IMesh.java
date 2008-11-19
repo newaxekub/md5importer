@@ -12,7 +12,7 @@ import com.model.md5.interfaces.mesh.primitive.IWeight;
  *
  * @author Yi Wang (Neakor)
  * @version Creation date: 11-17-2008 20:12 EST
- * @version Modified date: 11-18-2008 22:45 EST
+ * @version Modified date: 11-19-2008 17:10 EST
  */
 public interface IMesh extends Savable {
 
@@ -25,6 +25,12 @@ public interface IMesh extends Savable {
 	 * Update this mesh and its geometric data.
 	 */
 	public void updateMesh();
+	
+	/**
+	 * Set this mesh to share the given joints instead of using its own.
+	 * @param joints The array of <code>IJoint</code> to be shared.
+	 */
+	public void setShare(IJoint[] joints);
 
 	/**
 	 * Retrieve the vertex with given index number.

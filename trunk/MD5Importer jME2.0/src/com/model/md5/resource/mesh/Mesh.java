@@ -40,7 +40,7 @@ import com.model.md5.interfaces.mesh.primitive.IWeight;
  * This class is used internally by <code>MD5Importer</code> only.
  * 
  * @author Yi Wang (Neakor)
- * @version Modified date: 11-18-2008 22:39 EST
+ * @version Modified date: 11-19-2008 17:14 EST
  */
 public class Mesh extends TriMesh implements IMesh {
 	/**
@@ -194,6 +194,13 @@ public class Mesh extends TriMesh implements IMesh {
 		else this.setModelBound(new BoundingBox());
 		this.updateModelBound();
 		this.updateGeometricState(0, true);
+	}
+
+	@Override
+	public void setShare(IJoint[] joints) {
+		for(IWeight weight : this.weights) {
+			weight.setJoint(joints[weight.getJoint().getIndex()]);
+		}
 	}
 
 	@Override
