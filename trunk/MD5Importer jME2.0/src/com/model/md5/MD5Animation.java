@@ -60,11 +60,11 @@ public class MD5Animation implements Serializable, IMD5Animation {
 	 */
 	private float time;
 	/**
-	 * The index of the next frame.
+	 * The index of the previous frame.
 	 */
 	private int prevFrame;
 	/**
-	 * The index of the previous frame.
+	 * The index of the next frame.
 	 */
 	private int nextFrame;
 	/**
@@ -222,7 +222,7 @@ public class MD5Animation implements Serializable, IMD5Animation {
 
 	@Override
 	public float getPercentage() {
-		return this.nextFrame / this.getFrameCount();
+		return (float)this.nextFrame / (float)this.getFrameCount();
 	}
 
 	@Override
