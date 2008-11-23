@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jME2.0_10_24.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl_util_applet.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="MD5Viewer/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
