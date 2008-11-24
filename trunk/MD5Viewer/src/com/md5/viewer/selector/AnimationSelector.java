@@ -55,7 +55,7 @@ public class AnimationSelector {
 	// This method should be placed into the button handler.
 	public void startPlayer() {
 		// TODO Load actual hierarchy from file.
-		AnimationPlayer player = new AnimationPlayer(this.urls, this.loader.load(null), this.manual);
+		AnimationPlayer player = new AnimationPlayer(null, this.loader.load(null), null, this.urls, this.manual);
 		player.start();
 	}
 }
