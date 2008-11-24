@@ -5,11 +5,12 @@ import java.net.URL;
 import java.util.List;
 
 import com.jme.app.SimpleGame;
+import com.jme.input.KeyBindingManager;
+import com.jme.input.KeyInput;
 import com.jme.scene.Controller;
 import com.model.md5.controller.MD5Controller;
 import com.model.md5.importer.MD5Importer;
 import com.model.md5.interfaces.IMD5Animation;
-import com.model.md5.interfaces.IMD5Controller;
 import com.model.md5.interfaces.IMD5Node;
 
 /**
@@ -24,7 +25,7 @@ import com.model.md5.interfaces.IMD5Node;
  * @author Yi Wang (Neakor)
  * @author Tim Poliquin (Weenahmen)
  * @version Creation date: 11-23-2008 23:12 EST
- * @version Modified date: 11-24-2008 00:06 EST
+ * @version Modified date: 11-24-2008 10:09 EST
  */
 public class AnimationPlayer extends SimpleGame {
 	/**
@@ -48,6 +49,10 @@ public class AnimationPlayer extends SimpleGame {
 	 */
 	private final boolean manual;
 	/**
+	 * The <code>KeyBindingManager</code> instance.
+	 */
+	private final KeyBindingManager keyBinding;
+	/**
 	 * The <code>MD5Importer</code> instance.
 	 */
 	private final MD5Importer importer;
@@ -64,9 +69,17 @@ public class AnimationPlayer extends SimpleGame {
 	 */
 	private IMD5Animation[] animations;
 	/**
-	 * The <code>IMD5Controller</code> instance set on the model mesh.
+	 * The <code>MD5Controller</code> instance set on the model mesh.
 	 */
-	private IMD5Controller controller;
+	private MD5Controller controller;
+	/**
+	 * The current <code>Integer</code> animation index.
+	 */
+	private int index;
+	/**
+	 * The elapsed time since last fading to a new animation.
+	 */
+	private float count;
 
 	/**
 	 * Constructor of <code>AnimationPlayer</code>.
@@ -82,6 +95,7 @@ public class AnimationPlayer extends SimpleGame {
 		this.baseAnimURL = baseAnimURL;
 		this.urls = urls;
 		this.manual = manual;
+		this.keyBinding = KeyBindingManager.getKeyBindingManager();
 		this.importer = MD5Importer.getInstance();
 	}
 
@@ -91,6 +105,8 @@ public class AnimationPlayer extends SimpleGame {
 			this.loadModelMesh();
 			this.loadAnimations();
 			this.setupController();
+			this.setupUtilityKey();
+			this.setupManualKey();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -98,7 +114,40 @@ public class AnimationPlayer extends SimpleGame {
 	
 	@Override
 	protected void simpleUpdate() {
-		// TODO
+		if(this.keyBinding.isValidCommand("speedup", false)) {
+			this.controller.setSpeed(this.controller.getSpeed() * 1.2f);
+		} else if(this.keyBinding.isValidCommand("slowdown", false)) {
+			this.controller.setSpeed(this.controller.getSpeed() * 0.8f);
+		}
+		if(this.manual) {
+			if(this.keyBinding.isValidCommand("next", false)) {
+				IMD5Animation active = this.controller.getActiveAnimation();
+				if(active != null && active.getPercentage() >= 0.7f) {
+					this.controller.setRepeatType(Controller.RT_CLAMP);
+					this.controller.setFading(this.animations[this.index], 0.2f, false);
+					this.index++;
+					if(this.index >= this.animations.length) this.index = 0;
+				}
+			} else if(this.keyBinding.isValidCommand("reset", false)) {
+				this.resetAnimation();
+			}
+			if(this.controller.getActiveAnimation() != this.baseAnimation) {
+				this.count += this.tpf;
+				if(this.count >= 0.5f) {
+					this.resetAnimation();
+					this.count = 0;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Reset the animation back to the base animation.
+	 */
+	private void resetAnimation() {
+		this.controller.setRepeatType(Controller.RT_WRAP);
+		this.controller.setFading(this.baseAnimation, 0.2f, false);
+		this.index = 0;
 	}
 	
 	/**
@@ -147,5 +196,21 @@ public class AnimationPlayer extends SimpleGame {
 		this.controller.setRepeatType(Controller.RT_WRAP);
 		this.controller.setFading(this.baseAnimation, 0, false);
 		this.modelMesh.addController(this.controller);
+	}
+	
+	/**
+	 * Setup the utility control hot keys.
+	 */
+	private void setupUtilityKey() {
+		this.keyBinding.set("speedup", KeyInput.KEY_EQUALS);
+		this.keyBinding.set("slowdown", KeyInput.KEY_MINUS);
+	}
+	
+	/**
+	 * Setup the control hot keys for manual mode.
+	 */
+	private void setupManualKey() {
+		this.keyBinding.set("next", KeyInput.KEY_SPACE);
+		this.keyBinding.set("reset", KeyInput.KEY_BACK);
 	}
 }

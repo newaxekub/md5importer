@@ -30,4 +30,12 @@ public class HierarchyLoader {
 		// TODO Load into the hierarchy.
 		return null;
 	}
+	
+	/**
+	 * Retrieve the base directory for the hierarchy file and the mesh files.
+	 * @return The <code>String</code> base directory.
+	 */
+	public String getBaseDirectory() {
+		return null;
+	}
 }
