@@ -10,5 +10,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="MD5Viewer/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/MD5Importer_jME2.0_v2.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
