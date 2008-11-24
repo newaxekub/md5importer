@@ -1,4 +1,4 @@
-package com.md5.viewer.gui;
+package com.md5.viewer.selector;
 
 import java.net.URL;
 import java.util.ArrayList;

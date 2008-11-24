@@ -1,6 +1,6 @@
 package com.md5.viewer;
 
-import com.md5.viewer.gui.AnimationSelector;
+import com.md5.viewer.selector.AnimationSelector;
 
 /**
  * <code>MD5Viewer</code> defines the concrete implementation of a viewer
