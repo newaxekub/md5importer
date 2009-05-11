@@ -3,6 +3,7 @@
 *MD5Importer Concurrent version 1.0 for jME2.0 release*
 
 1. Concurrent version of MD5Importer that allows animation update process to be separated from the rendering thread to greatly enhance performance and more importantly scalability.
+
 2. This version also includes the normal sharing functionality that allows vertex normals to be shared if the vertices share the same geometric position.
 
 * MD5Importer jME1.0 and jME2.0 version 1.3 release.*
